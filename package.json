@@ -1,0 +1,35 @@
+{
+  "name": "dao-connect",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.17",
+    "@types/react": "^18.0.26",
+    "@types/react-dom": "^18.0.9",
+    "typescript": "^4.9.4"
+  },
+  "dependencies": {
+    "@rainbow-me/rainbowkit": "^0.8.1",
+    "@walletconnect/client": "1.8.0",
+    "@walletconnect/types": "1.8.0",
+    "@zoralabs/nouns-protocol": "^1.0.1",
+    "autoprefixer": "^10.4.13",
+    "ethers": "^5.7.2",
+    "graphql": "^16.6.0",
+    "graphql-request": "^5.1.0",
+    "graphql-tag": "^2.12.6",
+    "jsqr": "^1.4.0",
+    "next": "^13.0.7",
+    "postcss": "^8.4.20",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "swr": "^2.0.0",
+    "tailwindcss": "^3.2.4",
+    "wagmi": "^0.9.5"
+  }
+}
