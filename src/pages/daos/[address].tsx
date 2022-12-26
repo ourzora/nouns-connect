@@ -1,5 +1,6 @@
 import request from "graphql-request";
 import { GetServerSideProps } from "next";
+import Link from "next/link";
 import { useCallback, useState } from "react";
 import toast from "react-hot-toast";
 import { useAccount, useProvider } from "wagmi";
@@ -7,7 +8,6 @@ import { useAccount, useProvider } from "wagmi";
 import { ConnectWalletInput } from "../../components/ConnectWalletInput";
 import Layout from "../../components/layout";
 import { RenderRequest } from "../../components/RenderRequest";
-import { SubmitProposal } from "../../components/SubmitProposal";
 import { AllNounsQueries } from "../../config/daos-query";
 import { Transaction, useTransactionsStore } from "../../stores/interactions";
 import { CHAIN_ID, ZORA_API_URL } from "../../utils/constants";
@@ -62,28 +62,36 @@ function DAOActionComponent({ dao }: { dao: any }) {
         <h3 className="text-l">Connected to:</h3>
         <h4 className="font-bold">{wcClientData.name}</h4>
         <p>{wcClientData.description}</p>
-        <button className="underline mt-4" onClick={() => {
-          toast("Disconnected Wallet from DAO")
-          wcDisconnect()
-        }}>
+        <button
+          className="underline mt-4"
+          onClick={() => {
+            toast("Disconnected Wallet from DAO");
+            wcDisconnect();
+          }}
+        >
           Disconnect Wallet Connect from App
         </button>
         <br />
         <ul>
           {transactions.map((transaction: Transaction, indx: number) => (
             <>
-              <RenderRequest indx={indx} key={transaction.id} transaction={transaction} />
+              <RenderRequest
+                indx={indx}
+                key={transaction.id}
+                transaction={transaction}
+              />
             </>
           ))}
         </ul>
         {isConnected ? (
-          transactions.length > 0 ? (
+          transactions.length === 0 ? (
             <div>No transactions added to this DAO</div>
           ) : (
-            <SubmitProposal
-              daoAddress={dao.governorAddress}
-              requests={transactions}
-            />
+            <Link
+              href={`/proposals/create?address=${dao.collectionAddress.toLowerCase()}`}
+            >
+              Create Proposal
+            </Link>
           )
         ) : (
           <div className="mt-5 underline">
