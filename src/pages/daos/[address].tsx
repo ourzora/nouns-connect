@@ -1,23 +1,26 @@
-import { useRouter } from "next/router";
+import request from "graphql-request";
+import { GetServerSideProps } from "next";
 import { useCallback, useState } from "react";
-import { useAccount, useProvider, useQuery } from "wagmi";
+import toast from "react-hot-toast";
+import { useAccount, useProvider } from "wagmi";
+
 import { ConnectWalletInput } from "../../components/ConnectWalletInput";
 import Layout from "../../components/layout";
 import { RenderRequest } from "../../components/RenderRequest";
-import { RequestType } from "../../components/RequestType";
 import { SubmitProposal } from "../../components/SubmitProposal";
-import { DAOS } from "../../config/daos";
-import { CHAIN_ID } from "../../utils/constants";
+import { AllNounsQueries } from "../../config/daos-query";
+import { Transaction, useTransactionsStore } from "../../stores/interactions";
+import { CHAIN_ID, ZORA_API_URL } from "../../utils/constants";
 import { useWalletConnectClient } from "../../utils/useWalletConnectClient";
 
-function DAOActionComponent({ daoAddress }) {
+function DAOActionComponent({ dao }: { dao: any }) {
   const [error, setError] = useState<undefined | string>(undefined);
-  const [requests, setRequests] = useState<RequestType[]>([]);
-  const { isReady, query } = useRouter();
+  const { transactions, addTransactions } = useTransactionsStore();
 
   const onWCRequest = useCallback(
     (error: any, payload: any) => {
       if (error) {
+        toast(error.toString());
         setError(error);
       }
 
@@ -28,10 +31,9 @@ function DAOActionComponent({ daoAddress }) {
         calldata: param.data,
         value: param.value || "0",
       }));
-
-      setRequests([...requests, ...paramArgs]);
+      addTransactions(paramArgs);
     },
-    [requests, setError, setRequests]
+    [setError, addTransactions]
   );
 
   const chainId = CHAIN_ID;
@@ -48,32 +50,41 @@ function DAOActionComponent({ daoAddress }) {
 
   const { wcClientData, wcConnect, wcDisconnect } = useWalletConnectClient({
     onWCRequest,
-    daoAddress,
+    daoTreasuryAddress: dao.treasuryAddress,
     provider,
     chainId,
   });
 
   if (wcClientData) {
-    console.log({ wcClientData });
     return (
       <>
         {error && <span>{error}</span>}
         <h3 className="text-l">Connected to:</h3>
         <h4 className="font-bold">{wcClientData.name}</h4>
         <p>{wcClientData.description}</p>
-        <button className="underline mt-4" onClick={() => wcDisconnect()}>
+        <button className="underline mt-4" onClick={() => {
+          toast("Disconnected Wallet from DAO")
+          wcDisconnect()
+        }}>
           Disconnect Wallet Connect from App
         </button>
         <br />
         <ul>
-          {requests.map((request: any, indx: number) => (
+          {transactions.map((transaction: Transaction, indx: number) => (
             <>
-              <RenderRequest indx={indx} key={request.id} request={request} />
+              <RenderRequest indx={indx} key={transaction.id} transaction={transaction} />
             </>
           ))}
         </ul>
-        {isConnected && requests.length > 0 ? (
-          <SubmitProposal daoAddress={daoAddress} requests={requests} />
+        {isConnected ? (
+          transactions.length > 0 ? (
+            <div>No transactions added to this DAO</div>
+          ) : (
+            <SubmitProposal
+              daoAddress={dao.governorAddress}
+              requests={transactions}
+            />
+          )
         ) : (
           <div className="mt-5 underline">
             Connect your wallet to submit a proposal
@@ -88,21 +99,37 @@ function DAOActionComponent({ daoAddress }) {
   );
 }
 
-const DAOActionPage = () => {
-  const { query, isReady } = useRouter();
-  const DAO = isReady
-    ? DAOS.find((dao) => dao.token === query.address)
-    : undefined;
-  if (!DAO) {
-    return <span>loading...</span>;
-  }
+const DAOActionPage = ({ dao }) => {
   return (
     <Layout title="DAOConnect">
-      <h1>DAOConnect for <strong className="">{DAO.name}</strong></h1>
+      <h1>
+        DAOConnect for <strong className="">{dao.name}</strong>
+      </h1>
 
-      {isReady && <DAOActionComponent daoAddress={DAO.token} />}
+      <DAOActionComponent dao={dao} />
     </Layout>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async ({
+  res,
+  query,
+}) => {
+  res.setHeader(
+    "Cache-Control",
+    "public, s-maxage=50, stale-while-revalidate=59"
+  );
+
+  const daos = await request(ZORA_API_URL, AllNounsQueries, {
+    chain: { "1": "MAINNET", "5": "GOERLI" }[CHAIN_ID.toString()],
+    collectionAddresses: [query.address as string],
+  });
+
+  const dao = daos.nouns.nounsDaos.nodes[0];
+
+  return {
+    props: { dao },
+  };
 };
 
 export default DAOActionPage;

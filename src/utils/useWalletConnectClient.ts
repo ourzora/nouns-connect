@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect, useRef, useMemo } from 'react'
 import WalletConnect from '@walletconnect/client'
 import { IClientMeta, IWalletConnectSession } from '@walletconnect/types'
 import { Provider } from '@ethersproject/abstract-provider'
+import toast from 'react-hot-toast'
 
 const rejectWithMessage = (
   connector: WalletConnect,
@@ -15,17 +16,17 @@ export const useWalletConnectClient = ({
   provider,
   chainId,
   onWCRequest,
-  daoAddress,
+  daoTreasuryAddress,
 }: {
   provider: Provider
   chainId: number
   onWCRequest: (a: any, b: any) => void
-  daoAddress: string
+  daoTreasuryAddress: string
 }) => {
   const [wcClientData, setWcClientData] = useState<IClientMeta | null>(null)
   const [connector, setConnector] = useState<WalletConnect | undefined>()
 
-  const localStorageSessionKey = useRef(`session_${daoAddress}`)
+  const localStorageSessionKey = useRef(`session_${daoTreasuryAddress}`)
 
   const onWCReqCurry = useRef(onWCRequest)
 
@@ -66,13 +67,14 @@ export const useWalletConnectClient = ({
         }
 
         wcConnector.approveSession({
-          accounts: [daoAddress],
+          accounts: [daoTreasuryAddress],
           chainId,
         })
 
         trackEvent('New session', wcConnector.peerMeta)
 
         setWcClientData(payload.params[0].peerMeta)
+        toast('WC Connected');
       })
 
       wcConnector.on('call_request', async (error: any, payload: any) => {

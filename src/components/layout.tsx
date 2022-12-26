@@ -24,9 +24,9 @@ const Layout = ({ children, title = "DAOConnect" }: Props) => (
         <ConnectButton />
       </aside>
     </header>
-    <section className="md:m-10">
+    <div className="md:m-10">
       {children}
-    </section>
+    </div>
     {/* <footer>
       <hr />
       <span>I'm here to stay (Footer)</span>

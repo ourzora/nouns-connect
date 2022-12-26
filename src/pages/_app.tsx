@@ -6,6 +6,7 @@ import {
   mainnet,
   goerli,
 } from "wagmi";
+import {Toaster} from 'react-hot-toast';
 import { publicProvider } from "wagmi/providers/public";
 
 import "../styles/globals.css";
@@ -37,6 +38,7 @@ export default function MyApp({ Component, pageProps }: any) {
   return (
     <WagmiConfig client={client}>
       <RainbowKitProvider chains={chains}>
+        <Toaster />
         <Component {...pageProps} />
       </RainbowKitProvider>
     </WagmiConfig>

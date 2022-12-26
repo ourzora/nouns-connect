@@ -1,10 +1,17 @@
-import Link from "next/link";
+import request from "graphql-request";
+import { GetServerSideProps } from "next";
+
 import { DAOItem } from "../components/DAOItem";
 import Layout from "../components/layout";
 import { YourDAOs } from "../components/YourDAOs";
-import { DAOS } from "../config/daos";
+import { AllNounsQueries } from "../config/daos-query";
+import {
+  CHAIN_ID,
+  FEATURED_ADDRESSES_LIST,
+  ZORA_API_URL,
+} from "../utils/constants";
 
-const IndexPage = () => (
+const IndexPage = ({ daos }: { daos: any }) => (
   <Layout title="Home | Next.js + TypeScript Example">
     <h1 className="font-bold text-4xl sm:text-3xl">DAOConnect</h1>
     <p className="my-16 text-center text-4xl">
@@ -40,13 +47,36 @@ const IndexPage = () => (
         </svg>
       </button>
     </section>
-    <section id="all-daos">
-      <h1>All DAOs</h1>
-      {DAOS.map((dao) => (
-        <DAOItem name={dao.name} address={dao.token} description="" />
-      ))}
-    </section>
+    {daos.length && (
+      <section id="all-daos">
+        <h1>Featured DAOs</h1>
+        {daos.map((dao) => (
+          <DAOItem
+            key={dao.collectionAddress}
+            name={dao.name}
+            address={dao.collectionAddress}
+            description=""
+          />
+        ))}
+      </section>
+    )}
   </Layout>
 );
+
+export const getServerSideProps: GetServerSideProps = async ({ res }) => {
+  res.setHeader(
+    "Cache-Control",
+    "public, s-maxage=50, stale-while-revalidate=59"
+  );
+
+  const daosResponse = await request(ZORA_API_URL, AllNounsQueries, {
+    chain: { "1": "MAINNET", "5": "GOERLI" }[CHAIN_ID.toString()],
+    collectionAddresses: FEATURED_ADDRESSES_LIST,
+  });
+
+  return {
+    props: { daos: daosResponse.nouns.nounsDaos.nodes },
+  };
+};
 
 export default IndexPage;

@@ -14,7 +14,7 @@ export const RequestDataDecoder = ({
       const result = await fetch(
         `https://${
           CHAIN_ID === 5 ? "goerli." : ""
-        }ether.actor/decode/${to}/${calldata}`
+        }ether.actor/decode/${calldata}`
       );
       if (result.ok) {
         const json = await result.json();

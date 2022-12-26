@@ -19,6 +19,7 @@ export const YourDAOs = () => {
   if (data) {
     daos = data.nouns.nounsDaos.nodes.map((item) => (
       <DAOItem
+        key={item.name}
         address={item.collectionAddress}
         name={item.name}
         description={item.description}
@@ -26,7 +27,7 @@ export const YourDAOs = () => {
     ));
   }
 
-  if (isConnected) {
+  if (typeof window !== 'undefined' && isConnected) {
     return (
       <>
         <h1>Your DAOs</h1>

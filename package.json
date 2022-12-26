@@ -28,8 +28,10 @@
     "postcss": "^8.4.20",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hot-toast": "^2.4.0",
     "swr": "^2.0.0",
     "tailwindcss": "^3.2.4",
-    "wagmi": "^0.9.5"
+    "wagmi": "^0.9.5",
+    "zustand": "^4.1.5"
   }
 }
