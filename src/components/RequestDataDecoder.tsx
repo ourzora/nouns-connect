@@ -27,17 +27,23 @@ export const RequestDataDecoder = ({
     fetchData(calldata, to);
   }, [calldata, to]);
 
-  if (response){
+  if (response) {
     return (
       <span>
-        <span>{response.functionName}</span><span>(</span>
-        {response.decoded.map((part) => (
-          <span>{part.toString()}, </span>
+        <span>
+          {response.functionName}
+        </span>
+        <span>(</span>
+        {response.decoded.map((part, indx) => (
+          <span>
+            {part.toString()}
+            {indx === response.decoded.length - 1 ? "" : ", "}
+          </span>
         ))}
         <span>)</span>
       </span>
     );
   } else {
-    return (<span>...</span>)
+    return <span>...</span>;
   }
 };

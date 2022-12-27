@@ -66,7 +66,7 @@ function DAOActionComponent({ dao }: { dao: any }) {
 const DAOActionPage = ({ dao }) => {
   return (
     <Layout title="DAOConnect">
-      <h1>
+      <h1 className="text-lg mb-4">
         DAOConnect for <strong className="">{dao.name}</strong>
       </h1>
 

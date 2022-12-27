@@ -7,6 +7,7 @@ export const DescriptionManager = () => {
     return (
       <>
         <div>
+          <h3 className="text-md font-bold mb-2">Description</h3>
           <textarea
             value={description}
             onChange={(evt) => {
@@ -14,10 +15,10 @@ export const DescriptionManager = () => {
             }}
             rows={6}
             cols={40}
-            className="border-1 ml-6 p-2 border-gray-200 shadow-md"
+            className="border-2 p-2 border-gray-200 shadow-md"
           />
         </div>
-        <button className="text-underline" onClick={() => save()}>
+        <button className="border-2 border-gray-300 px-2 py-1 mt-2 hover:border-gray-600" onClick={() => save()}>
           Save
         </button>
       </>
@@ -26,8 +27,9 @@ export const DescriptionManager = () => {
 
   return (
     <div>
+      <h3 className="text-md font-bold">Proposal Description: </h3>
       <div>{description}</div>
-      <button className="text-underline" onClick={() => edit()}>
+      <button className="border-2 border-gray-300 px-2 py-1 mt-2 hover:border-gray-600" onClick={() => edit()}>
         Edit
       </button>
     </div>

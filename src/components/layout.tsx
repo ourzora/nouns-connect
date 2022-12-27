@@ -16,17 +16,18 @@ const Layout = ({ children, title = "DAOConnect" }: Props) => (
       <meta charSet="utf-8" />
       <meta name="viewport" content="initial-scale=1.0, width=device-width" />
     </Head>
-    <header>
+    <header className="text-md">
       <nav className="m-8">
-        <Link className="" href="/">DAOConnect</Link> | <Link href="/about">About</Link>
+        <Link className="" href="/">
+          DAOConnect
+        </Link>{" "}
+        | <Link href="/about">About</Link>
       </nav>
       <aside className="float-right mx-8 -mt-16">
         <ConnectButton />
       </aside>
     </header>
-    <div className="md:m-10">
-      {children}
-    </div>
+    <div className="md:m-10">{children}</div>
     {/* <footer>
       <hr />
       <span>I'm here to stay (Footer)</span>
