@@ -4,7 +4,7 @@ import { GetServerSideProps } from "next";
 import { DAOItem } from "../components/DAOItem";
 import Layout from "../components/layout";
 import { YourDAOs } from "../components/YourDAOs";
-import { AllNounsQueries } from "../config/daos-query";
+import { AllNounsQueries, AllNounsQuery, NounsQueryByCollection } from "../config/daos-query";
 import {
   CHAIN_ID,
   FEATURED_ADDRESSES_LIST,
@@ -55,7 +55,6 @@ const IndexPage = ({ daos }: { daos: any }) => (
             key={dao.collectionAddress}
             name={dao.name}
             address={dao.collectionAddress}
-            description=""
           />
         ))}
       </section>
@@ -69,10 +68,16 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
     "public, s-maxage=50, stale-while-revalidate=59"
   );
 
-  const daosResponse = await request(ZORA_API_URL, AllNounsQueries, {
+  // const daosResponse = await request(ZORA_API_URL, NounsQueryByCollection, {
+  //   chain: { "1": "MAINNET", "5": "GOERLI" }[CHAIN_ID.toString()],
+  //   collectionAddresses: FEATURED_ADDRESSES_LIST,
+  // });
+
+  const daosResponse = await request(ZORA_API_URL, AllNounsQuery, {
     chain: { "1": "MAINNET", "5": "GOERLI" }[CHAIN_ID.toString()],
-    collectionAddresses: FEATURED_ADDRESSES_LIST,
   });
+
+
 
   return {
     props: { daos: daosResponse.nouns.nounsDaos.nodes },

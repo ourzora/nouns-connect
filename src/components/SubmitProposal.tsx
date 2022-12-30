@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 
 const MESSAGE_LOOKUP = {
   "0xe33f2b3e": "User does not meet quorum to submit a proposal",
+
 };
 
 export const SubmitProposal = ({

@@ -8,7 +8,7 @@ import { DescriptionManager } from "../../components/DescriptionManager";
 import Layout from "../../components/layout";
 import { RenderRequest } from "../../components/RenderRequest";
 import { SubmitProposal } from "../../components/SubmitProposal";
-import { AllNounsQueries } from "../../config/daos-query";
+import { NounsQueryByCollection } from "../../config/daos-query";
 import { useDescription } from "../../stores/description";
 import { Transaction, useTransactionsStore } from "../../stores/interactions";
 import { CHAIN_ID, ZORA_API_URL } from "../../utils/constants";
@@ -84,7 +84,7 @@ export const getServerSideProps: GetServerSideProps = async ({
     "public, s-maxage=50, stale-while-revalidate=59"
   );
 
-  const daos = await request(ZORA_API_URL, AllNounsQueries, {
+  const daos = await request(ZORA_API_URL, NounsQueryByCollection, {
     chain: { "1": "MAINNET", "5": "GOERLI" }[CHAIN_ID.toString()],
     collectionAddresses: [query.address as string],
   });

@@ -26,11 +26,37 @@ export const MyNounsDaosQuery = gql`
   }
 `;
 
-export const AllNounsQueries = gql`
+export const NounsQueryByCollection = gql`
   query MyNounQuery($collectionAddresses: [String!]!, $chain: Chain!) {
     nouns {
       nounsDaos(
         where: { collectionAddresses: $collectionAddresses }
+        networks: [{ chain: $chain, network: ETHEREUM }]
+      ) {
+        nodes {
+          name
+          auctionAddress
+          contractAddress
+          description
+          governorAddress
+          collectionAddress
+          treasuryAddress
+          totalSupply
+          networkInfo {
+            network
+            chain
+          }
+        }
+      }
+    }
+  }
+`;
+
+
+export const AllNounsQuery = gql`
+  query AllNounsQuery($chain: Chain!) {
+    nouns {
+      nounsDaos(
         networks: [{ chain: $chain, network: ETHEREUM }]
       ) {
         nodes {
