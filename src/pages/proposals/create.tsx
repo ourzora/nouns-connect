@@ -2,20 +2,31 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import request from "graphql-request";
 import { GetServerSideProps } from "next";
 import Link from "next/link";
-import { useAccount } from "wagmi";
+import { useAccount, useContractRead } from "wagmi";
 import { DescriptionManager } from "../../components/DescriptionManager";
 
 import Layout from "../../components/layout";
 import { RenderRequest } from "../../components/RenderRequest";
-import { SubmitProposal } from "../../components/SubmitProposal";
+import { SubmitProposalNouns } from "../../components/SubmitProposalNouns";
+import { SubmitProposalBuilder } from "../../components/SubmitProposalBuilder";
 import { NounsQueryByCollection } from "../../config/daos-query";
 import { useDescription } from "../../stores/description";
 import { Transaction, useTransactionsStore } from "../../stores/interactions";
 import { CHAIN_ID, ZORA_API_URL } from "../../utils/constants";
+import governorAbi from "@nouns/contracts/dist/abi/contracts/governance/NounsDAOLogicV2.sol/NounsDAOLogicV2.json";
 
 function DAOActionComponent({ dao }: { dao: any }) {
   const { transactions } = useTransactionsStore();
   const { description, editing: editingDescription } = useDescription();
+  const { data, isError, isLoading } = useContractRead({
+    abi: governorAbi,
+    address: dao.governorAddress,
+    functionName: "admin",
+  });
+
+  const SubmitComponent = isError ? SubmitProposalBuilder : SubmitProposalNouns;
+
+  console.log({ dao });
 
   const { isConnected } = useAccount();
 
@@ -44,7 +55,8 @@ function DAOActionComponent({ dao }: { dao: any }) {
           <>
             <DescriptionManager />
             {description.length > 0 && !editingDescription && (
-              <SubmitProposal
+              <SubmitComponent
+                isNounsDaoStructure={!isError}
                 description={description}
                 daoAddress={dao.governorAddress}
                 from={dao.treasuryAddress}
