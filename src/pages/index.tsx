@@ -4,7 +4,7 @@ import { GetServerSideProps } from "next";
 import { DAOItem } from "../components/DAOItem";
 import Layout from "../components/layout";
 import { YourDAOs } from "../components/YourDAOs";
-import { AllNounsQueries, AllNounsQuery, NounsQueryByCollection } from "../config/daos-query";
+import { AllNounsQuery } from "../config/daos-query";
 import {
   CHAIN_ID,
   FEATURED_ADDRESSES_LIST,

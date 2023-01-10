@@ -22,7 +22,7 @@ export const YourDAOs = () => {
         key={item.name}
         address={item.collectionAddress}
         name={item.name}
-        description={item.description}
+        // description={item.description}
       />
     ));
   }
