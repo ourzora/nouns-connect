@@ -9,6 +9,9 @@ import {
 import {Toaster} from 'react-hot-toast';
 import { publicProvider } from "wagmi/providers/public";
 
+import { Londrina } from "../fonts/Londrina";
+import { ptRootUi } from "../fonts/PtRootUi";
+
 import "../styles/globals.css";
 import '@rainbow-me/rainbowkit/styles.css';
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
@@ -36,11 +39,13 @@ const client = createClient({
 
 export default function MyApp({ Component, pageProps }: any) {
   return (
-    <WagmiConfig client={client}>
-      <RainbowKitProvider chains={chains}>
-        <Toaster />
-        <Component {...pageProps} />
-      </RainbowKitProvider>
-    </WagmiConfig>
+    <main className={`${Londrina.variable} ${ptRootUi.variable}`}>
+      <WagmiConfig client={client}>
+        <RainbowKitProvider chains={chains}>
+          <Toaster />
+          <Component {...pageProps} />
+        </RainbowKitProvider>
+      </WagmiConfig>
+    </main>
   );
 }

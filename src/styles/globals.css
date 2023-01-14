@@ -1,3 +1,7 @@
+@import url(/node_modules/@fontsource/londrina-solid/latin.css);
+@import url(/node_modules/pt-root-ui-font/regular.css);
+@import url(/node_modules/pt-root-ui-font/bold.css);
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

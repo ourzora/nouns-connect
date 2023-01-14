@@ -2,6 +2,7 @@ import React, { ReactNode } from "react";
 import Link from "next/link";
 import Head from "next/head";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { Logo } from "./Logo";
 
 type Props = {
   children?: ReactNode;
@@ -16,18 +17,18 @@ const Layout = ({ children, title = "DAOConnect" }: Props) => (
       <meta charSet="utf-8" />
       <meta name="viewport" content="initial-scale=1.0, width=device-width" />
     </Head>
-    <header className="text-md">
-      <nav className="m-8">
+    <header className="font-pt leading-6">
+      <nav className="m-8 text-xl font-bold flex align-center">
         <Link className="" href="/">
-          DAOConnect
+          <Logo />{' '}{' '}NounsConnect
         </Link>{" "}
-        | <Link href="/about">About</Link>
+        {/* | <Link href="/about">About</Link> */}
       </nav>
       <aside className="float-right mx-8 -mt-16">
         <ConnectButton />
       </aside>
     </header>
-    <div className="md:m-10">{children}</div>
+    <div className="md:m-10 font-londrina flex items-center justify-center" style={{minHeight: '80vh'}}>{children}</div>
     {/* <footer>
       <hr />
       <span>I'm here to stay (Footer)</span>

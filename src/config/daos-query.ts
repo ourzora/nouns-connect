@@ -26,6 +26,38 @@ export const MyNounsDaosQuery = gql`
   }
 `;
 
+export const LastTokenQuery = gql`
+  query LastTokenQuery($tokens: [TokenInput!]!, $chain: Chain!) {
+    tokens(
+      where: { tokens: $tokens }
+      networks: [{ chain: $chain, network: ETHEREUM }]
+    ) {
+      nodes {
+        token {
+          name
+          description
+          tokenId
+          lastRefreshTime
+          image {
+            url
+            size
+            mediaEncoding {
+              ... on ImageEncodingTypes {
+                poster
+              }
+            }
+          }
+        }
+
+        networkInfo {
+          network
+          chain
+        }
+      }
+    }
+  }
+`;
+
 export const NounsQueryByCollection = gql`
   query MyNounQuery($collectionAddresses: [String!]!, $chain: Chain!) {
     nouns {
@@ -47,18 +79,14 @@ export const NounsQueryByCollection = gql`
             chain
           }
         }
-      }
     }
   }
 `;
 
-
 export const AllNounsQuery = gql`
   query AllNounsQuery($chain: Chain!) {
     nouns {
-      nounsDaos(
-        networks: [{ chain: $chain, network: ETHEREUM }]
-      ) {
+      nounsDaos(networks: [{ chain: $chain, network: ETHEREUM }]) {
         nodes {
           name
           auctionAddress

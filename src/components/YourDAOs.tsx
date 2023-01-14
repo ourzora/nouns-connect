@@ -1,4 +1,5 @@
 import request from "graphql-request";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { useAccount } from "wagmi";
 import { MyNounsDaosQuery } from "../config/daos-query";
@@ -22,12 +23,16 @@ export const YourDAOs = () => {
         key={item.name}
         address={item.collectionAddress}
         name={item.name}
-        // description={item.description}
       />
     ));
   }
 
-  if (typeof window !== 'undefined' && isConnected) {
+  const [isConnectedState, setIsConnectedState] = useState(false);
+  useEffect(() => {
+    setIsConnectedState(isConnected);
+  }, [isConnected]);
+
+  if (isConnectedState) {
     return (
       <>
         <h1>Your DAOs</h1>
