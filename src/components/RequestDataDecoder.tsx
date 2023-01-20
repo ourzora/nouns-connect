@@ -1,5 +1,7 @@
-import { useCallback, useState, useEffect } from "react";
 import { CHAIN_ID } from "../utils/constants";
+import useSWR from "swr";
+
+const fetcher = (url: URL) => fetch(url).then((res) => res.json());
 
 export const RequestDataDecoder = ({
   calldata,
@@ -8,36 +10,22 @@ export const RequestDataDecoder = ({
   calldata: string;
   to: string;
 }) => {
-  const [response, setResponse] = useState<any>(undefined);
-  const fetchData = useCallback(
-    async (calldata: string, to: string) => {
-      const result = await fetch(
-        `https://${
-          CHAIN_ID === 5 ? "goerli." : ""
-        }ether.actor/decode/${calldata}`
-      );
-      if (result.ok) {
-        const json = await result.json();
-        setResponse(json);
-      }
-    },
-    [setResponse]
+  const { data } = useSWR(
+    `https://${
+      CHAIN_ID === 5 ? "goerli." : ""
+    }ether.actor/decode/${to}/${calldata}`,
+    fetcher
   );
-  useEffect(() => {
-    fetchData(calldata, to);
-  }, [calldata, to]);
 
-  if (response) {
+  if (data?.decoded) {
     return (
       <span>
-        <span>
-          {response.functionName}
-        </span>
+        <span>{data.functionName}</span>
         <span>(</span>
-        {response.decoded.map((part, indx) => (
+        {data.decoded.map((part, indx) => (
           <span>
             {part.toString()}
-            {indx === response.decoded.length - 1 ? "" : ", "}
+            {indx === data.decoded.length - 1 ? "" : ", "}
           </span>
         ))}
         <span>)</span>

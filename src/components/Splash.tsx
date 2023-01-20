@@ -40,7 +40,7 @@ export const Splash = () => {
       });
     } else if (openConnectModal) {
       setButtonState({
-        buttonText: "Connect to your wallet",
+        buttonText: "Connect Wallet",
         buttonOnClick: () => openConnectModal(),
       });
     } else {

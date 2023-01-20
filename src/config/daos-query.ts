@@ -26,6 +26,27 @@ export const MyNounsDaosQuery = gql`
   }
 `;
 
+export const MyHoldingsQuery = gql`
+  query MyHoldingsQuery(
+    $addresses: [String!]!
+    $owner: String!
+    $chain: Chain!
+  ) {
+    tokens(
+      where: { ownerAddresses: [$owner], collectionAddresses: $addresses }
+      networks: [{ chain: $chain, network: ETHEREUM }]
+    ) {
+      nodes {
+        token {
+          name
+          collectionAddress
+          owner
+        }
+      }
+    }
+  }
+`;
+
 export const LastTokenQuery = gql`
   query LastTokenQuery($tokens: [TokenInput!]!, $chain: Chain!) {
     tokens(
@@ -36,6 +57,7 @@ export const LastTokenQuery = gql`
         token {
           name
           description
+          collectionAddress
           tokenId
           lastRefreshTime
           image {
@@ -47,11 +69,10 @@ export const LastTokenQuery = gql`
               }
             }
           }
-        }
-
-        networkInfo {
-          network
-          chain
+          networkInfo {
+            network
+            chain
+          }
         }
       }
     }
@@ -79,6 +100,7 @@ export const NounsQueryByCollection = gql`
             chain
           }
         }
+      }
     }
   }
 `;

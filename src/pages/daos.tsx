@@ -57,37 +57,44 @@ const AllDAOs = ({ daos }: { daos: any }) => {
   );
 };
 
-const IndexPage = ({ daos }: { daos: any }) => {
+const IndexPage = () => {
   return (
     <Layout title="NounsConnect | Home">
-      <h1 className="font-bold mt-6 text-5xl sm:text-3xl">Select DAO</h1>
-      <p className="mt-2 my-16 text-center text-4xl">
-        Choose the DAO you would like to connect an application to
-      </p>
+      <div>
+        <div className="text-center">
+          <h1 className="mt-6 text-5xl sm:text-4xl">Select DAO</h1>
+          <p
+            className="mt-2 my-16 text-center text-xl mt-2 font-pt"
+            style={{ color: "#808080" }}
+          >
+            Choose the DAO you would like to connect an application to
+          </p>
+        </div>
 
-      <YourDAOs />
+        <YourDAOs />
+      </div>
     </Layout>
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ res }) => {
-  res.setHeader(
-    "Cache-Control",
-    "public, s-maxage=50, stale-while-revalidate=59"
-  );
+// export const getServerSideProps: GetServerSideProps = async ({ res }) => {
+//   res.setHeader(
+//     "Cache-Control",
+//     "public, s-maxage=50, stale-while-revalidate=59"
+//   );
 
-  // const daosResponse = await request(ZORA_API_URL, NounsQueryByCollection, {
-  //   chain: { "1": "MAINNET", "5": "GOERLI" }[CHAIN_ID.toString()],
-  //   collectionAddresses: FEATURED_ADDRESSES_LIST,
-  // });
+// const daosResponse = await request(ZORA_API_URL, NounsQueryByCollection, {
+//   chain: { "1": "MAINNET", "5": "GOERLI" }[CHAIN_ID.toString()],
+//   collectionAddresses: FEATURED_ADDRESSES_LIST,
+// });
 
-  const daosResponse = await request(ZORA_API_URL, AllNounsQuery, {
-    chain: { "1": "MAINNET", "5": "GOERLI" }[CHAIN_ID.toString()],
-  });
+// const daosResponse = await request(ZORA_API_URL, AllNounsQuery, {
+//   chain: { "1": "MAINNET", "5": "GOERLI" }[CHAIN_ID.toString()],
+// });
 
-  return {
-    props: { daos: daosResponse.nouns.nounsDaos.nodes },
-  };
-};
+// return {
+//   props: { daos: daosResponse.nouns.nounsDaos.nodes },
+// };
+// };
 
 export default IndexPage;

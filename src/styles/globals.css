@@ -1,6 +1,6 @@
-@import url(/node_modules/@fontsource/londrina-solid/latin.css);
-@import url(/node_modules/pt-root-ui-font/regular.css);
-@import url(/node_modules/pt-root-ui-font/bold.css);
+body {
+  background-color: #fbfbfb;
+}
 
 @tailwind base;
 @tailwind components;

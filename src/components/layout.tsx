@@ -10,7 +10,7 @@ type Props = {
 };
 
 const Layout = ({ children, title = "DAOConnect" }: Props) => (
-  <div>
+  <>
     <Head>
       <title>{title}</title>
       <link href="/styles/globals.css" type="text/stylesheet" />
@@ -20,7 +20,7 @@ const Layout = ({ children, title = "DAOConnect" }: Props) => (
     <header className="font-pt leading-6">
       <nav className="m-8 text-xl font-bold flex align-center">
         <Link className="" href="/">
-          <Logo />{' '}{' '}NounsConnect
+          <Logo /> <span className="">NounsConnect</span>
         </Link>{" "}
         {/* | <Link href="/about">About</Link> */}
       </nav>
@@ -28,12 +28,17 @@ const Layout = ({ children, title = "DAOConnect" }: Props) => (
         <ConnectButton />
       </aside>
     </header>
-    <div className="md:m-10 font-londrina flex items-center justify-center" style={{minHeight: '80vh'}}>{children}</div>
+    <div
+      className="md:m-10 font-londrina flex items-center justify-center"
+      style={{ minHeight: "80vh" }}
+    >
+      {children}
+    </div>
     {/* <footer>
       <hr />
       <span>I'm here to stay (Footer)</span>
     </footer> */}
-  </div>
+  </>
 );
 
 export default Layout;

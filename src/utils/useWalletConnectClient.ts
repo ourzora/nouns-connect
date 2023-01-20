@@ -1,16 +1,16 @@
-import { useState, useCallback, useEffect, useRef, useMemo } from 'react'
-import WalletConnect from '@walletconnect/client'
-import { IClientMeta, IWalletConnectSession } from '@walletconnect/types'
-import { Provider } from '@ethersproject/abstract-provider'
-import toast from 'react-hot-toast'
+import { useState, useCallback, useEffect, useRef } from "react";
+import WalletConnect from "@walletconnect/client";
+import { IClientMeta, IWalletConnectSession } from "@walletconnect/types";
+import { Provider } from "@ethersproject/abstract-provider";
+import toast from "react-hot-toast";
 
 const rejectWithMessage = (
   connector: WalletConnect,
   id: number | undefined,
   message: string
 ) => {
-  connector.rejectRequest({ id, error: { message } })
-}
+  connector.rejectRequest({ id, error: { message } });
+};
 
 export const useWalletConnectClient = ({
   provider,
@@ -18,102 +18,108 @@ export const useWalletConnectClient = ({
   onWCRequest,
   daoTreasuryAddress,
 }: {
-  provider: Provider
-  chainId: number
-  onWCRequest: (a: any, b: any) => void
-  daoTreasuryAddress: string
+  provider: Provider;
+  chainId: number;
+  onWCRequest: (a: any, b: any) => void;
+  daoTreasuryAddress: string;
 }) => {
-  const [wcClientData, setWcClientData] = useState<IClientMeta | null>(null)
-  const [connector, setConnector] = useState<WalletConnect | undefined>()
+  const [wcClientData, setWcClientData] = useState<IClientMeta | null>(null);
+  const [connector, setConnector] = useState<WalletConnect | undefined>();
 
-  const localStorageSessionKey = useRef(`session_${daoTreasuryAddress}`)
+  const localStorageSessionKey = useRef(`session_${daoTreasuryAddress}`);
 
-  const onWCReqCurry = useRef(onWCRequest)
+  const onWCReqCurry = useRef(onWCRequest);
 
   useEffect(() => {
-    onWCReqCurry.current = onWCRequest
-  }, [onWCRequest, onWCReqCurry])
+    onWCReqCurry.current = onWCRequest;
+  }, [onWCRequest, onWCReqCurry]);
 
   const trackEvent = useCallback((action: any, meta: any) => {
-    if (!meta) return
+    if (!meta) return;
 
     // todo track
-    console.log({ action, meta })
-  }, [])
+    console.log({ action, meta });
+  }, []);
 
   const wcDisconnect = useCallback(async () => {
     try {
-      await connector?.killSession()
-      setConnector(undefined)
-      setWcClientData(null)
+      await connector?.killSession();
+      setConnector(undefined);
+      setWcClientData(null);
     } catch (error) {
-      console.log('Error trying to close WC session: ', error)
+      console.log("Error trying to close WC session: ", error);
     }
-  }, [connector])
+  }, [connector]);
 
   const wcConnect = useCallback(
-    async ({ uri, session }: { uri?: string; session?: IWalletConnectSession }) => {
+    async ({
+      uri,
+      session,
+    }: {
+      uri?: string;
+      session?: IWalletConnectSession;
+    }) => {
       const wcConnector = new WalletConnect({
         uri,
         session,
         storageId: localStorageSessionKey.current,
-      })
-      setConnector(wcConnector)
-      setWcClientData(wcConnector.peerMeta)
+      });
+      setConnector(wcConnector);
+      setWcClientData(wcConnector.peerMeta);
 
-      wcConnector.on('session_request', (error: any, payload: any) => {
+      wcConnector.on("session_request", (error: any, payload: any) => {
         if (error) {
-          throw error
+          throw error;
         }
 
         wcConnector.approveSession({
           accounts: [daoTreasuryAddress],
           chainId,
-        })
+        });
 
-        trackEvent('New session', wcConnector.peerMeta)
+        trackEvent("New session", wcConnector.peerMeta);
 
-        setWcClientData(payload.params[0].peerMeta)
-        toast('WC Connected');
-      })
+        setWcClientData(payload.params[0].peerMeta);
+        toast("WC Connected");
+      });
 
-      wcConnector.on('call_request', async (error: any, payload: any) => {
+      wcConnector.on("call_request", async (error: any, payload: any) => {
         if (error) {
-          throw error
+          throw error;
         }
 
         try {
-          onWCReqCurry.current(error, payload)
+          onWCReqCurry.current(error, payload);
 
-          trackEvent('Transaction Confirmed', wcConnector.peerMeta)
+          trackEvent("Transaction Confirmed", wcConnector.peerMeta);
 
           wcConnector.approveRequest({
             id: payload.id,
             result: null,
-          })
+          });
         } catch (err) {
-          rejectWithMessage(wcConnector, payload.id, (err as Error).message)
+          rejectWithMessage(wcConnector, payload.id, (err as Error).message);
         }
-      })
+      });
 
-      wcConnector.on('disconnect', (error: any) => {
+      wcConnector.on("disconnect", (error: any) => {
         if (error) {
-          throw error
+          throw error;
         }
-        wcDisconnect()
-      })
+        wcDisconnect();
+      });
     },
     [provider, wcDisconnect, onWCReqCurry]
-  )
+  );
 
   useEffect(() => {
     if (!connector) {
-      const session = localStorage.getItem(localStorageSessionKey.current)
+      const session = localStorage.getItem(localStorageSessionKey.current);
       if (session) {
-        wcConnect({ session: JSON.parse(session) })
+        wcConnect({ session: JSON.parse(session) });
       }
     }
-  }, [connector, wcConnect])
+  }, [connector, wcConnect]);
 
-  return { wcClientData, wcConnect, wcDisconnect }
-}
+  return { wcClientData, wcConnect, wcDisconnect };
+};

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
-import jsQr from "jsqr";
+import jsQR from "jsqr";
 import { blobToImageData } from "../utils/images";
+import { toast } from "react-hot-toast";
 // import { format } from 'date-fns'
 
 type ConnectWalletInputProps = {
@@ -14,17 +15,27 @@ export const ConnectWalletInput = ({
 }: ConnectWalletInputProps) => {
   const [isConnecting, setIsConnecting] = useState(false);
   const [inputValue, setInputValue] = useState("");
+  const [dragging, setDragging] = useState(false);
 
   const connectWithQR = useCallback(
     async (file: File) => {
+      console.log("connect as qr");
+
       const reader = new FileReader();
+      reader.addEventListener("load", (event: ProgressEvent<FileReader>) => {
+        console.log({ event });
+      });
       reader.onload = async (event: ProgressEvent<FileReader>) => {
+        console.log("onload");
         const imageData = await blobToImageData(event.target?.result as string);
-        const code = jsQr(imageData.data, imageData.width, imageData.height);
+        const code = jsQR(imageData.data, imageData.width, imageData.height);
+        console.log({ code });
+
         if (code?.data) {
           setIsConnecting(true);
           onConnect({ uri: code.data });
         } else {
+          toast("Invalid QR Code");
           // setInvalidQRCode(true)
           setInputValue(
             `Screen Shot ` //${format(new Date(), 'yyyy-MM-dd')} at ${format(
@@ -85,9 +96,15 @@ export const ConnectWalletInput = ({
     [connectWithUri]
   );
 
+  const onFileChange = useCallback(
+    (event: any) => {
+      connectWithQR(event.target.files[0]);
+    },
+    [connectWithQR]
+  );
+
   const onWCPaste = useCallback(
     (event: any) => {
-      console.log({ client });
       if (client) {
         return;
       }
@@ -114,35 +131,76 @@ export const ConnectWalletInput = ({
   );
 
   const dragStart = (evt: any) => {
+    setDragging(true);
+    console.log("drag start");
     evt.preventDefault();
   };
+  const dragEnd = () => {
+    setDragging(false);
+  }
   const onDrop = (evt: any) => {
+    dragEnd();
     evt.preventDefault();
-    if (evt.dataTransfer.items) {
-      evt.dataTransfer.items.forEach((item) => {
+    console.log("drop", evt);
+    if (evt?.dataTransfer?.items) {
+      for (const item of evt.dataTransfer.items) {
         if (item.kind === "file") {
           const file = item.getAsFile();
           connectWithQR(file);
         }
-      });
+      }
     }
   };
 
   return (
     <div
-      className="my-6 w-50 h-50 m-20"
+      className="rounded-lg relative border mx-4 flex flex-col items-center bg-white p-8"
       onDragStart={dragStart}
       onDrop={onDrop}
+      onDragEnd={dragEnd}
+      onDragExit={dragEnd}
       onDragEnter={dragStart}
+      onDragOver={dragStart}
     >
-      WalletConnect URI: (or paste image)
-      <input
-        className="border-2 border-gray-200 shadow-md p-2 text-large block mt-2"
-        type="text"
-        onPaste={onWCPaste}
-        onChange={onWCChange}
+      {dragging && (
+        <div className="inset-0 absolute bg-white/60 font-pt font-2xl m-10">
+          Drag QR code image here.
+        </div>
+      )}
+      <img
+        src="/img/design/walletconnect.png"
+        width="160"
+        height="80"
+        alt="WalletConnect"
       />
-      {/* <Label>{error}</Label> */}
+      <p className="text-center font-pt font-xl mt-2">
+        Go to the app you want to connect to and <br /> select WalletConnect
+      </p>
+      <div className="my-6 font-pt w-full m-20">
+        <input
+          type="file"
+          id="file-input"
+          onChange={onFileChange}
+          className="hidden"
+        />
+        <div className="flex border-2 border-gray-200 shadow-md p-1 text-large rounded-lg">
+          <label htmlFor="file-input" className="cursor-pointer block p-4">
+            <img
+              alt="Upload a file to connect to QR"
+              src="/img/design/qr.png"
+              width="20"
+              height="20"
+            />
+          </label>
+          <input
+            className="flex-grow pl-4"
+            type="text"
+            onPaste={onWCPaste}
+            onChange={onWCChange}
+            placeholder="  Connection URI or QR Code Image"
+          />
+        </div>
+      </div>
     </div>
   );
 };

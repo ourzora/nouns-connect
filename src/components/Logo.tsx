@@ -92,7 +92,7 @@ export const Logo = () => {
     <canvas
       width={WIDTH_TOTAL}
       height={WIDTH_TOTAL}
-      className="inline-block"
+      className="inline-block -mt-2"
       ref={canvasRef}
     />
   );
