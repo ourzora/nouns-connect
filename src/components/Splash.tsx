@@ -1,14 +1,12 @@
 import {
-  useAccountModal,
   useChainModal,
   useConnectModal,
 } from "@rainbow-me/rainbowkit";
 import { useRouter } from "next/router";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { CHAIN_ID } from "../utils/constants";
 import { AppButton } from "./AppButton";
-import { SplashImageScatter } from "./SplashImageScatter";
 
 const NETWORK_NAMES = {
   1: "Mainnet",
@@ -52,15 +50,16 @@ export const Splash = () => {
   }, [isConnected, openConnectModal]);
 
   return (
-    <section className="flex justify-items-center align-items-center flex-col text-center m-10">
-      <SplashImageScatter />
-      <h3 className={tagLineText}>The easiest way to</h3>
-      <h1 className="text-6xl ">Connect your Nouns DAO</h1>
-      <h3 className={tagLineText}>
-        to any crypto application to submit a proposal.
-      </h3>
-      <div className={"mt-10"}>
-        <AppButton onClick={buttonOnClick}>{buttonText}</AppButton>
+    <section className="flex items-center text-center fixed h-screen top-0">
+      <div className="flex flex-col">
+        <h3 className={tagLineText}>The easiest way to</h3>
+        <h1 className="text-6xl">Connect your Nouns DAO</h1>
+        <h3 className={tagLineText}>
+          to any crypto application to submit a proposal.
+        </h3>
+        <div className={"mt-10"}>
+          <AppButton onClick={buttonOnClick}>{buttonText}</AppButton>
+        </div>
       </div>
     </section>
   );

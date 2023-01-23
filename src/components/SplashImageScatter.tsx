@@ -11,7 +11,7 @@ const ImageItem = ({ id, x, y }: { id: number; x: number; y: number }) => {
   );
 };
 
-export const SplashImageScatter = () => {
+export default function SplashImageScatter() {
   const [coords, setCoords] = useState([]);
   const [sizes, setSizes] = useState([0, 0]);
 
@@ -44,7 +44,7 @@ export const SplashImageScatter = () => {
   }, [sizes]);
 
   return (
-    <div className={"absolute inset-0 -z-10"}>
+    <div className={"absolute inset-0"}>
       {coords.map(({ x, y, id }) => (
         <ImageItem id={id} key={id} x={x} y={y} />
       ))}

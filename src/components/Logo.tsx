@@ -1,4 +1,5 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef } from "react";
+import Link from "next/link";
 
 const WIDTH_TOTAL = 40;
 
@@ -48,8 +49,11 @@ class Circle {
   }
 }
 
-export const Logo = () => {
+export default function Logo() {
   const canvasRef = useRef<HTMLCanvasElement>();
+  /**
+   * TODO: could animated this - circles rotating.
+   */
   useLayoutEffect(() => {
     if (canvasRef.current) {
       const ctx = canvasRef.current.getContext("2d");
@@ -89,11 +93,14 @@ export const Logo = () => {
   }, [canvasRef]);
 
   return (
-    <canvas
-      width={WIDTH_TOTAL}
-      height={WIDTH_TOTAL}
-      className="inline-block -mt-2"
-      ref={canvasRef}
-    />
+    <Link className="" href="/">
+      <canvas
+        width={WIDTH_TOTAL}
+        height={WIDTH_TOTAL}
+        className="inline-block -mt-2"
+        ref={canvasRef}
+      />
+      <span className="">NounsConnect</span>
+    </Link>
   );
 };

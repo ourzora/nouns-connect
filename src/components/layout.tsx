@@ -2,7 +2,11 @@ import React, { ReactNode } from "react";
 import Link from "next/link";
 import Head from "next/head";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { Logo } from "./Logo";
+import dynamic from "next/dynamic";
+
+const Logo = dynamic(() => import('./Logo'), {
+  ssr: false,
+})
 
 type Props = {
   children?: ReactNode;
@@ -19,9 +23,7 @@ const Layout = ({ children, title = "DAOConnect" }: Props) => (
     </Head>
     <header className="font-pt leading-6">
       <nav className="m-8 text-xl font-bold flex align-center">
-        <Link className="" href="/">
-          <Logo /> <span className="">NounsConnect</span>
-        </Link>{" "}
+        <Logo />
         {/* | <Link href="/about">About</Link> */}
       </nav>
       <aside className="float-right mx-8 -mt-16">
