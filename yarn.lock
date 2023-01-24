@@ -801,6 +801,11 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.20.55.tgz#c329cbd434c42164f846b909bd6f85b5537f6240"
   integrity sha512-J8xLz7q2OFulZ2cyGTLE1TbbZcjpno7FaN6zdJNrgAdrJ+DZzh/uFR6YrTb4C+nXakvud8Q4+rbhoIWlYQbUFQ==
 
+"@types/nprogress@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@types/nprogress/-/nprogress-0.2.0.tgz#86c593682d4199212a0509cc3c4d562bbbd6e45f"
+  integrity sha512-1cYJrqq9GezNFPsWTZpFut/d4CjpZqA0vhqDUPFWYKF1oIyBz5qnoYMzR+0C/T96t3ebLAC1SSnwrVOm5/j74A==
+
 "@types/pbkdf2@^3.0.0":
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/@types/pbkdf2/-/pbkdf2-3.1.0.tgz#039a0e9b67da0cdc4ee5dab865caa6b267bb66b1"
@@ -2471,7 +2476,7 @@ lodash@^4.17.20:
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
-loose-envify@^1.0.0, loose-envify@^1.1.0:
+loose-envify@^1.0.0, loose-envify@^1.1.0, loose-envify@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/loose-envify/-/loose-envify-1.4.0.tgz#71ee51fa7be4caec1a63839f7e682d8132d30caf"
   integrity sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==
@@ -2579,6 +2584,15 @@ next@^13.1.2:
     "@next/swc-win32-ia32-msvc" "13.1.2"
     "@next/swc-win32-x64-msvc" "13.1.2"
 
+nextjs-progressbar@^0.0.16:
+  version "0.0.16"
+  resolved "https://registry.yarnpkg.com/nextjs-progressbar/-/nextjs-progressbar-0.0.16.tgz#d2c1e54ffc2c6d52b64282c0d764a44241fbc36e"
+  integrity sha512-GV0fD38EMD3vSDCmkq+tObmoup6QA91a6a9MxGuhJZuRk/9TNsrHGnIQQQ/sggkMkXuT4fBgF6jRjFwScDT3zA==
+  dependencies:
+    "@types/nprogress" "^0.2.0"
+    nprogress "^0.2.0"
+    prop-types "^15.8.1"
+
 node-addon-api@^2.0.0:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-2.0.2.tgz#432cfa82962ce494b132e9d72a15b29f71ff5d32"
@@ -2610,6 +2624,16 @@ normalize-range@^0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/normalize-range/-/normalize-range-0.1.2.tgz#2d10c06bdfd312ea9777695a4d28439456b75942"
   integrity sha512-bdok/XvKII3nUpklnV6P2hxtMNrCboOjAcyBuQnWEhO665FwrSNRxU+AqpsyvO6LgGYPspN+lu5CLtw4jPRKNA==
+
+nprogress@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/nprogress/-/nprogress-0.2.0.tgz#cb8f34c53213d895723fcbab907e9422adbcafb1"
+  integrity sha512-I19aIingLgR1fmhftnbWWO3dXc0hSxqHQHQb3H8m+K3TnEn/iSeTZZOyvKXWqQESMwuUVnatlCnZdLBZZt2VSA==
+
+object-assign@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-4.1.1.tgz#2109adc7965887cfc05cbbd442cac8bfbb360863"
+  integrity sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==
 
 object-hash@^3.0.0:
   version "3.0.0"
@@ -2785,6 +2809,15 @@ preact@^10.5.9:
   resolved "https://registry.yarnpkg.com/preact/-/preact-10.11.3.tgz#8a7e4ba19d3992c488b0785afcc0f8aa13c78d19"
   integrity sha512-eY93IVpod/zG3uMF22Unl8h9KkrcKIRs2EGar8hwLZZDU1lkjph303V9HZBwufh2s736U6VXuhD109LYqPoffg==
 
+prop-types@^15.8.1:
+  version "15.8.1"
+  resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
+  integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
+  dependencies:
+    loose-envify "^1.4.0"
+    object-assign "^4.1.1"
+    react-is "^16.13.1"
+
 "pt-root-ui-font@https://github.com/kokkekpek/pt-root-ui-font.git":
   version "1.0.0"
   resolved "https://github.com/kokkekpek/pt-root-ui-font.git#6168d52805db89c8e79be61cb7cf0f8d79a05208"
@@ -2859,6 +2892,11 @@ react-hot-toast@^2.4.0:
   integrity sha512-qnnVbXropKuwUpriVVosgo8QrB+IaPJCpL8oBI6Ov84uvHZ5QQcTp2qg6ku2wNfgJl6rlQXJIQU5q+5lmPOutA==
   dependencies:
     goober "^2.1.10"
+
+react-is@^16.13.1:
+  version "16.13.1"
+  resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
+  integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
 react-remove-scroll-bar@^2.3.3:
   version "2.3.4"

@@ -8,7 +8,7 @@ import {
 } from "wagmi";
 import {Toaster} from 'react-hot-toast';
 import { publicProvider } from "wagmi/providers/public";
-
+import NextNProgress from 'nextjs-progressbar'
 import { Londrina } from "../fonts/Londrina";
 import { ptRootUi } from "../fonts/PtRootUi";
 
@@ -49,6 +49,14 @@ export default function MyApp({ Component, pageProps }: any) {
     <main className={`${Londrina.variable} ${ptRootUi.variable}`}>
       <WagmiConfig client={client}>
         <RainbowKitProvider chains={chains}>
+          <NextNProgress
+            color={'rgba(0,0,0,.5)'}
+            startPosition={0.125}
+            stopDelayMs={200}
+            height={2}
+            showOnShallow
+            options={{ showSpinner: false }}
+          />
           <Header />
           <Toaster />
           <Component {...pageProps} />

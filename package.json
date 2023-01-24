@@ -29,6 +29,7 @@
     "graphql-tag": "^2.12.6",
     "jsqr": "^1.4.0",
     "next": "^13.1.2",
+    "nextjs-progressbar": "^0.0.16",
     "postcss": "^8.4.20",
     "pt-root-ui-font": "https://github.com/kokkekpek/pt-root-ui-font.git",
     "react": "^18.2.0",
