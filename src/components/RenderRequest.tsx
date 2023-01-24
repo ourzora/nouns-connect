@@ -1,11 +1,16 @@
 import { BigNumber, ethers } from "ethers";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import toast from "react-hot-toast";
 import { Transaction, useTransactionsStore } from "../stores/interactions";
 import { CHAIN_ID } from "../utils/constants";
 import { RequestDataDecoder } from "./RequestDataDecoder";
 import useSWR from "swr";
 import { fetcher } from "../utils/fetcher";
+import { formatEther, parseEther } from "ethers/lib/utils.js";
+import { PrettyAddress } from "./PrettyAddress";
+import { DefinitionListItem } from "./DefinitionListItem";
+import { ContractDataItems } from "./ContractDataItems";
+import { XIcon } from "./XIcon";
 
 export const RenderRequest = ({
   indx,
@@ -36,74 +41,66 @@ export const RenderRequest = ({
     fetcher
   );
 
+  const parsedResponse = useMemo(() => {
+    if (!contractData?.abi) {
+      return undefined;
+    }
+    try {
+      const iface = new ethers.utils.Interface(contractData.abi);
+      return iface.parseTransaction({
+        data: transaction.data.calldata,
+        value: transaction.data.value,
+      });
+    } catch {
+      return undefined;
+    }
+  }, [contractData?.abi]);
+
   return (
-    <div>
+    <div className="flex w-full">
       <div
-        className="w-8 h-8 bg-cover"
+        className="w-6 h-6 mr-4 bg-contain bg-no-repeat"
         style={{ backgroundImage: `url(${transaction.wallet.icon})` }}
       />
-      <div>
-        <span className="font-bold">Custom Data</span> on{" "}
-        <span className="font-bold">{transaction.data.to}</span>
+      <div className="w-full">
+        <div className="flex w-full">
+          <div className="mb-4 flex-grow font-sm text-left text-lg">
+            <span className="font-bold capitalize">
+              {parsedResponse?.name || "Custom Data"}
+            </span>{" "}
+            on{" "}
+            <span className="font-bold">
+              <PrettyAddress
+                address={transaction.data.to as any}
+                prettyName={contractData?.info?.ContractName}
+              />
+            </span>
+          </div>
+          <div className="">
+            <button
+              className="text-right"
+              onClick={() => removeTransactionAtIndex(indx)}
+            >
+              <XIcon />
+            </button>
+          </div>
+        </div>
         <div>
+          {parsedResponse && (
+            <ContractDataItems
+              args={parsedResponse?.args}
+              functionFragmentInputs={parsedResponse?.functionFragment?.inputs}
+            />
+          )}
           <dl>
-            <dt>{transaction.wallet.name}</dt>
+            <DefinitionListItem name="ETH Value">
+              {BigNumber.from("0").eq(transaction.data.value)
+                ? "No ETH value"
+                : formatEther(transaction.data.value)}
+            </DefinitionListItem>
           </dl>
         </div>
       </div>
     </div>
-
-    // <div className="overflow-hidden bg-white shadow sm:rounded-lg mb-6">
-    //   <div className="px-4 py-5 sm:px-6 flex">
-    //     <div className="flex-grow">
-    //       <h3 className="text-lg font-medium leading-6 text-gray-900">
-    //         Transaction #{indx + 1} Information
-    //       </h3>
-    //       <p className="mt-1 max-w-2xl text-sm text-gray-500">
-    //         Proposal Transaction Information
-    //       </p>
-    //     </div>
-    //     <div className="flex-1">
-    //       <button className="p-2 text-m border-none" onClick={removeTxnClick}>
-    //         Remove
-    //       </button>
-    //     </div>
-    //   </div>
-    //   <div className="border-t border-gray-200">
-    //     <dl>
-    //       <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-    //         <dt className="text-sm font-medium text-gray-500">Value</dt>
-    //         <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-    //           {ethers.utils.formatEther(BigNumber.from(transaction.value))}{" "}
-    //           ether
-    //         </dd>
-    //       </div>
-    //       <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-    //         <dt className="text-sm font-medium text-gray-500">Recipient</dt>
-    //         <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-    //           {transaction.to}{" "}
-    //           <a
-    //             title="View on Etherscan"
-    //             target="_blank"
-    //             href={`https://${
-    //               CHAIN_ID === 5 ? "goerli." : ""
-    //             }etherscan.io/address/${transaction.to}`}
-    //           >
-    //             ↗
-    //           </a>
-    //         </dd>
-    //       </div>
-    //       <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-    //         <dt className="text-sm font-medium text-gray-500">Data</dt>
-    //         <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-    //           <RequestDataDecoder
-    //             to={transaction.to}
-    //             calldata={transaction.calldata}
-    //           />
-    //         </dd>
-    //       </div>
-    //     </dl>
-    //   </div>
-    // </div>
   );
 };

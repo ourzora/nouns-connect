@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import jsQR from "jsqr";
 import { blobToImageData } from "../utils/images";
 import { toast } from "react-hot-toast";
-// import { format } from 'date-fns'
+import { format } from 'date-fns'
 
 type ConnectWalletInputProps = {
   client: any;
@@ -38,10 +38,7 @@ export const ConnectWalletInput = ({
           toast("Invalid QR Code");
           // setInvalidQRCode(true)
           setInputValue(
-            `Screen Shot ` //${format(new Date(), 'yyyy-MM-dd')} at ${format(
-            // new Date(),
-            // 'hh.mm.ss'
-            // )}`
+            `Screen Shot ${format(new Date(), 'yyyy-MM-dd')}`
           );
         }
       };
@@ -76,10 +73,6 @@ export const ConnectWalletInput = ({
     },
     [connectWithQR, connectWithUri]
   );
-  //   // // Read the file's contents, assuming it's a text file.
-  //   // // There is no way to write back to it.
-  //   // console.log(await file.text());
-  // });
 
   useEffect(() => {
     document.addEventListener("paste", onPaste);

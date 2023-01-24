@@ -22,6 +22,7 @@
     "@walletconnect/types": "1.8.0",
     "@zoralabs/nouns-protocol": "^1.0.1",
     "autoprefixer": "^10.4.13",
+    "date-fns": "^2.29.3",
     "ethers": "^5.7.2",
     "graphql": "^16.6.0",
     "graphql-request": "^5.1.0",

@@ -45,6 +45,7 @@ export const useWalletConnectClient = ({
     try {
       await connector?.killSession();
       setConnector(undefined);
+      localStorage.removeItem(localStorageSessionKey.current);
       setWcClientData(null);
     } catch (error) {
       console.log("Error trying to close WC session: ", error);

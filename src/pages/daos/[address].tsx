@@ -40,7 +40,7 @@ function DAOActionComponent({ dao }: { dao: any }) {
           calldata: param.data,
           value: param.value || "0",
         },
-        wallet: {connectedTo, icon},
+        wallet: { connectedTo, icon },
       }));
       addTransactions(paramArgs);
     },
@@ -92,59 +92,62 @@ function DAOActionComponent({ dao }: { dao: any }) {
     </AppButton>
   );
 
-  if (wcClientData) {
-    return (
-      <>
-        {error && <span>{error}</span>}
-
-        {transactions?.length > 0 ? (
-          <div>
-            {transactions.map((transaction: Transaction, indx: number) => (
-              <BorderFrame key={indx}>
-                <RenderRequest
-                  indx={indx}
-                  key={transaction.data.id}
-                  transaction={transaction}
-                />
-              </BorderFrame>
-            ))}
-          </div>
-        ) : (
-          <BorderFrame>
-            <div className="font-lg p-20">
-              Go back to <span className="font-bold">{wcClientData?.name}</span>{" "}
-              to start
-              <br />
-              generating transactions for your proposal.
-            </div>
-          </BorderFrame>
-        )}
-        <div className="mt-8" />
-        {isConnected ? (
-          transactions.length === 0 ? (
-            <>{disconnectButton}</>
-          ) : (
-            <div className="flex ml-8">
-              {disconnectButton}
-              <AppButton
-                className="ml-4 flex-grow"
-                href={`/proposals/create?address=${dao.collectionAddress.toLowerCase()}`}
-              >
-                Next step
-              </AppButton>
-            </div>
-          )
-        ) : (
-          <div className="mt-5 underline">
-            Connect your wallet to submit a proposal
-          </div>
-        )}
-      </>
-    );
-  }
-
   return (
-    <ConnectWalletInput onConnect={handleConnectionURI} client={wcClientData} />
+    <>
+      {error && <span>{error}</span>}
+
+      {!wcClientData && (
+        <ConnectWalletInput
+          onConnect={handleConnectionURI}
+          client={wcClientData}
+        />
+      )}
+
+      {transactions?.length > 0 ? (
+        <>
+          {transactions.map((transaction: Transaction, indx: number) => (
+            <BorderFrame key={indx}>
+              <RenderRequest
+                indx={indx}
+                key={transaction.data.id}
+                transaction={transaction}
+              />
+            </BorderFrame>
+          ))}
+        </>
+      ) : isConnected ? (
+        <BorderFrame>
+          <div className="font-lg p-20">
+            Go back to <span className="font-bold">{wcClientData?.name}</span>{" "}
+            to start
+            <br />
+            generating transactions for your proposal.
+          </div>
+        </BorderFrame>
+      ) : (
+        <div className="mt-5 underline">
+          Connect your wallet to submit a proposal
+        </div>
+      )}
+      <div className="mt-8" />
+      {isConnected ? (
+        transactions.length === 0 ? (
+          <>{disconnectButton}</>
+        ) : (
+          <div className="flex ml-8">
+            {disconnectButton}
+            <AppButton
+              className="ml-4 flex-grow"
+              href={`/proposals/create?address=${dao.collectionAddress.toLowerCase()}`}
+            >
+              Next step
+            </AppButton>
+          </div>
+        )
+      ) : (
+        <></>
+      )}
+    </>
   );
 }
 
