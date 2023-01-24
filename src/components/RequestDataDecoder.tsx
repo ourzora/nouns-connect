@@ -1,8 +1,6 @@
 import { CHAIN_ID } from "../utils/constants";
 import useSWR from "swr";
 
-const fetcher = (url: URL) => fetch(url).then((res) => res.json());
-
 export const RequestDataDecoder = ({
   calldata,
   to,
@@ -10,13 +8,7 @@ export const RequestDataDecoder = ({
   calldata: string;
   to: string;
 }) => {
-  const { data } = useSWR(
-    `https://${
-      CHAIN_ID === 5 ? "goerli." : ""
-    }ether.actor/decode/${to}/${calldata}`,
-    fetcher
-  );
-
+  
   if (data?.decoded) {
     return (
       <span>

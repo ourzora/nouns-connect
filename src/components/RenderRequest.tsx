@@ -4,6 +4,8 @@ import toast from "react-hot-toast";
 import { Transaction, useTransactionsStore } from "../stores/interactions";
 import { CHAIN_ID } from "../utils/constants";
 import { RequestDataDecoder } from "./RequestDataDecoder";
+import useSWR from "swr";
+import { fetcher } from "../utils/fetcher";
 
 export const RenderRequest = ({
   indx,
@@ -18,58 +20,90 @@ export const RenderRequest = ({
     toast("Transaction removed from queue");
   }, [indx]);
 
+  const { data: contractData, error: contractError } = useSWR(
+    `https://${CHAIN_ID === 5 ? "goerli." : ""}ether.actor/${
+      transaction.data.to
+    }.json`,
+    fetcher
+  );
+
+  const { data: decodeData, error: decodeError } = useSWR(
+    contractError || contractData?.guessFromInterface
+      ? `https://${CHAIN_ID === 5 ? "goerli." : ""}ether.actor/decode/${
+          transaction.data.to
+        }/${transaction.data.calldata}`
+      : undefined,
+    fetcher
+  );
+
   return (
-    <div className="overflow-hidden bg-white shadow sm:rounded-lg mb-6">
-      <div className="px-4 py-5 sm:px-6 flex">
-        <div className="flex-grow">
-          <h3 className="text-lg font-medium leading-6 text-gray-900">
-            Transaction #{indx + 1} Information
-          </h3>
-          <p className="mt-1 max-w-2xl text-sm text-gray-500">
-            Proposal Transaction Information
-          </p>
+    <div>
+      <div
+        className="w-8 h-8 bg-cover"
+        style={{ backgroundImage: `url(${transaction.wallet.icon})` }}
+      />
+      <div>
+        <span className="font-bold">Custom Data</span> on{" "}
+        <span className="font-bold">{transaction.data.to}</span>
+        <div>
+          <dl>
+            <dt>{transaction.wallet.name}</dt>
+          </dl>
         </div>
-        <div className="flex-1">
-          <button className="p-2 text-m border-none" onClick={removeTxnClick}>
-            Remove
-          </button>
-        </div>
-      </div>
-      <div className="border-t border-gray-200">
-        <dl>
-          <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-            <dt className="text-sm font-medium text-gray-500">Value</dt>
-            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-              {ethers.utils.formatEther(BigNumber.from(transaction.value))}{" "}
-              ether
-            </dd>
-          </div>
-          <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-            <dt className="text-sm font-medium text-gray-500">Recipient</dt>
-            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-              {transaction.to}{" "}
-              <a
-                title="View on Etherscan"
-                target="_blank"
-                href={`https://${
-                  CHAIN_ID === 5 ? "goerli." : ""
-                }etherscan.io/address/${transaction.to}`}
-              >
-                ↗
-              </a>
-            </dd>
-          </div>
-          <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-            <dt className="text-sm font-medium text-gray-500">Data</dt>
-            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-              <RequestDataDecoder
-                to={transaction.to}
-                calldata={transaction.calldata}
-              />
-            </dd>
-          </div>
-        </dl>
       </div>
     </div>
+
+    // <div className="overflow-hidden bg-white shadow sm:rounded-lg mb-6">
+    //   <div className="px-4 py-5 sm:px-6 flex">
+    //     <div className="flex-grow">
+    //       <h3 className="text-lg font-medium leading-6 text-gray-900">
+    //         Transaction #{indx + 1} Information
+    //       </h3>
+    //       <p className="mt-1 max-w-2xl text-sm text-gray-500">
+    //         Proposal Transaction Information
+    //       </p>
+    //     </div>
+    //     <div className="flex-1">
+    //       <button className="p-2 text-m border-none" onClick={removeTxnClick}>
+    //         Remove
+    //       </button>
+    //     </div>
+    //   </div>
+    //   <div className="border-t border-gray-200">
+    //     <dl>
+    //       <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+    //         <dt className="text-sm font-medium text-gray-500">Value</dt>
+    //         <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+    //           {ethers.utils.formatEther(BigNumber.from(transaction.value))}{" "}
+    //           ether
+    //         </dd>
+    //       </div>
+    //       <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+    //         <dt className="text-sm font-medium text-gray-500">Recipient</dt>
+    //         <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+    //           {transaction.to}{" "}
+    //           <a
+    //             title="View on Etherscan"
+    //             target="_blank"
+    //             href={`https://${
+    //               CHAIN_ID === 5 ? "goerli." : ""
+    //             }etherscan.io/address/${transaction.to}`}
+    //           >
+    //             ↗
+    //           </a>
+    //         </dd>
+    //       </div>
+    //       <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+    //         <dt className="text-sm font-medium text-gray-500">Data</dt>
+    //         <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+    //           <RequestDataDecoder
+    //             to={transaction.to}
+    //             calldata={transaction.calldata}
+    //           />
+    //         </dd>
+    //       </div>
+    //     </dl>
+    //   </div>
+    // </div>
   );
 };

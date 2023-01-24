@@ -1,13 +1,18 @@
-import { TransactionDescription } from "ethers/lib/utils.js";
 import create from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
 export type Transaction = {
-  id: number;
-  gas: string;
-  to: string;
-  calldata: string;
-  value: string;
+  data: {
+    id: number;
+    gas: string;
+    to: string;
+    calldata: string;
+    value: string;
+  };
+  wallet: {
+    icon: string;
+    name: string;
+  };
 };
 
 interface TransactionsState {
@@ -35,7 +40,7 @@ export const useTransactionsStore = create<TransactionsState>()(
           })),
       }),
       {
-        name: "transactions-storage",
+        name: "transactions-storage-v2",
       }
     )
   )

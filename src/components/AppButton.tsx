@@ -4,14 +4,15 @@ export const AppButton = ({
   className,
   ...props
 }: any) => {
+  const TagName = ('href' in props) ? 'a' : 'button';
   return (
-    <button
+    <TagName
       {...props}
-      className={`py-2 px-4 ${
-        inverted ? "text-black bg-white" : "bg-black text-white"
-      } rounded font-pt font-bold ${className}`}
+      className={`py-3 px-4 ${
+        inverted ? "hover:bg-gray-100 bg-white" : "bg-black hover:bg-gray-900 text-white"
+      } rounded font-pt transition-colors text-md font-bold ${className}`}
     >
       {children}
-    </button>
+    </TagName>
   );
 };

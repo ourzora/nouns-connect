@@ -18,10 +18,12 @@ import { CHAIN_ID, ZORA_API_URL } from "../../utils/constants";
 import { useWalletConnectClient } from "../../utils/useWalletConnectClient";
 import { useWCConnectionStore } from "../../stores/connection";
 import { BorderFrame } from "../../components/BorderFrame";
+import { AppButton } from "../../components/AppButton";
 
 function DAOActionComponent({ dao }: { dao: any }) {
   const [error, setError] = useState<undefined | string>(undefined);
   const { transactions, addTransactions } = useTransactionsStore();
+  const { connectTo, connectedTo, icon, disconnect } = useWCConnectionStore();
 
   const onWCRequest = useCallback(
     (error: any, payload: any) => {
@@ -31,15 +33,18 @@ function DAOActionComponent({ dao }: { dao: any }) {
       }
 
       const paramArgs = payload.params.map((param: any) => ({
-        id: payload.id,
-        gas: param.gas,
-        to: param.to,
-        calldata: param.data,
-        value: param.value || "0",
+        data: {
+          id: payload.id,
+          gas: param.gas,
+          to: param.to,
+          calldata: param.data,
+          value: param.value || "0",
+        },
+        wallet: {connectedTo, icon},
       }));
       addTransactions(paramArgs);
     },
-    [setError, addTransactions]
+    [setError, addTransactions, connectedTo, icon]
   );
 
   const chainId = CHAIN_ID;
@@ -62,7 +67,6 @@ function DAOActionComponent({ dao }: { dao: any }) {
     chainId,
   });
 
-  const { connectTo, disconnect } = useWCConnectionStore();
   useEffect(() => {
     if (wcClientData?.name) {
       console.log(wcClientData);
@@ -75,19 +79,23 @@ function DAOActionComponent({ dao }: { dao: any }) {
     }
   }, [wcClientData?.name]);
 
+  const disconnectButton = (
+    <AppButton
+      inverted
+      onClick={() => {
+        toast("Disconnected Wallet from DAO");
+        wcDisconnect();
+        disconnect();
+      }}
+    >
+      Disconnect from App
+    </AppButton>
+  );
+
   if (wcClientData) {
     return (
       <>
         {error && <span>{error}</span>}
-        <button
-          className="underline mt-4"
-          onClick={() => {
-            toast("Disconnected Wallet from DAO");
-            wcDisconnect();
-          }}
-        >
-          Disconnect Wallet Connect from App
-        </button>
 
         {transactions?.length > 0 ? (
           <div>
@@ -95,7 +103,7 @@ function DAOActionComponent({ dao }: { dao: any }) {
               <BorderFrame key={indx}>
                 <RenderRequest
                   indx={indx}
-                  key={transaction.id}
+                  key={transaction.data.id}
                   transaction={transaction}
                 />
               </BorderFrame>
@@ -111,15 +119,20 @@ function DAOActionComponent({ dao }: { dao: any }) {
             </div>
           </BorderFrame>
         )}
+        <div className="mt-8" />
         {isConnected ? (
           transactions.length === 0 ? (
-            <></>
+            <>{disconnectButton}</>
           ) : (
-            <Link
-              href={`/proposals/create?address=${dao.collectionAddress.toLowerCase()}`}
-            >
-              Create Proposal
-            </Link>
+            <div className="flex ml-8">
+              {disconnectButton}
+              <AppButton
+                className="ml-4 flex-grow"
+                href={`/proposals/create?address=${dao.collectionAddress.toLowerCase()}`}
+              >
+                Next step
+              </AppButton>
+            </div>
           )
         ) : (
           <div className="mt-5 underline">
