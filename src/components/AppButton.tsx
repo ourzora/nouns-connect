@@ -10,7 +10,7 @@ export const AppButton = ({
       {...props}
       className={`py-3 px-4 ${
         inverted ? "hover:bg-gray-100 bg-white" : "bg-black hover:bg-gray-900 text-white"
-      } rounded font-pt transition-colors text-md font-bold ${className}`}
+      } rounded font-pt transition-colors text-md font-bold ${props.disabled ? 'opacity-50' : ''} ${className}`}
     >
       {children}
     </TagName>

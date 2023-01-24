@@ -1,5 +1,3 @@
-import request from "graphql-request";
-import { GetServerSideProps } from "next";
 import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useProvider } from "wagmi";
@@ -7,16 +5,14 @@ import { useProvider } from "wagmi";
 import { ConnectWalletInput } from "../../components/ConnectWalletInput";
 import Layout from "../../components/layout";
 import { RenderRequest } from "../../components/RenderRequest";
-import {
-  NounsQueryByCollection,
-} from "../../config/daos-query";
 import { Transaction, useTransactionsStore } from "../../stores/interactions";
-import { CHAIN_ID, ZORA_API_URL } from "../../utils/constants";
+import { CHAIN_ID } from "../../utils/constants";
 import { useWalletConnectClient } from "../../utils/useWalletConnectClient";
 import { useWCConnectionStore } from "../../stores/connection";
 import { BorderFrame } from "../../components/BorderFrame";
 import { AppButton } from "../../components/AppButton";
 import { DAOHeader } from "../../components/DAOHeader";
+import { GetDaoServerSide } from "../../fetchers/get-dao";
 
 function DAOActionComponent({ dao }: { dao: any }) {
   const [error, setError] = useState<undefined | string>(undefined);
@@ -123,8 +119,7 @@ function DAOActionComponent({ dao }: { dao: any }) {
           </div>
         </BorderFrame>
       ) : (
-        <>
-        </>
+        <></>
       )}
       <div className="mt-8" />
       {wcClientData ? (
@@ -152,7 +147,7 @@ const DAOActionPage = ({ dao }) => {
   return (
     <Layout title="DAOConnect">
       <div className="text-center relative max-w-3xl w-full mx-4">
-        <DAOHeader showConnection={true} dao={dao}  />
+        <DAOHeader showConnection={true} dao={dao} />
 
         <DAOActionComponent dao={dao} />
       </div>
@@ -160,25 +155,6 @@ const DAOActionPage = ({ dao }) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({
-  res,
-  query,
-}) => {
-  res.setHeader(
-    "Cache-Control",
-    "public, s-maxage=50, stale-while-revalidate=59"
-  );
-
-  const daos = await request(ZORA_API_URL, NounsQueryByCollection, {
-    chain: { "1": "MAINNET", "5": "GOERLI" }[CHAIN_ID.toString()],
-    collectionAddresses: [query.address as string],
-  });
-
-  const dao = daos.nouns.nounsDaos.nodes[0];
-
-  return {
-    props: { dao },
-  };
-};
+export const getServerSideProps = GetDaoServerSide;
 
 export default DAOActionPage;

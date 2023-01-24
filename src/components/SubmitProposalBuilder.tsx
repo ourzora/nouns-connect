@@ -1,4 +1,4 @@
-import { useContractWrite, usePrepareContractWrite, useSigner } from "wagmi";
+import { useContract, useContractWrite, usePrepareContractWrite, useSigner } from "wagmi";
 import governorABI from "@zoralabs/nouns-protocol/dist/artifacts/Governor.sol/Governor.json";
 import { CHAIN_ID } from "../utils/constants";
 import { Transaction } from "../stores/interactions";
@@ -47,7 +47,9 @@ export const SubmitProposalBuilder = ({
     chainId: CHAIN_ID,
   });
 
-  // const {push} = useRouter();
+  const {push} = useRouter();
+
+  const governorContract = useContract({address: daoAddress, abi: governorABI.abi});
 
   const { write, isLoading } = useContractWrite({
     ...config,
@@ -58,10 +60,12 @@ export const SubmitProposalBuilder = ({
       toast(`Issue sending proposal to DAO`);
     },
     onSettled: async (response) => {
-      // const txn = await response.wait()
+      const txn = await response.wait()
       // find new proposal hash
+      console.log({txn});
       // txn.logs.find((log) => log.)
-      // push(`/proposal/?id=${txnId}&dao=${daoTokenAddress}`)
+      const txnId = '0'
+      // push(`/proposals/created?id=${txnId}&address=${daoTokenAddress}`)
     },
   });
 

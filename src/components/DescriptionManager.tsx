@@ -36,7 +36,7 @@ export const DescriptionManager = ({
           >
             Summary
             {hasTitle && (
-              <span className="text-right inline-block right-0 absolute text-gray-500 font-md">
+              <span className="text-right inline-block right-0 absolute text-gray-500 font-regular text-md">
                 (optional)
               </span>
             )}

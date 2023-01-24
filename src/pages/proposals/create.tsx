@@ -17,6 +17,7 @@ import governorAbi from "@nouns/contracts/dist/abi/contracts/governance/NounsDAO
 import { AppButton } from "../../components/AppButton";
 import { BorderFrame } from "../../components/BorderFrame";
 import { DAOHeader } from "../../components/DAOHeader";
+import { GetDaoServerSide } from "../../fetchers/get-dao";
 
 function DAOActionComponent({ dao }: { dao: any }) {
   const { transactions } = useTransactionsStore();
@@ -95,25 +96,6 @@ const DAOActionPage = ({ dao }) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({
-  res,
-  query,
-}) => {
-  res.setHeader(
-    "Cache-Control",
-    "public, s-maxage=50, stale-while-revalidate=59"
-  );
-
-  const daos = await request(ZORA_API_URL, NounsQueryByCollection, {
-    chain: { "1": "MAINNET", "5": "GOERLI" }[CHAIN_ID.toString()],
-    collectionAddresses: [query.address as string],
-  });
-
-  const dao = daos.nouns.nounsDaos.nodes[0];
-
-  return {
-    props: { dao },
-  };
-};
+export const getServerSideProps = GetDaoServerSide;
 
 export default DAOActionPage;
