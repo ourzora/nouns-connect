@@ -9,3 +9,7 @@ body {
 :root {
   --header-height: 100px;
 }
+
+.button-wrapper {
+  @apply relative flex items-center overflow-hidden rounded-full text-white bg-gray-800 pr-5 pl-2 h-11;
+}

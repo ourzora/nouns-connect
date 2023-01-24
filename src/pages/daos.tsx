@@ -58,9 +58,12 @@ const AllDAOs = ({ daos }: { daos: any }) => {
 };
 
 const IndexPage = () => {
+  /**
+   * TODO: might be nice to do a carousel here so we can maintain the fixed center layout on desktop
+   */
   return (
     <Layout title="NounsConnect | Home">
-      <div>
+      <div className="w-full max-w-[1440px] px-6">
         <div className="text-center">
           <h1 className="mt-6 text-5xl sm:text-4xl">Select DAO</h1>
           <p

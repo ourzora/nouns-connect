@@ -57,7 +57,7 @@ export const Splash = () => {
         <h3 className={tagLineText}>
           to any crypto application to submit a proposal.
         </h3>
-        <div className={"mt-10"}>
+        <div className={"pt-10 justify-center flex"}>
           <AppButton onClick={buttonOnClick}>{buttonText}</AppButton>
         </div>
       </div>
