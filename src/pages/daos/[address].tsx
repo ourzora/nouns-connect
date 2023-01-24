@@ -1,16 +1,13 @@
 import request from "graphql-request";
 import { GetServerSideProps } from "next";
-import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useAccount, useProvider } from "wagmi";
-import useSWR from "swr";
+import { useProvider } from "wagmi";
 
 import { ConnectWalletInput } from "../../components/ConnectWalletInput";
 import Layout from "../../components/layout";
 import { RenderRequest } from "../../components/RenderRequest";
 import {
-  LastTokenQuery,
   NounsQueryByCollection,
 } from "../../config/daos-query";
 import { Transaction, useTransactionsStore } from "../../stores/interactions";
@@ -19,6 +16,7 @@ import { useWalletConnectClient } from "../../utils/useWalletConnectClient";
 import { useWCConnectionStore } from "../../stores/connection";
 import { BorderFrame } from "../../components/BorderFrame";
 import { AppButton } from "../../components/AppButton";
+import { DAOHeader } from "../../components/DAOHeader";
 
 function DAOActionComponent({ dao }: { dao: any }) {
   const [error, setError] = useState<undefined | string>(undefined);
@@ -49,7 +47,6 @@ function DAOActionComponent({ dao }: { dao: any }) {
 
   const chainId = CHAIN_ID;
   const provider = useProvider();
-  const { isConnected } = useAccount();
 
   const handleConnectionURI = async ({ uri }: { uri: string }) => {
     try {
@@ -105,6 +102,7 @@ function DAOActionComponent({ dao }: { dao: any }) {
 
       {transactions?.length > 0 ? (
         <>
+          <h3 className="font-lg text-left">Transactions</h3>
           {transactions.map((transaction: Transaction, indx: number) => (
             <BorderFrame key={indx}>
               <RenderRequest
@@ -115,7 +113,7 @@ function DAOActionComponent({ dao }: { dao: any }) {
             </BorderFrame>
           ))}
         </>
-      ) : isConnected ? (
+      ) : wcClientData ? (
         <BorderFrame>
           <div className="font-lg p-20">
             Go back to <span className="font-bold">{wcClientData?.name}</span>{" "}
@@ -125,12 +123,11 @@ function DAOActionComponent({ dao }: { dao: any }) {
           </div>
         </BorderFrame>
       ) : (
-        <div className="mt-5 underline">
-          Connect your wallet to submit a proposal
-        </div>
+        <>
+        </>
       )}
       <div className="mt-8" />
-      {isConnected ? (
+      {wcClientData ? (
         transactions.length === 0 ? (
           <>{disconnectButton}</>
         ) : (
@@ -152,52 +149,10 @@ function DAOActionComponent({ dao }: { dao: any }) {
 }
 
 const DAOActionPage = ({ dao }) => {
-  const { connectedTo, icon } = useWCConnectionStore();
-  const { data: imageData } = useSWR(
-    dao.collectionAddress,
-    (collectionAddress) =>
-      request(ZORA_API_URL, LastTokenQuery, {
-        tokens: [{ address: collectionAddress, tokenId: "0" }],
-        chain: CHAIN_ID === 1 ? "ETHEREUM" : "GOERLI",
-      })
-  );
-
   return (
     <Layout title="DAOConnect">
       <div className="text-center">
-        <h1 className="text-6xl sm:text-4xl">
-          {!connectedTo && <>Let’s connect </>}
-          {imageData && imageData.tokens.nodes.length && (
-            <img
-              className="mx-2 w-14 h-14 rounded-lg inline-block"
-              src={imageData.tokens.nodes[0].token.image.mediaEncoding.poster}
-              alt=""
-            />
-          )}{" "}
-          {dao.name}
-        </h1>
-        <p
-          className="mt-2 mb-6 font-pt text-xl font-regular"
-          style={{ color: "#808080" }}
-        >
-          {connectedTo ? (
-            <>
-              is now connected to{" "}
-              {icon && (
-                <img
-                  src={icon}
-                  className="inline-block px-1"
-                  width="30"
-                  height="30"
-                  alt=""
-                />
-              )}{" "}
-              <span className="text-black">{connectedTo}</span>
-            </>
-          ) : (
-            <>We’re now going to connect {dao.name} to your app of choice</>
-          )}
-        </p>
+        <DAOHeader showConnection={true} dao={dao}  />
 
         <DAOActionComponent dao={dao} />
       </div>

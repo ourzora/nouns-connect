@@ -1,26 +1,58 @@
 import { useDescription } from "../stores/description";
+import { AppButton } from "./AppButton";
 
-export const DescriptionManager = () => {
-  const { description, editing, edit, save, update } = useDescription();
+export const DescriptionManager = ({
+  hasTitle = true,
+}: {
+  hasTitle?: boolean;
+}) => {
+  const { description, editing, edit, save, updateDescription, updateTitle } =
+    useDescription();
 
   if (editing) {
     return (
       <>
         <div>
-          <h3 className="text-md font-bold mb-2">Description</h3>
+          {hasTitle && (
+            <>
+              <label
+                className="font-lg text-left block mb-2 mt-4"
+                htmlFor="proposal-title"
+              >
+                Proposal Title
+              </label>
+              <input
+                type="text"
+                id="proposal-title"
+                className="p-4 rounded font-lg mv-4 w-full border-2 border-gray-200 font-pt"
+                onChange={(evt: any) => updateTitle(evt.target.value)}
+              />
+            </>
+          )}
+
+          <label
+            htmlFor="proposal-summary"
+            className="font-lg text-left block mb-2 mt-4"
+          >
+            Summary
+            {hasTitle && (
+              <span className="text-right inline-block right-0 absolute text-gray-500 font-md">
+                (optional)
+              </span>
+            )}
+          </label>
+
           <textarea
             value={description}
-            onChange={(evt) => {
-              update(evt.target.value);
+            id="proposal-summary"
+            onChange={(evt: any) => {
+              updateDescription(evt.target.value);
             }}
             rows={6}
             cols={40}
-            className="border-2 p-2 border-gray-200 shadow-md"
+            className="border-2 p-4 border-gray-200 rounded w-full font-pt font-normal"
           />
         </div>
-        <button className="border-2 border-gray-300 px-2 py-1 mt-2 hover:border-gray-600" onClick={() => save()}>
-          Save
-        </button>
       </>
     );
   }
@@ -29,7 +61,10 @@ export const DescriptionManager = () => {
     <div>
       <h3 className="text-md font-bold">Proposal Description: </h3>
       <div>{description}</div>
-      <button className="border-2 border-gray-300 px-2 py-1 mt-2 hover:border-gray-600" onClick={() => edit()}>
+      <button
+        className="border-2 border-gray-300 px-2 py-1 mt-2 hover:border-gray-600"
+        onClick={() => edit()}
+      >
         Edit
       </button>
     </div>

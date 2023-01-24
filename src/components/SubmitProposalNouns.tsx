@@ -4,6 +4,8 @@ import { CHAIN_ID } from "../utils/constants";
 import { Transaction } from "../stores/interactions";
 import toast from "react-hot-toast";
 import useSWR from "swr";
+import { AppButton } from "./AppButton";
+import { useDescription } from "../stores/description";
 // import addressesMainnet from '@zoralabs/nouns-protocol/dist/addresses/1.json';
 // import addressesTestnet from '@zoralabs/nouns-protocol/dist/addresses/5.json';
 
@@ -15,7 +17,6 @@ export const SubmitProposalNouns = ({
   daoAddress,
   from,
   transactions,
-  description,
 }: {
   daoAddress: string;
   isNounsDaoStructure: boolean;
@@ -25,23 +26,26 @@ export const SubmitProposalNouns = ({
 }) => {
   const { data: signer } = useSigner();
 
+  const { description } = useDescription();
+
   const { config, error } = usePrepareContractWrite({
     address: daoAddress,
     abi: governorAbi,
     functionName: "propose",
     signer,
+    enabled: description.length > 0,
     onError: (err: any) => {
       toast(`Error setting up proposal`);
     },
     args: [
       // targets
-      transactions.map((txn: Transaction) => txn.to),
+      transactions.map((txn: Transaction) => txn.data.to),
       // values
-      transactions.map((txn: Transaction) => txn.value),
+      transactions.map((txn: Transaction) => txn.data.value),
       // signatures (not sure what to do here – maybe use ether.actor again)
       transactions.map((txn: Transaction) => ""),
       // calldatas
-      transactions.map((txn: Transaction) => txn.calldata),
+      transactions.map((txn: Transaction) => txn.data.calldata),
       // description
       description,
     ],
@@ -53,9 +57,13 @@ export const SubmitProposalNouns = ({
     onSuccess: () => {
       toast(`Sending proposal request`);
     },
-    onSettled: () => {
-      toast(`Successfully sent proposal to DAO`);
+    onError: () => {
+      toast(`Error sending request`);
     },
+    // onSettled: (response: any) => {
+    //   console.log({response})
+    //   toast(`Successfully sent proposal to DAO`);
+    // },
   });
 
   if (error) {
@@ -68,12 +76,12 @@ export const SubmitProposalNouns = ({
   }
 
   return (
-    <button
-      className="border-2 border-gray-300 px-2 py-1 mt-2 hover:border-gray-600"
+    <AppButton
+      className=""
       disabled={!!error || isLoading}
       onClick={() => write()}
     >
-      Submit Proposal to DAO
-    </button>
+      Submit Proposal
+    </AppButton>
   );
 };

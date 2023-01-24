@@ -81,7 +81,7 @@ export const Logo = () => {
               (last: Color, at: Circle) => last.merge(at.color),
               new Color(0, 0, 0)
             );
-          ctx.fillStyle = newColor.isBlack() ? '#fff' : newColor.toHexString();
+          ctx.fillStyle = newColor.isBlack() ? '#fbfbfb' : newColor.toHexString();
           ctx.fillRect(xi, yi, 1, 1);
         }
       }

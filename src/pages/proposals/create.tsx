@@ -14,6 +14,9 @@ import { useDescription } from "../../stores/description";
 import { Transaction, useTransactionsStore } from "../../stores/interactions";
 import { CHAIN_ID, ZORA_API_URL } from "../../utils/constants";
 import governorAbi from "@nouns/contracts/dist/abi/contracts/governance/NounsDAOLogicV2.sol/NounsDAOLogicV2.json";
+import { AppButton } from "../../components/AppButton";
+import { BorderFrame } from "../../components/BorderFrame";
+import { DAOHeader } from "../../components/DAOHeader";
 
 function DAOActionComponent({ dao }: { dao: any }) {
   const { transactions } = useTransactionsStore();
@@ -26,62 +29,66 @@ function DAOActionComponent({ dao }: { dao: any }) {
 
   const SubmitComponent = isError ? SubmitProposalBuilder : SubmitProposalNouns;
 
-  console.log({ dao });
-
   const { isConnected } = useAccount();
 
   return (
-    <>
-      <ul>
-        {transactions.map((transaction: Transaction, indx: number) => (
+    <div className="flex flex-col relative">
+      <DAOHeader showConnection={false} dao={dao} />
+
+      {transactions?.length > 0 ? (
+        <>
+          <h3 className="font-lg text-left mt-4 -mb-4">Transactions</h3>
+          {transactions.map((transaction: Transaction, indx: number) => (
+            <BorderFrame key={indx}>
+              <RenderRequest
+                indx={indx}
+                key={transaction.data.id}
+                transaction={transaction}
+                defaultCollapsed={true}
+              />
+            </BorderFrame>
+          ))}
+        </>
+      ) : (
+        <BorderFrame>
+          No transactions added to this DAO{" "}
+          <AppButton
+            className="my-8"
+            href={`/daos/${dao.collectionAddress.toLowerCase()}`}
+          >
+            Go to Propose Page
+          </AppButton>
+        </BorderFrame>
+      )}
+
+      {transactions.length > 0 ? (
+        isConnected ? (
           <>
-            <RenderRequest
-              indx={indx}
-              key={transaction.id}
-              transaction={transaction}
+            <DescriptionManager hasTitle={isError} />
+            <div className="h-4"> </div>
+            <SubmitComponent
+              isNounsDaoStructure={!isError}
+              daoAddress={dao.governorAddress}
+              from={dao.treasuryAddress}
+              transactions={transactions}
             />
           </>
-        ))}
-      </ul>
-      {isConnected ? (
-        transactions.length === 0 ? (
-          <div>
-            No transactions added to this DAO{" "}
-            <Link href={`/daos/${dao.collectionAddress.toLowerCase()}`}>
-              Go to Propose Page
-            </Link>
-          </div>
         ) : (
-          <>
-            <DescriptionManager />
-            {description.length > 0 && !editingDescription && (
-              <SubmitComponent
-                isNounsDaoStructure={!isError}
-                description={description}
-                daoAddress={dao.governorAddress}
-                from={dao.treasuryAddress}
-                transactions={transactions}
-              />
-            )}
-          </>
+          <div className="mt-5 underline">
+            Connect your wallet to submit a proposal
+            <ConnectButton />
+          </div>
         )
       ) : (
-        <div className="mt-5 underline">
-          Connect your wallet to submit a proposal
-          <ConnectButton />
-        </div>
+        <></>
       )}
-    </>
+    </div>
   );
 }
 
 const DAOActionPage = ({ dao }) => {
   return (
-    <Layout title="DAOConnect">
-      <h1 className="text-lg mb-4">
-        DAOConnect for <strong className="">{dao.name}</strong>
-      </h1>
-
+    <Layout title="Nouns Connect | Create Proposal">
       <DAOActionComponent dao={dao} />
     </Layout>
   );

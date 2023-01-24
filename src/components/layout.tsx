@@ -9,7 +9,7 @@ type Props = {
   title?: string;
 };
 
-const Layout = ({ children, title = "DAOConnect" }: Props) => (
+const Layout = ({ children, title = "Nouns Connect" }: Props) => (
   <>
     <Head>
       <title>{title}</title>
