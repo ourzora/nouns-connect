@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useAccount, useContractRead } from "wagmi";
 import { DescriptionManager } from "../../components/DescriptionManager";
 
-import Layout from "../../components/Layout";
+import Layout from "../../components/LayoutWrapper";
 import { RenderRequest } from "../../components/RenderRequest";
 import { SubmitProposalNouns } from "../../components/SubmitProposalNouns";
 import { SubmitProposalBuilder } from "../../components/SubmitProposalBuilder";

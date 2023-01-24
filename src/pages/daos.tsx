@@ -2,7 +2,7 @@ import request from "graphql-request";
 import { GetServerSideProps } from "next";
 
 import { DAOItem } from "../components/DAOItem";
-import Layout from "../components/Layout";
+import Layout from "../components/LayoutWrapper";
 import { YourDAOs } from "../components/YourDAOs";
 import { AllNounsQuery } from "../config/daos-query";
 import {

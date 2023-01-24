@@ -7,7 +7,7 @@ import { useAccount, useProvider } from "wagmi";
 import useSWR from "swr";
 
 import { ConnectWalletInput } from "../../components/ConnectWalletInput";
-import Layout from "../../components/Layout";
+import Layout from "../../components/LayoutWrapper";
 import { RenderRequest } from "../../components/RenderRequest";
 import {
   LastTokenQuery,
