@@ -18,7 +18,19 @@ import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { CHAIN_ID } from "../utils/constants";
 import Header from "../components/Header";
 
+/*
+import { Londrina_Solid } from '@next/font/google'
+
+const Londrina = Londrina_Solid({
+  subsets: ['latin'],
+  weight: '400',
+  variable: '--font-londrina'
+})
+*/
+
 import dynamic from "next/dynamic";
+
+import clsx from "clsx";
 
 const SplashImageScatter = dynamic(() => import('../components/SplashImageScatter'), {
   ssr: false,
@@ -46,7 +58,7 @@ const client = createClient({
 
 export default function MyApp({ Component, pageProps }: any) {
   return (
-    <main className={`${Londrina.variable} ${ptRootUi.variable}`}>
+    <main className={`${Londrina.variable} font-sans`}>
       <WagmiConfig client={client}>
         <RainbowKitProvider chains={chains}>
           <NextNProgress
