@@ -5,6 +5,7 @@ import { Transaction } from "../stores/interactions";
 import toast from "react-hot-toast";
 import { AppButton } from "./AppButton";
 import { useDescription } from "../stores/description";
+import { useRouter } from "next/router";
 // import addressesMainnet from '@zoralabs/nouns-protocol/dist/addresses/1.json';
 // import addressesTestnet from '@zoralabs/nouns-protocol/dist/addresses/5.json';
 
@@ -15,9 +16,11 @@ const MESSAGE_LOOKUP = {
 export const SubmitProposalBuilder = ({
   daoAddress,
   from,
+  daoTokenAddress,
   transactions,
 }: {
   daoAddress: string;
+  daoTokenAddress: string;
   isNounsDaoStructure: boolean;
   from: string;
   transactions: Transaction[];
@@ -44,6 +47,8 @@ export const SubmitProposalBuilder = ({
     chainId: CHAIN_ID,
   });
 
+  // const {push} = useRouter();
+
   const { write, isLoading } = useContractWrite({
     ...config,
     onSuccess: () => {
@@ -52,8 +57,11 @@ export const SubmitProposalBuilder = ({
     onError: () => {
       toast(`Issue sending proposal to DAO`);
     },
-    onSettled: (response) => {
-      console.log({ response });
+    onSettled: async (response) => {
+      // const txn = await response.wait()
+      // find new proposal hash
+      // txn.logs.find((log) => log.)
+      // push(`/proposal/?id=${txnId}&dao=${daoTokenAddress}`)
     },
   });
 

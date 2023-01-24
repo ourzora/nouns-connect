@@ -151,7 +151,7 @@ function DAOActionComponent({ dao }: { dao: any }) {
 const DAOActionPage = ({ dao }) => {
   return (
     <Layout title="DAOConnect">
-      <div className="text-center">
+      <div className="text-center relative max-w-3xl w-full mx-4">
         <DAOHeader showConnection={true} dao={dao}  />
 
         <DAOActionComponent dao={dao} />

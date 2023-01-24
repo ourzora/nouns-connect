@@ -32,7 +32,7 @@ function DAOActionComponent({ dao }: { dao: any }) {
   const { isConnected } = useAccount();
 
   return (
-    <div className="flex flex-col relative">
+    <div className="flex flex-col relative max-w-3xl w-full mx-4">
       <DAOHeader showConnection={false} dao={dao} />
 
       {transactions?.length > 0 ? (
@@ -68,6 +68,7 @@ function DAOActionComponent({ dao }: { dao: any }) {
             <div className="h-4"> </div>
             <SubmitComponent
               isNounsDaoStructure={!isError}
+              daoTokenAddress={dao.tokenAddress}
               daoAddress={dao.governorAddress}
               from={dao.treasuryAddress}
               transactions={transactions}

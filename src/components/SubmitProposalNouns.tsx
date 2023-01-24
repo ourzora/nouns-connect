@@ -15,10 +15,12 @@ const MESSAGE_LOOKUP = {
 
 export const SubmitProposalNouns = ({
   daoAddress,
+  daoTokenAddress,
   from,
   transactions,
 }: {
   daoAddress: string;
+  daoTokenAddress: string;
   isNounsDaoStructure: boolean;
   from: string;
   description: string;
@@ -60,10 +62,12 @@ export const SubmitProposalNouns = ({
     onError: () => {
       toast(`Error sending request`);
     },
-    // onSettled: (response: any) => {
-    //   console.log({response})
-    //   toast(`Successfully sent proposal to DAO`);
-    // },
+    onSettled: async (response: any) => {
+      const result = response.wait()
+      // result.logs.find
+      // push to view url with dao address and proposal id
+      // push(``)
+    },
   });
 
   if (error) {

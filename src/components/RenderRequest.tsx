@@ -104,19 +104,17 @@ export const RenderRequest = ({
             </span>
           </div>
           <div className="">
-            {collapsed ? (
+            {defaultCollapsed ? (
               <button
                 className="text-right"
-                onClick={() => setCollapsed(false)}
+                onClick={() => setCollapsed(!collapsed)}
               >
                 …
               </button>
             ) : (
-              !defaultCollapsed && (
-                <button className="text-right" onClick={removeTxnClick}>
-                  <XIcon />
-                </button>
-              )
+              <button className="text-right" onClick={removeTxnClick}>
+                <XIcon />
+              </button>
             )}
           </div>
         </div>
