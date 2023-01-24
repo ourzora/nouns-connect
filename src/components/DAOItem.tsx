@@ -11,7 +11,7 @@ export const DAOItem = ({
   cover?: string;
   holdings?: number;
 }) => (
-  <div className="">
+  <Link className="" href={`/daos/${address}`}>
     <div
       className="cursor-pointer w-60 border rounded-lg shadow-sm m-2 hover:shadow-md"
       style={{borderColor: 'rgba(232, 232, 232, 1)'}}
@@ -20,7 +20,7 @@ export const DAOItem = ({
       <div className="w-full flex h-60 overflow-hidden">
         <img src={cover} alt="" className="flex-grow object-cover rounded-lg" />
       </div>
-      <Link className="p-6 inline-block" href={`/daos/${address}`}>
+      <div className="p-6 inline-block">
         <span className="block text-2xl">{name}</span>
         <span
           className="block text-sm font-pt font-normal mt-2"
@@ -28,7 +28,7 @@ export const DAOItem = ({
         >
           You have {holdings.toString()} votes
         </span>
-      </Link>
+      </div>
     </div>
-  </div>
+  </Link>
 );

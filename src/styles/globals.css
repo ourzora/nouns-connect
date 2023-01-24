@@ -5,3 +5,7 @@ body {
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --header-height: 100px;
+}

@@ -10,6 +10,9 @@ module.exports = {
         londrina: ["var(--font-londrina)", "sans-serif"],
         pt: ["var(--font-pt)", "sans-serif"],
       },
+      height: {
+        header: "var(--header-height)"
+      }
     },
   },
   plugins: [],

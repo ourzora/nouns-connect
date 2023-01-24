@@ -2,7 +2,7 @@ import request from "graphql-request";
 import { GetServerSideProps } from "next";
 
 import { DAOItem } from "../components/DAOItem";
-import Layout from "../components/layout";
+import Layout from "../components/Layout";
 import { YourDAOs } from "../components/YourDAOs";
 import { AllNounsQuery } from "../config/daos-query";
 import {
@@ -64,13 +64,12 @@ const IndexPage = () => {
         <div className="text-center">
           <h1 className="mt-6 text-5xl sm:text-4xl">Select DAO</h1>
           <p
-            className="mt-2 my-16 text-center text-xl mt-2 font-pt"
+            className="mt-2 my-16 text-center text-xl font-pt"
             style={{ color: "#808080" }}
           >
             Choose the DAO you would like to connect an application to
           </p>
         </div>
-
         <YourDAOs />
       </div>
     </Layout>

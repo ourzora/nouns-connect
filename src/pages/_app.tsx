@@ -16,6 +16,13 @@ import "../styles/globals.css";
 import '@rainbow-me/rainbowkit/styles.css';
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { CHAIN_ID } from "../utils/constants";
+import Header from "../components/Header";
+
+import dynamic from "next/dynamic";
+
+const SplashImageScatter = dynamic(() => import('../components/SplashImageScatter'), {
+  ssr: false,
+})
 
 const { chains, provider, webSocketProvider } = configureChains(
   [CHAIN_ID === 1 ? mainnet : goerli],
@@ -42,8 +49,10 @@ export default function MyApp({ Component, pageProps }: any) {
     <main className={`${Londrina.variable} ${ptRootUi.variable}`}>
       <WagmiConfig client={client}>
         <RainbowKitProvider chains={chains}>
+          <Header />
           <Toaster />
           <Component {...pageProps} />
+          <SplashImageScatter />
         </RainbowKitProvider>
       </WagmiConfig>
     </main>

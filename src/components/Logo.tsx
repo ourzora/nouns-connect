@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 const WIDTH_TOTAL = 40;
 
@@ -93,14 +94,21 @@ export default function Logo() {
   }, [canvasRef]);
 
   return (
-    <Link className="" href="/">
-      <canvas
-        width={WIDTH_TOTAL}
-        height={WIDTH_TOTAL}
-        className="inline-block -mt-2"
-        ref={canvasRef}
-      />
-      <span className="">NounsConnect</span>
-    </Link>
+    <motion.div
+      initial={{ opacity: 0, x: -300 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: 0.15 }}
+      exit={{ opacity: 0 }}
+    >
+      <Link href="/">
+        <canvas
+          width={WIDTH_TOTAL}
+          height={WIDTH_TOTAL}
+          className="inline-block -mt-2"
+          ref={canvasRef}
+        />
+        <span className="">NounsConnect</span>
+      </Link>
+    </motion.div>
   );
 };

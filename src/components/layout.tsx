@@ -1,46 +1,40 @@
 import React, { ReactNode } from "react";
-import Link from "next/link";
 import Head from "next/head";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
-import dynamic from "next/dynamic";
-
-const Logo = dynamic(() => import('./Logo'), {
-  ssr: false,
-})
+import { AnimatePresence, motion } from "framer-motion"
+import { useRouter } from "next/router";
 
 type Props = {
   children?: ReactNode;
   title?: string;
 };
 
-const Layout = ({ children, title = "DAOConnect" }: Props) => (
-  <>
-    <Head>
-      <title>{title}</title>
-      <link href="/styles/globals.css" type="text/stylesheet" />
-      <meta charSet="utf-8" />
-      <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-    </Head>
-    <header className="font-pt leading-6">
-      <nav className="m-8 text-xl font-bold flex align-center">
-        <Logo />
-        {/* | <Link href="/about">About</Link> */}
-      </nav>
-      <aside className="float-right mx-8 -mt-16">
-        <ConnectButton />
-      </aside>
-    </header>
-    <div
-      className="md:m-10 font-londrina flex items-center justify-center"
-      style={{ minHeight: "80vh" }}
-    >
-      {children}
-    </div>
-    {/* <footer>
-      <hr />
-      <span>I'm here to stay (Footer)</span>
-    </footer> */}
-  </>
-);
-
-export default Layout;
+export default function Layout({ children, title = "DAOConnect" }: Props) {
+  const { pathname } = useRouter()
+  return (
+    <>
+      <Head>
+        <title>{title}</title>
+        <link href="/styles/globals.css" type="text/stylesheet" />
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
+      <AnimatePresence>
+        <motion.div
+          key={pathname}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{
+            delay: 0.25,
+            opacity: {
+              duration: 0.5
+            }
+          }}
+          className="w-screen min-h-screen fixed top-0 z-10 flex items-center justify-center p-10 pb-20"
+        >
+          {children}
+        </motion.div>
+      </AnimatePresence>
+    </>
+  )
+}
