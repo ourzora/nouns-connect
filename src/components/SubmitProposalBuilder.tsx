@@ -1,4 +1,9 @@
-import { useContract, useContractWrite, usePrepareContractWrite, useSigner } from "wagmi";
+import {
+  useContract,
+  useContractWrite,
+  usePrepareContractWrite,
+  useSigner,
+} from "wagmi";
 import governorABI from "@zoralabs/nouns-protocol/dist/artifacts/Governor.sol/Governor.json";
 import { CHAIN_ID } from "../utils/constants";
 import { Transaction } from "../stores/interactions";
@@ -6,6 +11,7 @@ import toast from "react-hot-toast";
 import { AppButton } from "./AppButton";
 import { useDescription } from "../stores/description";
 import { useRouter } from "next/router";
+import { ethers } from "ethers";
 // import addressesMainnet from '@zoralabs/nouns-protocol/dist/addresses/1.json';
 // import addressesTestnet from '@zoralabs/nouns-protocol/dist/addresses/5.json';
 
@@ -47,9 +53,7 @@ export const SubmitProposalBuilder = ({
     chainId: CHAIN_ID,
   });
 
-  const {push} = useRouter();
-
-  const governorContract = useContract({address: daoAddress, abi: governorABI.abi});
+  const { push } = useRouter();
 
   const { write, isLoading } = useContractWrite({
     ...config,
@@ -60,12 +64,13 @@ export const SubmitProposalBuilder = ({
       toast(`Issue sending proposal to DAO`);
     },
     onSettled: async (response) => {
-      const txn = await response.wait()
+      const iface = new ethers.utils.Interface(governorABI.abi);
+      const txn = await response.wait();
       // find new proposal hash
-      console.log({txn});
-      // txn.logs.find((log) => log.)
-      const txnId = '0'
-      // push(`/proposals/created?id=${txnId}&address=${daoTokenAddress}`)
+      const proposeLog = iface.parseLog(txn.logs[0]);
+      console.log({ proposeLog });
+      const proposalId = proposeLog.args.proposalId;
+      push(`/proposals/created?id=${proposalId}&address=${daoTokenAddress}`);
     },
   });
 
@@ -88,7 +93,7 @@ export const SubmitProposalBuilder = ({
       disabled={!!error || isLoading}
       onClick={() => write()}
     >
-      Submit Proposal
+      {isLoading ? "Submitting Proposal..." : "Submit Proposal"}
     </AppButton>
   );
 };

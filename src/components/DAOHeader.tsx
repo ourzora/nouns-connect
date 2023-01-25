@@ -1,8 +1,5 @@
 import { useWCConnectionStore } from "../stores/connection";
-import useSWR from "swr";
-import { CHAIN_ID, ZORA_API_URL } from "../utils/constants";
-import { LastTokenQuery } from "../config/daos-query";
-import request from "graphql-request";
+import { useDAOImage } from "../hooks/useDAOImage";
 
 export const DAOHeader = ({
   dao,
@@ -13,23 +10,17 @@ export const DAOHeader = ({
 }) => {
   const { connectedTo, icon } = useWCConnectionStore();
 
-  const { data: imageData } = useSWR(
-    dao.collectionAddress,
-    (collectionAddress) =>
-      request(ZORA_API_URL, LastTokenQuery, {
-        tokens: [{ address: collectionAddress, tokenId: "0" }],
-        chain: CHAIN_ID === 1 ? "ETHEREUM" : "GOERLI",
-      })
-  );
+  const { url } = useDAOImage({ collectionAddress: dao.collectionAddress });
+
   return (
     <>
       <h1 className="text-6xl text-center sm:text-4xl">
         {showConnection && !connectedTo && <>Let’s connect </>}
-        {imageData && imageData.tokens.nodes.length && (
+        {url && (
           <img
             className="mx-2 w-14 h-14 rounded-lg inline-block"
-            src={imageData.tokens.nodes[0].token.image.mediaEncoding.poster}
-            alt=""
+            src={url}
+            alt={dao.name}
           />
         )}{" "}
         {dao.name}

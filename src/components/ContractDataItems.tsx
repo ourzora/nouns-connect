@@ -2,20 +2,14 @@ import { ethers } from "ethers";
 import { useMemo } from "react";
 import { PrettyAddress } from "./PrettyAddress";
 import { DefinitionListItem } from "./DefinitionListItem";
-import { FragmentsOnCompositeTypesRule } from "graphql";
 import { formatEther } from "ethers/lib/utils.js";
+import { formatPretty } from "../utils/format";
 
 type ContractDataItemsProps = {
   args: ethers.utils.Result;
   functionFragmentInputs: ethers.utils.ParamType[];
 };
 
-function formatPretty(input: string): string {
-  return input
-    .replace(/([A-Z])(?=[a-z])/g, (match) => ` ${match}`)
-    .replace(/^./, (match) => match.toUpperCase())
-    .trim();
-}
 
 function hasPart(searches: string[], value: string): boolean {
   return !!searches.find(
@@ -33,7 +27,6 @@ export const ContractDataItems = ({
       const arg = args[i];
       const fragment = functionFragmentInputs[i];
 
-      let valueStr: any = arg.toString();
       if (fragment.type === "address") {
         results.push(
           <DefinitionListItem
@@ -43,14 +36,17 @@ export const ContractDataItems = ({
             <PrettyAddress address={arg.toString()} />
           </DefinitionListItem>
         );
-      } else if (fragment.type === 'string') {
+      } else if (fragment.type === "string") {
         results.push(
-          <DefinitionListItem name={formatPretty(fragment.name)} title={fragment.name}>
+          <DefinitionListItem
+            name={formatPretty(fragment.name)}
+            title={fragment.name}
+          >
             <span className="text-gray-400">"</span>
             <span>{arg}</span>
             <span className="text-gray-400">"</span>
           </DefinitionListItem>
-        )
+        );
       } else if (hasPart(["price", "amount", "eth"], fragment.name)) {
         results.push(
           <DefinitionListItem

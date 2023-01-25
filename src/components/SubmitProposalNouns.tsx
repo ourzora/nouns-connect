@@ -6,6 +6,8 @@ import toast from "react-hot-toast";
 import useSWR from "swr";
 import { AppButton } from "./AppButton";
 import { useDescription } from "../stores/description";
+import { ethers } from "ethers";
+import { useRouter } from "next/router";
 // import addressesMainnet from '@zoralabs/nouns-protocol/dist/addresses/1.json';
 // import addressesTestnet from '@zoralabs/nouns-protocol/dist/addresses/5.json';
 
@@ -54,6 +56,8 @@ export const SubmitProposalNouns = ({
     chainId: CHAIN_ID,
   });
 
+  const { push } = useRouter();
+
   const { write, isLoading } = useContractWrite({
     ...config,
     onSuccess: () => {
@@ -63,10 +67,12 @@ export const SubmitProposalNouns = ({
       toast(`Error sending request`);
     },
     onSettled: async (response: any) => {
-      const result = response.wait()
-      // result.logs.find
-      // push to view url with dao address and proposal id
-      // push(``)
+      const iface = new ethers.utils.Interface(governorAbi);
+      const txn = await response.wait();
+      const proposeLog = iface.parseLog(txn.logs[0]);
+      push(
+        `/proposals/created?id=${proposeLog.args.id}&address=${daoTokenAddress}`
+      );
     },
   });
 
@@ -85,7 +91,7 @@ export const SubmitProposalNouns = ({
       disabled={!!error || isLoading}
       onClick={() => write()}
     >
-      Submit Proposal
+      {isLoading ? "Submitting Proposal..." : "Submit Proposal"}
     </AppButton>
   );
 };

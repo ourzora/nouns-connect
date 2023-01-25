@@ -122,22 +122,18 @@ function DAOActionComponent({ dao }: { dao: any }) {
         <></>
       )}
       <div className="mt-8" />
-      {wcClientData ? (
-        transactions.length === 0 ? (
-          <>{disconnectButton}</>
-        ) : (
-          <div className="flex ml-8">
-            {disconnectButton}
-            <AppButton
-              className="ml-4 flex-grow"
-              href={`/proposals/create?address=${dao.collectionAddress.toLowerCase()}`}
-            >
-              Next step
-            </AppButton>
-          </div>
-        )
+      {transactions.length === 0 ? (
+        wcClientData && disconnectButton
       ) : (
-        <></>
+        <div className="flex">
+          {wcClientData && disconnectButton}
+          <AppButton
+            className="ml-4 flex-grow"
+            href={`/proposals/create?address=${dao.collectionAddress.toLowerCase()}`}
+          >
+            Next step
+          </AppButton>
+        </div>
       )}
     </>
   );

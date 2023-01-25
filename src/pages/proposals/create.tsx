@@ -1,27 +1,21 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import request from "graphql-request";
-import { GetServerSideProps } from "next";
-import Link from "next/link";
 import { useAccount, useContractRead } from "wagmi";
-import { DescriptionManager } from "../../components/DescriptionManager";
 
+import { DescriptionManager } from "../../components/DescriptionManager";
 import Layout from "../../components/layout";
 import { RenderRequest } from "../../components/RenderRequest";
 import { SubmitProposalNouns } from "../../components/SubmitProposalNouns";
 import { SubmitProposalBuilder } from "../../components/SubmitProposalBuilder";
-import { NounsQueryByCollection } from "../../config/daos-query";
-import { useDescription } from "../../stores/description";
 import { Transaction, useTransactionsStore } from "../../stores/interactions";
-import { CHAIN_ID, ZORA_API_URL } from "../../utils/constants";
 import governorAbi from "@nouns/contracts/dist/abi/contracts/governance/NounsDAOLogicV2.sol/NounsDAOLogicV2.json";
 import { AppButton } from "../../components/AppButton";
 import { BorderFrame } from "../../components/BorderFrame";
 import { DAOHeader } from "../../components/DAOHeader";
 import { GetDaoServerSide } from "../../fetchers/get-dao";
+import { PageFrameSize } from "../../components/PageFrameSize";
 
 function DAOActionComponent({ dao }: { dao: any }) {
   const { transactions } = useTransactionsStore();
-  const { description, editing: editingDescription } = useDescription();
   const { data, isError, isLoading } = useContractRead({
     abi: governorAbi,
     address: dao.governorAddress,
@@ -33,7 +27,7 @@ function DAOActionComponent({ dao }: { dao: any }) {
   const { isConnected } = useAccount();
 
   return (
-    <div className="flex flex-col relative max-w-3xl w-full mx-4">
+    <PageFrameSize>
       <DAOHeader showConnection={false} dao={dao} />
 
       {transactions?.length > 0 ? (
@@ -69,14 +63,14 @@ function DAOActionComponent({ dao }: { dao: any }) {
             <div className="h-4"> </div>
             <SubmitComponent
               isNounsDaoStructure={!isError}
-              daoTokenAddress={dao.tokenAddress}
+              daoTokenAddress={dao.collectionAddress}
               daoAddress={dao.governorAddress}
               from={dao.treasuryAddress}
               transactions={transactions}
             />
           </>
         ) : (
-          <div className="mt-5 underline">
+          <div className="mt-5 font-pt text-lg">
             Connect your wallet to submit a proposal
             <ConnectButton />
           </div>
@@ -84,7 +78,7 @@ function DAOActionComponent({ dao }: { dao: any }) {
       ) : (
         <></>
       )}
-    </div>
+    </PageFrameSize>
   );
 }
 

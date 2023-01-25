@@ -16,7 +16,7 @@ export const DescriptionManager = ({
           {hasTitle && (
             <>
               <label
-                className="font-lg text-left block mb-2 mt-4"
+                className="text-lg text-left block mb-2 mt-4"
                 htmlFor="proposal-title"
               >
                 Proposal Title
@@ -32,11 +32,11 @@ export const DescriptionManager = ({
 
           <label
             htmlFor="proposal-summary"
-            className="font-lg text-left block mb-2 mt-4"
+            className="text-lg text-left block mb-2 mt-4"
           >
             Summary
             {hasTitle && (
-              <span className="text-right inline-block right-0 absolute text-gray-500 font-regular text-md">
+              <span className="text-right inline-block right-0 absolute text-gray-500 font-regular text-sm">
                 (optional)
               </span>
             )}
