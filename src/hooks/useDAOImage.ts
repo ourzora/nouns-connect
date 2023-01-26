@@ -15,9 +15,10 @@ export const useDAOImage = ({
       chain: CHAIN_ID === 1 ? "ETHEREUM" : "GOERLI",
     })
   );
+
   return {
     imageData,
-    url: imageData.tokens.nodes.length
+    url: imageData?.tokens.nodes.length
       ? imageData.tokens.nodes[0].token.image.mediaEncoding.poster
       : undefined,
   };
