@@ -16,6 +16,6 @@ export const DefinitionListItem = ({
     >
       {name}
     </dt>
-    <dd className="block p-0 m-0 mb-2 text-left p-3">{children}</dd>
+    <dd className="block p-0 m-0 mb-2 text-left p-3 break-words">{children}</dd>
   </>
 );

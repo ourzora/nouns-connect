@@ -81,8 +81,8 @@ export const RenderRequest = ({
           style={{ backgroundImage: `url(${transaction.wallet.icon})` }}
         />
       )}
-      <div className="w-full">
-        <div className="flex w-full overflow-scroll">
+      <div className="">
+        <div className="flex w-full">
           <div className="flex-grow font-sm text-left text-lg">
             <span className="font-bold capitalize">
               {parsedResponse?.name || "Custom Data"}

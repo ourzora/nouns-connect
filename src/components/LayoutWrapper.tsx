@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import Head from "next/head";
-import { AnimatePresence, motion } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/router";
 
 type Props = {
@@ -9,7 +9,7 @@ type Props = {
 };
 
 export default function Layout({ children, title = "DAOConnect" }: Props) {
-  const { pathname } = useRouter()
+  const { pathname } = useRouter();
   return (
     <>
       <Head>
@@ -27,14 +27,14 @@ export default function Layout({ children, title = "DAOConnect" }: Props) {
           transition={{
             delay: 0.25,
             opacity: {
-              duration: 0.5
-            }
+              duration: 0.5,
+            },
           }}
-          className="w-screen min-h-screen fixed top-0 z-10 flex items-center justify-center p-10 pb-20"
+          className="w-screen overflow-auto min-h-screen top-0 z-10 flex items-center justify-center p-10 pb-20"
         >
           {children}
         </motion.div>
       </AnimatePresence>
     </>
-  )
+  );
 }
