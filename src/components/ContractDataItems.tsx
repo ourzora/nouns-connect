@@ -51,7 +51,7 @@ export const ContractDataItems = ({
             <PrettyAddress address={arg.toString()} />
           </DefinitionListItem>
         );
-      } else if (fragment.type === "bytes") {
+      } else if (fragment.type.startsWith('bytes')) {
         console.log(arg);
         results.push(
           <DefinitionListItem

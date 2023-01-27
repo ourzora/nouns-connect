@@ -1,15 +1,21 @@
-import { ConnectButton as RKConnectButton } from '@rainbow-me/rainbowkit'
-import { Avatar } from './Avatar'
-import { motion } from 'framer-motion'
+import {
+  ConnectButton as RKConnectButton,
+  useChainModal,
+} from "@rainbow-me/rainbowkit";
+import { Avatar } from "./Avatar";
+import { motion } from "framer-motion";
 
 export default function ConnectButton({ ...props }) {
+  const { openChainModal } = useChainModal();
+
   return (
     <motion.div
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.9 }}
-      transition={{ease: "easeInOut"}}
+      transition={{ ease: "easeInOut" }}
       className="connect-button-wrapper relative flex items-center overflow-hidden rounded-full text-md text-white bg-gray-800 px-6 h-11"
-      {...props}>
+      {...props}
+    >
       <RKConnectButton.Custom>
         {({ account, chain, openAccountModal, openConnectModal, mounted }) => {
           return (
@@ -17,15 +23,15 @@ export default function ConnectButton({ ...props }) {
               {(() => {
                 if (!mounted || !account || !chain) {
                   return (
-                    <button onClick={openConnectModal}>
-                      Connect Wallet
-                    </button>
-                  )
+                    <button onClick={openConnectModal}>Connect Wallet</button>
+                  );
                 }
                 if (chain.unsupported) {
                   return (
-                    <div className="text-red-400">&#x26A0; Wrong Network</div>
-                  )
+                    <button onClick={openChainModal} className="text-red-400">
+                      &#x26A0; Wrong Network
+                    </button>
+                  );
                 }
                 return (
                   <button onClick={openAccountModal}>
@@ -34,12 +40,12 @@ export default function ConnectButton({ ...props }) {
                       {account.displayName}
                     </div>
                   </button>
-                )
+                );
               })()}
             </>
-          )
+          );
         }}
       </RKConnectButton.Custom>
     </motion.div>
-  )
+  );
 }
