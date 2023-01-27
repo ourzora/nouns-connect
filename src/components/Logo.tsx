@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef } from "react";
 
 const WIDTH_TOTAL = 40;
 
@@ -44,36 +44,36 @@ class Circle {
   shouldRender(at: Point) {
     const newPoint = this.position.sub(at);
     const result = newPoint.length();
-    return (result < this.radius);
+    return result < this.radius;
   }
 }
 
-export const Logo = () => {
+export const Logo = ({ size = WIDTH_TOTAL }: { size?: number }) => {
   const canvasRef = useRef<HTMLCanvasElement>();
   useLayoutEffect(() => {
     if (canvasRef.current) {
       const ctx = canvasRef.current.getContext("2d");
-      const center = new Point(WIDTH_TOTAL / 2, WIDTH_TOTAL / 2);
-      const radius = 10;
+      const center = new Point(size / 2, size / 2);
+      const radius = Math.sqrt(size)*1.4
       const circles = [
         new Circle(
-          new Point(0, -1).mul(4).add(center),
+          new Point(0, -1).mul(radius/2).add(center),
           radius,
           new Color(255, 0, 0)
         ),
         new Circle(
-          new Point(-1, 1).mul(4).add(center),
+          new Point(-1, 1).mul(radius/2).add(center),
           radius,
           new Color(0, 255, 0)
         ),
         new Circle(
-          new Point(1, 1).mul(4).add(center),
+          new Point(1, 1).mul(radius/2).add(center),
           radius,
           new Color(0, 0, 255)
         ),
       ];
-      for (let xi = 0; xi < WIDTH_TOTAL; xi++) {
-        for (let yi = 0; yi < WIDTH_TOTAL; yi++) {
+      for (let xi = 0; xi < size; xi++) {
+        for (let yi = 0; yi < size; yi++) {
           const atPoint = new Point(xi, yi);
           const newColor = circles
             .filter((circle) => circle.shouldRender(atPoint))
@@ -81,7 +81,9 @@ export const Logo = () => {
               (last: Color, at: Circle) => last.merge(at.color),
               new Color(0, 0, 0)
             );
-          ctx.fillStyle = newColor.isBlack() ? '#fbfbfb' : newColor.toHexString();
+          ctx.fillStyle = newColor.isBlack()
+            ? "#fbfbfb"
+            : newColor.toHexString();
           ctx.fillRect(xi, yi, 1, 1);
         }
       }
@@ -90,8 +92,8 @@ export const Logo = () => {
 
   return (
     <canvas
-      width={WIDTH_TOTAL}
-      height={WIDTH_TOTAL}
+      width={size}
+      height={size}
       className="inline-block -mt-2"
       ref={canvasRef}
     />

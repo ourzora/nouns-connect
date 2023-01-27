@@ -75,12 +75,14 @@ export const RenderRequest = ({
 
   return (
     <div className="flex w-full">
-      <div
-        className="w-6 h-6 mr-4 bg-contain bg-no-repeat"
-        style={{ backgroundImage: `url(${transaction.wallet.icon})` }}
-      />
+      {transaction.wallet?.icon && (
+        <div
+          className="w-6 h-6 mr-4 bg-contain bg-no-repeat"
+          style={{ backgroundImage: `url(${transaction.wallet.icon})` }}
+        />
+      )}
       <div className="w-full">
-        <div className="flex w-full">
+        <div className="flex w-full overflow-scroll">
           <div className="flex-grow font-sm text-left text-lg">
             <span className="font-bold capitalize">
               {parsedResponse?.name || "Custom Data"}
