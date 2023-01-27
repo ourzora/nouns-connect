@@ -21,13 +21,11 @@ const MESSAGE_LOOKUP = {
 
 export const SubmitProposalBuilder = ({
   daoAddress,
-  from,
   onSubmitted,
   transactions,
 }: {
   daoAddress: string;
   isNounsDaoStructure: boolean;
-  from: string;
   transactions: Transaction[];
   onSubmitted: ({ proposalId }: { proposalId: string }) => void;
 }) => {
@@ -61,7 +59,7 @@ export const SubmitProposalBuilder = ({
       toast(`Sending proposal request`);
     },
     onError: () => {
-      toast(`Issue sending proposal to DAO`);
+      toast(`Failed to send proposal to DAO`);
     },
     onSettled: async (response) => {
       const iface = new ethers.utils.Interface(governorABI.abi);
@@ -90,7 +88,7 @@ export const SubmitProposalBuilder = ({
   return (
     <AppButton
       className=""
-      disabled={!!error || isLoading}
+      disabled={!!error || isLoading || title.length === 0}
       onClick={() => write()}
     >
       {isLoading ? "Submitting Proposal..." : "Submit Proposal"}

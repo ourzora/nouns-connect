@@ -15,7 +15,7 @@ export const DAOHeader = ({
 
   return (
     <>
-      <h1 className="text-6xl text-center sm:text-4xl">
+      <h1 className="md:text-6xl text-4xl text-center mt-14 md:mt-0">
         {showConnection && !connectedTo && <>Let’s connect </>}
         {url && (
           <img
@@ -38,7 +38,7 @@ export const DAOHeader = ({
       </h1>
       {showConnection && (
         <p
-          className="mt-2 mb-6 font-pt text-xl font-regular"
+          className="mt-2 mb-6 font-pt md:text-xl text-md font-pt"
           style={{ color: "#808080" }}
         >
           {connectedTo ? (

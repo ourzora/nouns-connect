@@ -81,7 +81,7 @@ export const RenderRequest = ({
           style={{ backgroundImage: `url(${transaction.wallet.icon})` }}
         />
       )}
-      <div style={{ width: "calc(100% - 40px)" }}>
+      <div style={{ width: defaultCollapsed ? '100%' : "calc(100% - 40px)" }}>
         <div className="flex w-full">
           <div className="flex-grow font-sm text-left text-lg">
             <span className="font-bold capitalize">

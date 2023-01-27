@@ -17,14 +17,11 @@ const MESSAGE_LOOKUP = {
 
 export const SubmitProposalNouns = ({
   daoAddress,
-  from,
   transactions,
   onSubmitted,
 }: {
   daoAddress: string;
   isNounsDaoStructure: boolean;
-  from: string;
-  description: string;
   transactions: Transaction[];
   onSubmitted: ({ proposalId }: { proposalId: string }) => void;
 }) => {
@@ -55,8 +52,6 @@ export const SubmitProposalNouns = ({
     chainId: CHAIN_ID,
   });
 
-  const { push } = useRouter();
-
   const { write, isLoading } = useContractWrite({
     ...config,
     onSuccess: () => {
@@ -85,7 +80,7 @@ export const SubmitProposalNouns = ({
   return (
     <AppButton
       className=""
-      disabled={!!error || isLoading}
+      disabled={!!error || isLoading || !write}
       onClick={() => write()}
     >
       {isLoading ? "Submitting Proposal..." : "Submit Proposal"}

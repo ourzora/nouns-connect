@@ -25,7 +25,11 @@ function Created({ dao }: { dao: any }) {
       request(ZORA_API_URL, ProposalByIdQuery, {
         chain: CHAIN_ID === 1 ? "MAINNET" : "GOERLI",
         proposalId,
-      })
+      }),
+      {
+        shouldRetryOnError: true,
+        errorRetryCount: 1000 
+      }
   );
 
   const nounsProposal = useMemo(() => {
@@ -137,7 +141,7 @@ function Created({ dao }: { dao: any }) {
               </div>
             </>
           ) : (
-            <h3 className="font-londrina">Loading...</h3>
+            <h3 className="font-londrina text-xl font-pt">Loading... this may take a minute.</h3>
           )}
         </BorderFrame>
         <div className="flex mt-8 items-center text-2xl text-gray-700 justify-center font-pt font-bold">

@@ -8,7 +8,7 @@ export default function ConnectButton({ ...props }) {
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.9 }}
       transition={{ease: "easeInOut"}}
-      className="connect-button-wrapper relative flex items-center overflow-hidden rounded-full text-lg text-white bg-gray-800 px-6 h-11"
+      className="connect-button-wrapper relative flex items-center overflow-hidden rounded-full text-md text-white bg-gray-800 px-6 h-11"
       {...props}>
       <RKConnectButton.Custom>
         {({ account, chain, openAccountModal, openConnectModal, mounted }) => {

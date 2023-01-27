@@ -30,7 +30,7 @@ export default function Layout({ children, title = "DAOConnect" }: Props) {
               duration: 0.5,
             },
           }}
-          className="w-screen overflow-auto min-h-screen top-0 z-10 flex items-center justify-center p-10 pb-20"
+          className="w-screen overflow-auto min-h-screen top-0 z-10 flex items-center justify-center lg:p-10 p-1 pb-20"
         >
           {children}
         </motion.div>
