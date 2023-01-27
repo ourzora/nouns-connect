@@ -12,7 +12,7 @@ export const DAOItem = ({
   cover?: string;
   holdings?: number;
 }) => (
-  <Link className="w-full relative" href={`/daos/${address}`}>
+  <Link className="" href={`/daos/${address}`}>
     <motion.div
       whileHover={{ scale: 1.03 }}
       whileTap={{ scale: 0.95 }}
@@ -21,8 +21,8 @@ export const DAOItem = ({
       style={{borderColor: 'rgba(232, 232, 232, 1)'}}
       key={address}
     >
-      <div className="w-full flex overflow-hidden aspect-square relative rounded-lg">
-        <img src={cover} alt="" className="w-full h-full object-cover absolute" />
+      <div className="w-full flex h-60 overflow-hidden aspect-square relative rounded-lg">
+        <img src={cover} alt="" className="w-full h-full object-cover absolute " />
       </div>
       <div className="p-6 inline-block">
         <span className="block text-2xl">{name}</span>

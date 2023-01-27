@@ -50,7 +50,7 @@ export const Splash = () => {
   }, [isConnected, openConnectModal]);
 
   return (
-    <section className="flex items-center text-center fixed h-screen top-0 font-londrina">
+    <section className="flex items-center text-center fixed h-screen top-0 z-50 relative font-londrina">
       <div className="flex flex-col">
         <h3 className={tagLineText}>The easiest way to</h3>
         <h1 className="text-6xl font-londrina">Connect your Nouns DAO</h1>

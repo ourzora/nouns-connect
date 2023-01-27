@@ -1,5 +1,7 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useAccount, useContractRead } from "wagmi";
+import { useCallback } from "react";
+import { useRouter } from "next/router";
 
 import { DescriptionManager } from "../../components/DescriptionManager";
 import Layout from "../../components/layout";
@@ -15,7 +17,7 @@ import { GetDaoServerSide } from "../../fetchers/get-dao";
 import { PageFrameSize } from "../../components/PageFrameSize";
 
 function DAOActionComponent({ dao }: { dao: any }) {
-  const { transactions } = useTransactionsStore();
+  const { transactions, clear } = useTransactionsStore();
   const { data, isError, isLoading } = useContractRead({
     abi: governorAbi,
     address: dao.governorAddress,
@@ -25,6 +27,17 @@ function DAOActionComponent({ dao }: { dao: any }) {
   const SubmitComponent = isError ? SubmitProposalBuilder : SubmitProposalNouns;
 
   const { isConnected } = useAccount();
+  const { push } = useRouter();
+
+  const onProposalSubmitted = useCallback(
+    ({ proposalId }: { proposalId: string }) => {
+      clear();
+      push(
+        `/proposals/created?id=${proposalId}&address=${dao.collectionAddress}`
+      );
+    },
+    [push, clear]
+  );
 
   return (
     <PageFrameSize>
@@ -62,8 +75,8 @@ function DAOActionComponent({ dao }: { dao: any }) {
             <DescriptionManager hasTitle={isError} />
             <div className="h-4"> </div>
             <SubmitComponent
+              onSubmitted={onProposalSubmitted}
               isNounsDaoStructure={!isError}
-              daoTokenAddress={dao.collectionAddress}
               daoAddress={dao.governorAddress}
               from={dao.treasuryAddress}
               transactions={transactions}

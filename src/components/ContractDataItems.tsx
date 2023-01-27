@@ -28,14 +28,16 @@ export const ContractDataItems = ({
       const fragment = functionFragmentInputs[i];
 
       if (fragment.type.endsWith("[]")) {
-        console.log({ arg, fragment });
-        for (let argPart of arg) {
+        for (let [indx, argPart] of arg.entries()) {
           results.push(
             <ContractDataItems
-              key={argPart}
+              key={`${fragment.name}-${indx}`}
               args={[argPart]}
               functionFragmentInputs={[
-                { ...fragment.arrayChildren, name: fragment.name } as any,
+                {
+                  ...fragment.arrayChildren,
+                  name: `${fragment.name}[${indx}]`,
+                } as any,
               ]}
             />
           );

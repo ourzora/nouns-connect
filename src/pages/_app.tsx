@@ -19,17 +19,6 @@ import { CHAIN_ID } from "../utils/constants";
 import Header from "../components/Header";
 import dynamic from "next/dynamic";
 
-/*
-import { Londrina_Solid } from '@next/font/google'
-
-const Londrina = Londrina_Solid({
-  subsets: ['latin'],
-  weight: '400',
-  variable: '--font-londrina'
-})
-*/
-
-
 const SplashImageScatter = dynamic(
   () => import("../components/SplashImageScatter"),
   {
@@ -72,8 +61,8 @@ export default function MyApp({ Component, pageProps }: any) {
           />
           <Header />
           <Toaster />
-          <Component {...pageProps} />
           <SplashImageScatter />
+          <Component {...pageProps} />
         </RainbowKitProvider>
       </WagmiConfig>
     </main>

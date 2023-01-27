@@ -17,7 +17,7 @@ export default function ConnectButton({ ...props }) {
               {(() => {
                 if (!mounted || !account || !chain) {
                   return (
-                    <button onClick={openConnectModal} className="pl-2.5">
+                    <button onClick={openConnectModal}>
                       Connect Wallet
                     </button>
                   )

@@ -22,14 +22,14 @@ const MESSAGE_LOOKUP = {
 export const SubmitProposalBuilder = ({
   daoAddress,
   from,
-  daoTokenAddress,
+  onSubmitted,
   transactions,
 }: {
   daoAddress: string;
-  daoTokenAddress: string;
   isNounsDaoStructure: boolean;
   from: string;
   transactions: Transaction[];
+  onSubmitted: ({ proposalId }: { proposalId: string }) => void;
 }) => {
   const { isError, data: signer } = useSigner();
 
@@ -70,7 +70,7 @@ export const SubmitProposalBuilder = ({
       const proposeLog = iface.parseLog(txn.logs[0]);
       console.log({ proposeLog });
       const proposalId = proposeLog.args.proposalId;
-      push(`/proposals/created?id=${proposalId}&address=${daoTokenAddress}`);
+      onSubmitted({ proposalId });
     },
   });
 

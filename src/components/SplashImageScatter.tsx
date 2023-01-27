@@ -1,6 +1,7 @@
-import { useMemo, useEffect, useState } from "react";
+import { useMemo, useEffect, useState, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/router";
+import { useDebounce } from "../hooks/useDebounce";
 
 const ImageItem = ({ id, x, y }: { id: number; x: number; y: number }) => {
   const item = {
@@ -16,10 +17,10 @@ const ImageItem = ({ id, x, y }: { id: number; x: number; y: number }) => {
       opacity: 0,
       scale: 0.25,
       rotate: -360,
-    }
-  }
-  
-  const size = useMemo(() => Math.random() * (17 - 7) + 7, [])
+    },
+  };
+
+  const size = useMemo(() => Math.random() * (17 - 7) + 7, []);
 
   return (
     <motion.div
@@ -27,11 +28,11 @@ const ImageItem = ({ id, x, y }: { id: number; x: number; y: number }) => {
         top: y,
         left: x,
         width: `${size}vmin`,
-        height: `${size}vmin`
+        height: `${size}vmin`,
       }}
       key={`${x}-${y}`}
       variants={item}
-      className="absolute"
+      className="absolute z-0"
     >
       <img
         alt=""
@@ -45,20 +46,18 @@ const ImageItem = ({ id, x, y }: { id: number; x: number; y: number }) => {
 export default function SplashImageScatter() {
   const [coords, setCoords] = useState([]);
   const [sizes, setSizes] = useState([0, 0]);
-  
-  /*
-  Might debounce this or sense for mobile or more substantial viewport change
-  const resizeHandler = useCallback(() => {
+
+  // Might debounce this or sense for mobile or more substantial viewport change
+  const debouncedResizeHandler = useDebounce(() => {
     setSizes([window.innerWidth, window.innerHeight]);
-  }, [setSizes]);
+  }, 300);
 
   useEffect(() => {
-    window.addEventListener('resize', resizeHandler)
+    window.addEventListener("resize", debouncedResizeHandler);
     return () => {
-      window.removeEventListener('resize', resizeHandler);
-    }
-  })
-  */
+      window.removeEventListener("resize", debouncedResizeHandler);
+    };
+  });
 
   useEffect(() => {
     const width = window.innerWidth;
@@ -67,33 +66,37 @@ export default function SplashImageScatter() {
     setCoords(
       imageIds.map((id) => {
         const x = Math.floor(
-          (Math.random()+1) * width / 8 + width / 3.5 * (Math.sin(id/5*Math.PI + Math.random()/10) + 1)
+          ((Math.random() + 1) * width) / 8 +
+            (width / 3.5) *
+              (Math.sin((id / 5) * Math.PI + Math.random() / 10) + 1)
         );
         const y = Math.floor(
-          (Math.random()+1) * height / 8 + height / 3.75  * (Math.cos(id/5*Math.PI + Math.random()/10) + 1)
+          ((Math.random() + 1) * height) / 8 +
+            (height / 3.75) *
+              (Math.cos((id / 5) * Math.PI + Math.random() / 10) + 1)
         );
         return { x, y, id };
       })
     );
   }, [sizes]);
 
-  const { pathname } = useRouter()
+  const { pathname } = useRouter();
 
   const container = {
     hidden: {
-      opacity: 0
+      opacity: 0,
     },
     show: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.35
-      }
-    }
-  }
+        staggerChildren: 0.35,
+      },
+    },
+  };
 
   return (
     <AnimatePresence>
-      {pathname === '/' && coords.length &&
+      {pathname === "/" && coords.length && (
         <motion.div
           key="scatter"
           variants={container}
@@ -101,13 +104,13 @@ export default function SplashImageScatter() {
           animate="show"
           exit="exit"
           id="splash-scatter"
-          className="fixed w-screen h-[80vh] top-0 pointer-events-none z-0"
+          className="fixed w-screen h-[80vh] top-0 pointer-events-none"
         >
           {coords.map(({ x, y, id }) => (
             <ImageItem key={id} id={id} x={x} y={y} />
           ))}
         </motion.div>
-      }
+      )}
     </AnimatePresence>
   );
-};
+}

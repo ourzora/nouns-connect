@@ -1,4 +1,4 @@
-import { useEnsAddress, useEnsName } from "wagmi";
+import { useEnsName } from "wagmi";
 import { CHAIN_ID } from "../utils/constants";
 
 export const PrettyAddress = ({
@@ -16,7 +16,7 @@ export const PrettyAddress = ({
       <a
         title="View on etherscan"
         target="_blank"
-        className="color-gray-800 hover:color-black transition-color"
+        className="text-gray-600 hover:color-black transition-color"
         href={`https://${
           CHAIN_ID === 5 ? "goerli." : ""
         }etherscan.io/address/${address}`}
