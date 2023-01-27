@@ -1,4 +1,6 @@
 import { useLayoutEffect, useRef } from "react";
+import Link from "next/link";
+import { motion } from "framer-motion";
 
 const WIDTH_TOTAL = 40;
 
@@ -48,26 +50,29 @@ class Circle {
   }
 }
 
-export const Logo = ({ size = WIDTH_TOTAL }: { size?: number }) => {
+const Logo = ({ size = WIDTH_TOTAL }: { size?: number }) => {
   const canvasRef = useRef<HTMLCanvasElement>();
+  /**
+   * TODO: could animated this - circles rotating.
+   */
   useLayoutEffect(() => {
     if (canvasRef.current) {
       const ctx = canvasRef.current.getContext("2d");
       const center = new Point(size / 2, size / 2);
-      const radius = Math.sqrt(size)*1.4
+      const radius = Math.sqrt(size) * 1.4;
       const circles = [
         new Circle(
-          new Point(0, -1).mul(radius/2).add(center),
+          new Point(0, -1).mul(radius / 2).add(center),
           radius,
           new Color(255, 0, 0)
         ),
         new Circle(
-          new Point(-1, 1).mul(radius/2).add(center),
+          new Point(-1, 1).mul(radius / 2).add(center),
           radius,
           new Color(0, 255, 0)
         ),
         new Circle(
-          new Point(1, 1).mul(radius/2).add(center),
+          new Point(1, 1).mul(radius / 2).add(center),
           radius,
           new Color(0, 0, 255)
         ),
@@ -91,11 +96,23 @@ export const Logo = ({ size = WIDTH_TOTAL }: { size?: number }) => {
   }, [canvasRef]);
 
   return (
-    <canvas
-      width={size}
-      height={size}
-      className="inline-block -mt-2"
-      ref={canvasRef}
-    />
+    <motion.div
+      initial={{ opacity: 0, x: -300 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: 0.15 }}
+      exit={{ opacity: 0 }}
+    >
+      <Link href="/">
+        <canvas
+          width={size}
+          height={size}
+          className="inline-block -mt-2"
+          ref={canvasRef}
+        />
+        <span className="">NounsConnect</span>
+      </Link>
+    </motion.div>
   );
 };
+
+export default Logo;

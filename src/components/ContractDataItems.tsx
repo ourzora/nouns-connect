@@ -4,12 +4,12 @@ import { PrettyAddress } from "./PrettyAddress";
 import { DefinitionListItem } from "./DefinitionListItem";
 import { formatEther } from "ethers/lib/utils.js";
 import { formatPretty } from "../utils/format";
+import { DecodeBytecode } from "./DecodeBytecode";
 
 type ContractDataItemsProps = {
   args: ethers.utils.Result;
   functionFragmentInputs: ethers.utils.ParamType[];
 };
-
 
 function hasPart(searches: string[], value: string): boolean {
   return !!searches.find(
@@ -27,13 +27,41 @@ export const ContractDataItems = ({
       const arg = args[i];
       const fragment = functionFragmentInputs[i];
 
-      if (fragment.type === "address") {
+      if (fragment.type.endsWith("[]")) {
+        for (let [indx, argPart] of arg.entries()) {
+          results.push(
+            <ContractDataItems
+              key={`${fragment.name}-${indx}`}
+              args={[argPart]}
+              functionFragmentInputs={[
+                {
+                  ...fragment.arrayChildren,
+                  name: `${fragment.name}[${indx}]`,
+                } as any,
+              ]}
+            />
+          );
+        }
+      } else if (fragment.type === "address") {
         results.push(
           <DefinitionListItem
             name={formatPretty(fragment.name)}
             title={fragment.name}
           >
             <PrettyAddress address={arg.toString()} />
+          </DefinitionListItem>
+        );
+      } else if (fragment.type === "bytes") {
+        console.log(arg);
+        results.push(
+          <DefinitionListItem
+            name={formatPretty(fragment.name)}
+            title={fragment.name}
+          >
+            <div className="border-gray-200 border-2 font-mono p-2 rounded-lg">
+              {arg}
+            </div>
+            {/* <DecodeBytecode value={arg} /> */}
           </DefinitionListItem>
         );
       } else if (fragment.type === "string") {

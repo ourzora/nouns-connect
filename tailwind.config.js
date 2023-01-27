@@ -1,3 +1,5 @@
+const { fontFamily } = require('tailwindcss/defaultTheme')
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -7,9 +9,12 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        londrina: ["var(--font-londrina)", "sans-serif"],
-        pt: ["var(--font-pt)", "sans-serif"],
+        londrina: ["var(--font-londrina)", ...fontFamily.sans],
+        pt: ["var(--font-pt)", ...fontFamily.sans],
       },
+      height: {
+        header: "var(--header-height)"
+      }
     },
   },
   plugins: [],

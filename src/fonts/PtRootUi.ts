@@ -1,20 +1,20 @@
 import localFont from "@next/font/local";
 
 export const ptRootUi = localFont({
-  variable: '--font-pt',
+  variable: "--font-pt",
   src: [
     {
-      path: "../../node_modules/pt-root-ui-font/regular.woff2",
+      path: "./../../public/fonts/PT-Root-UI_Regular.woff",
       weight: "500",
       style: "normal",
     },
     {
-      path: "../../node_modules/pt-root-ui-font/bold.woff2",
+      path: "./../../public/fonts/PT-Root-UI_Bold.woff",
       weight: "700",
       style: "normal",
     },
     {
-      path: "../../node_modules/pt-root-ui-font/light.woff2",
+      path: "./../../public/fonts/PT-Root-UI_Light.woff",
       weight: "300",
       style: "normal",
     },

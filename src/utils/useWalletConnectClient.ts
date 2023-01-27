@@ -96,7 +96,7 @@ export const useWalletConnectClient = ({
 
           wcConnector.approveRequest({
             id: payload.id,
-            result: null,
+            result: '0x0000000000000000000000000000000000000000000000000000000000000000',
           });
         } catch (err) {
           rejectWithMessage(wcConnector, payload.id, (err as Error).message);

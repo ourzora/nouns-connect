@@ -1,5 +1,6 @@
 import { useWCConnectionStore } from "../stores/connection";
 import { useDAOImage } from "../hooks/useDAOImage";
+import { CHAIN_ID } from "../utils/constants";
 
 export const DAOHeader = ({
   dao,
@@ -14,7 +15,7 @@ export const DAOHeader = ({
 
   return (
     <>
-      <h1 className="text-6xl text-center sm:text-4xl">
+      <h1 className="md:text-6xl text-4xl text-center mt-14 md:mt-0">
         {showConnection && !connectedTo && <>Let’s connect </>}
         {url && (
           <img
@@ -24,10 +25,20 @@ export const DAOHeader = ({
           />
         )}{" "}
         {dao.name}
+        <a
+          title="View on nouns.build"
+          target="_blank"
+          className="pl-2 text-gray-600 text-xl hover:color-black transition-color"
+          href={`https://${CHAIN_ID === 5 ? "testnet." : ""}nouns.build/dao/${
+            dao.collectionAddress
+          }`}
+        >
+          ↗
+        </a>
       </h1>
       {showConnection && (
         <p
-          className="mt-2 mb-6 font-pt text-xl font-regular"
+          className="mt-2 mb-6 font-pt md:text-xl text-md font-pt"
           style={{ color: "#808080" }}
         >
           {connectedTo ? (

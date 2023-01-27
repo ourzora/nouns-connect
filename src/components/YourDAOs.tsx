@@ -89,7 +89,7 @@ export const YourDAOs = () => {
   }, [isConnected]);
 
   if (isConnectedState) {
-    return <div className="flex justify-center flex-wrap">{daos}</div>;
+    return <menu className="flex justify-center flex-wrap gap-3">{daos}</menu>;
   }
   return <></>;
 };

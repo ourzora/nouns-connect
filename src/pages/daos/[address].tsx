@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import { useProvider } from "wagmi";
 
 import { ConnectWalletInput } from "../../components/ConnectWalletInput";
-import Layout from "../../components/layout";
+import Layout from "../../components/LayoutWrapper";
 import { RenderRequest } from "../../components/RenderRequest";
 import { Transaction, useTransactionsStore } from "../../stores/interactions";
 import { CHAIN_ID } from "../../utils/constants";
@@ -74,11 +74,17 @@ function DAOActionComponent({ dao }: { dao: any }) {
 
   const disconnectButton = (
     <AppButton
+      className="mr-4"
       inverted
       onClick={() => {
         toast("Disconnected Wallet from DAO");
         wcDisconnect();
         disconnect();
+        window.scrollBy({
+          top: -window.innerHeight,
+          left: 0,
+          behavior: "smooth",
+        });
       }}
     >
       Disconnect from App
@@ -128,7 +134,7 @@ function DAOActionComponent({ dao }: { dao: any }) {
         <div className="flex">
           {wcClientData && disconnectButton}
           <AppButton
-            className="ml-4 flex-grow"
+            className="flex-grow"
             href={`/proposals/create?address=${dao.collectionAddress.toLowerCase()}`}
           >
             Next step
@@ -141,8 +147,8 @@ function DAOActionComponent({ dao }: { dao: any }) {
 
 const DAOActionPage = ({ dao }) => {
   return (
-    <Layout title="DAOConnect">
-      <div className="text-center relative max-w-3xl w-full mx-4">
+    <Layout title="Nouns Connect | Your DAOs">
+      <div className="text-center relative max-w-3xl w-full mx-4 sm:mx-0 sm:mt-20 mt-10">
         <DAOHeader showConnection={true} dao={dao} />
 
         <DAOActionComponent dao={dao} />

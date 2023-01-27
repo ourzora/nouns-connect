@@ -14,7 +14,6 @@
     "typescript": "^4.9.4"
   },
   "dependencies": {
-    "@fontsource/londrina-solid": "^4.5.11",
     "@next/font": "^13.1.2",
     "@nouns/contracts": "^0.3.0",
     "@rainbow-me/rainbowkit": "^0.8.1",
@@ -24,13 +23,14 @@
     "autoprefixer": "^10.4.13",
     "date-fns": "^2.29.3",
     "ethers": "^5.7.2",
+    "framer-motion": "^8.5.2",
     "graphql": "^16.6.0",
     "graphql-request": "^5.1.0",
     "graphql-tag": "^2.12.6",
     "jsqr": "^1.4.0",
     "next": "^13.1.2",
+    "nextjs-progressbar": "^0.0.16",
     "postcss": "^8.4.20",
-    "pt-root-ui-font": "https://github.com/kokkekpek/pt-root-ui-font.git",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.0",

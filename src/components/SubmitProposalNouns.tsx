@@ -17,19 +17,15 @@ const MESSAGE_LOOKUP = {
 
 export const SubmitProposalNouns = ({
   daoAddress,
-  daoTokenAddress,
-  from,
   transactions,
+  onSubmitted,
 }: {
   daoAddress: string;
-  daoTokenAddress: string;
   isNounsDaoStructure: boolean;
-  from: string;
-  description: string;
   transactions: Transaction[];
+  onSubmitted: ({ proposalId }: { proposalId: string }) => void;
 }) => {
   const { data: signer } = useSigner();
-
   const { description } = useDescription();
 
   const { config, error } = usePrepareContractWrite({
@@ -56,8 +52,6 @@ export const SubmitProposalNouns = ({
     chainId: CHAIN_ID,
   });
 
-  const { push } = useRouter();
-
   const { write, isLoading } = useContractWrite({
     ...config,
     onSuccess: () => {
@@ -70,9 +64,7 @@ export const SubmitProposalNouns = ({
       const iface = new ethers.utils.Interface(governorAbi);
       const txn = await response.wait();
       const proposeLog = iface.parseLog(txn.logs[0]);
-      push(
-        `/proposals/created?id=${proposeLog.args.id}&address=${daoTokenAddress}`
-      );
+      onSubmitted({ proposalId: proposeLog.args.id });
     },
   });
 
@@ -88,7 +80,7 @@ export const SubmitProposalNouns = ({
   return (
     <AppButton
       className=""
-      disabled={!!error || isLoading}
+      disabled={!!error || isLoading || !write}
       onClick={() => write()}
     >
       {isLoading ? "Submitting Proposal..." : "Submit Proposal"}
