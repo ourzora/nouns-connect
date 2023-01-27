@@ -19,11 +19,13 @@ export const RenderRequest = ({
   transaction,
   defaultCollapsed = false,
   floatingDisplay = true,
+  showDeleteButtonInline = true,
 }: {
   transaction: Transaction;
   defaultCollapsed?: boolean;
   indx: number;
   floatingDisplay?: boolean;
+  showDeleteButtonInline?: boolean;
 }) => {
   const { removeTransactionAtIndex } = useTransactionsStore();
   const removeTxnClick = useCallback(() => {
@@ -139,7 +141,7 @@ export const RenderRequest = ({
                   : formatEther(transaction.data.value)}
               </DefinitionListItem>
             </dl>
-            {defaultCollapsed && (
+            {defaultCollapsed && showDeleteButtonInline && (
               <div className="mt-4">
                 <AppButton inverted onClick={removeTxnClick}>
                   Remove Transaction

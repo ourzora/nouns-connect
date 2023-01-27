@@ -45,6 +45,7 @@ const SubmittedTransactionsPreview = ({ dao }: { dao: any }) => {
           {transactions.map((transaction: Transaction, indx: number) => (
             <BorderFrame key={indx}>
               <RenderRequest
+                showDeleteButtonInline={false}
                 floatingDisplay={true}
                 indx={indx}
                 key={transaction.data.id}
