@@ -13,17 +13,25 @@ import { BorderFrame } from "../../components/BorderFrame";
 import { AppButton } from "../../components/AppButton";
 import { DAOHeader } from "../../components/DAOHeader";
 import { GetDaoServerSide } from "../../fetchers/get-dao";
+import { usePushStore } from "../../stores/push-store";
 
 function DAOActionComponent({ dao }: { dao: any }) {
   const [error, setError] = useState<undefined | string>(undefined);
   const { transactions, addTransactions } = useTransactionsStore();
   const { connectTo, connectedTo, icon, disconnect } = useWCConnectionStore();
+  const { permissionGranted } = usePushStore();
 
   const onWCRequest = useCallback(
     (error: any, payload: any) => {
       if (error) {
         toast(error.toString());
         setError(error);
+      }
+
+      if (permissionGranted === "granted") {
+        new Notification(`Nouns Connect: New Transaction`, {
+          body: `We have a new transaction from ${connectedTo}`,
+        });
       }
 
       const paramArgs = payload.params.map((param: any) => ({
@@ -38,7 +46,7 @@ function DAOActionComponent({ dao }: { dao: any }) {
       }));
       addTransactions(paramArgs);
     },
-    [setError, addTransactions, connectedTo, icon]
+    [setError, addTransactions, connectedTo, icon, permissionGranted]
   );
 
   const chainId = CHAIN_ID;

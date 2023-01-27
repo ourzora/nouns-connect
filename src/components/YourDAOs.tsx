@@ -1,18 +1,15 @@
 import request from "graphql-request";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import useSWR from "swr";
-import { useAccount } from "wagmi";
+import { useAccount, useContractReads } from "wagmi";
 import {
   LastTokenQuery,
   MyHoldingsQuery,
   MyNounsDaosQuery,
 } from "../config/daos-query";
-import {
-  CHAIN_ID,
-  FEATURED_ADDRESSES_LIST,
-  ZORA_API_URL,
-} from "../utils/constants";
+import { CHAIN_ID, ZORA_API_URL } from "../utils/constants";
 import { DAOItem } from "./DAOItem";
+import governorABI from "@zoralabs/nouns-protocol/dist/artifacts/Governor.sol/Governor.json";
 
 export const YourDAOs = () => {
   const { address, isConnected } = useAccount();
@@ -23,6 +20,31 @@ export const YourDAOs = () => {
       chain: CHAIN_ID === 1 ? "MAINNET" : "GOERLI",
     })
   );
+
+  const now = useMemo(() => {
+    return Math.floor(new Date().getTime() / 1000);
+  }, []);
+
+  const hasDAOs = address && data?.nouns?.nounsDaos?.nodes;
+  const { data: daoVotes } = useContractReads({
+    allowFailure: false,
+    enabled: hasDAOs,
+    contracts: hasDAOs
+      ? [
+          ...data.nouns.nounsDaos.nodes.map((nounsDao) => ({
+            address: nounsDao.governorAddress,
+            functionName: "getVotes",
+            abi: governorABI.abi,
+            args: [address, now - 120],
+          })),
+          ...data.nouns.nounsDaos.nodes.map((nounsDao) => ({
+            address: nounsDao.governorAddress,
+            functionName: "quorum",
+            abi: governorABI.abi,
+          })),
+        ]
+      : [],
+  });
 
   const { data: images } = useSWR(
     data
@@ -58,7 +80,7 @@ export const YourDAOs = () => {
 
   let daos = <span>loading...</span>;
   if (data) {
-    daos = data.nouns.nounsDaos.nodes.map((item) => (
+    daos = data.nouns.nounsDaos.nodes.map((item, indx) => (
       <DAOItem
         cover={
           images
@@ -76,7 +98,15 @@ export const YourDAOs = () => {
               ).length
             : 0
         }
-        key={item.name}
+        quorum={
+          daoVotes?.length > 0
+            ? (daoVotes[indx * 2] as any).toNumber()
+            : undefined
+        }
+        yourVotes={
+          daoVotes?.length > 0 ? (daoVotes[indx] as any).toNumber() : undefined
+        }
+        key={`${item.name}-${indx}`}
         address={item.collectionAddress}
         name={item.name}
       />

@@ -18,10 +18,12 @@ export const RenderRequest = ({
   indx,
   transaction,
   defaultCollapsed = false,
+  floatingDisplay = true,
 }: {
   transaction: Transaction;
   defaultCollapsed?: boolean;
   indx: number;
+  floatingDisplay?: boolean;
 }) => {
   const { removeTransactionAtIndex } = useTransactionsStore();
   const removeTxnClick = useCallback(() => {
@@ -81,7 +83,7 @@ export const RenderRequest = ({
           style={{ backgroundImage: `url(${transaction.wallet.icon})` }}
         />
       )}
-      <div style={{ width: defaultCollapsed ? '100%' : "calc(100% - 40px)" }}>
+      <div style={{ width: !floatingDisplay ? '100%' : "calc(100% - 40px)" }}>
         <div className="flex w-full">
           <div className="flex-grow font-sm text-left text-lg">
             <span className="font-bold capitalize">

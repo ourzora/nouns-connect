@@ -1,10 +1,8 @@
-import {
-  useChainModal,
-  useConnectModal,
-} from "@rainbow-me/rainbowkit";
+import { useChainModal, useConnectModal } from "@rainbow-me/rainbowkit";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
 import { useAccount } from "wagmi";
+import { usePushStore } from "../stores/push-store";
 import { CHAIN_ID } from "../utils/constants";
 import { AppButton } from "./AppButton";
 
@@ -30,11 +28,21 @@ export const Splash = () => {
     buttonOnClick: () => {},
   });
 
+  const { setPermissionGranted } = usePushStore();
+
   useEffect(() => {
     if (isConnected) {
       setButtonState({
         buttonText: "Go to my DAOs",
-        buttonOnClick: () => push("/daos"),
+        buttonOnClick: () => {
+          if ("Notification" in window) {
+            Notification.requestPermission((permission) => {
+              console.log('has push notif', permission)
+              setPermissionGranted(permission);
+            });
+          }
+          push("/daos");
+        },
       });
     } else if (openConnectModal) {
       setButtonState({
@@ -47,7 +55,7 @@ export const Splash = () => {
         buttonOnClick: () => openChainModal(),
       });
     }
-  }, [isConnected, openConnectModal]);
+  }, [isConnected, openConnectModal, setPermissionGranted]);
 
   return (
     <section className="flex items-center text-center fixed h-screen top-0 z-50 relative font-londrina">

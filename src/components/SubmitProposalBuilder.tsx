@@ -1,5 +1,4 @@
 import {
-  useContract,
   useContractWrite,
   usePrepareContractWrite,
   useSigner,

@@ -28,11 +28,11 @@ const SubmittedTransactionsPreview = ({ dao }: { dao: any }) => {
   const { push } = useRouter();
 
   const onProposalSubmitted = useCallback(
-    ({ proposalId }: { proposalId: string }) => {
-      clear();
-      push(
+    async ({ proposalId }: { proposalId: string }) => {
+      await push(
         `/proposals/created?id=${proposalId}&address=${dao.collectionAddress}`
       );
+      clear();
     },
     [push, clear]
   );
@@ -45,6 +45,7 @@ const SubmittedTransactionsPreview = ({ dao }: { dao: any }) => {
           {transactions.map((transaction: Transaction, indx: number) => (
             <BorderFrame key={indx}>
               <RenderRequest
+                floatingDisplay={true}
                 indx={indx}
                 key={transaction.data.id}
                 transaction={transaction}
