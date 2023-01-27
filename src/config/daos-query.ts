@@ -26,6 +26,28 @@ export const MyNounsDaosQuery = gql`
   }
 `;
 
+export const ProposalByIdQuery = gql`
+  query nounsProposal($proposalId: String!, $chain: Chain!) {
+    nouns {
+      nounsProposal(where:{
+        proposalId: $proposalId
+      }, network:{
+        chain: $chain, network: ETHEREUM
+      }) {
+        proposalId
+        proposalNumber
+        description
+        status
+        timeCreated
+        proposer
+        values
+        targets
+        calldatas
+      }
+    }
+  }
+`;
+
 export const MyHoldingsQuery = gql`
   query MyHoldingsQuery(
     $addresses: [String!]!

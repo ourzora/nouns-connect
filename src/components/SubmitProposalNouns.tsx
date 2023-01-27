@@ -4,6 +4,10 @@ import { CHAIN_ID } from "../utils/constants";
 import { Transaction } from "../stores/interactions";
 import toast from "react-hot-toast";
 import useSWR from "swr";
+import { AppButton } from "./AppButton";
+import { useDescription } from "../stores/description";
+import { ethers } from "ethers";
+import { useRouter } from "next/router";
 // import addressesMainnet from '@zoralabs/nouns-protocol/dist/addresses/1.json';
 // import addressesTestnet from '@zoralabs/nouns-protocol/dist/addresses/5.json';
 
@@ -13,11 +17,12 @@ const MESSAGE_LOOKUP = {
 
 export const SubmitProposalNouns = ({
   daoAddress,
+  daoTokenAddress,
   from,
   transactions,
-  description,
 }: {
   daoAddress: string;
+  daoTokenAddress: string;
   isNounsDaoStructure: boolean;
   from: string;
   description: string;
@@ -25,36 +30,49 @@ export const SubmitProposalNouns = ({
 }) => {
   const { data: signer } = useSigner();
 
+  const { description } = useDescription();
+
   const { config, error } = usePrepareContractWrite({
     address: daoAddress,
     abi: governorAbi,
     functionName: "propose",
     signer,
+    enabled: description.length > 0,
     onError: (err: any) => {
       toast(`Error setting up proposal`);
     },
     args: [
       // targets
-      transactions.map((txn: Transaction) => txn.to),
+      transactions.map((txn: Transaction) => txn.data.to),
       // values
-      transactions.map((txn: Transaction) => txn.value),
+      transactions.map((txn: Transaction) => txn.data.value),
       // signatures (not sure what to do here – maybe use ether.actor again)
       transactions.map((txn: Transaction) => ""),
       // calldatas
-      transactions.map((txn: Transaction) => txn.calldata),
+      transactions.map((txn: Transaction) => txn.data.calldata),
       // description
       description,
     ],
     chainId: CHAIN_ID,
   });
 
+  const { push } = useRouter();
+
   const { write, isLoading } = useContractWrite({
     ...config,
     onSuccess: () => {
       toast(`Sending proposal request`);
     },
-    onSettled: () => {
-      toast(`Successfully sent proposal to DAO`);
+    onError: () => {
+      toast(`Error sending request`);
+    },
+    onSettled: async (response: any) => {
+      const iface = new ethers.utils.Interface(governorAbi);
+      const txn = await response.wait();
+      const proposeLog = iface.parseLog(txn.logs[0]);
+      push(
+        `/proposals/created?id=${proposeLog.args.id}&address=${daoTokenAddress}`
+      );
     },
   });
 
@@ -68,12 +86,12 @@ export const SubmitProposalNouns = ({
   }
 
   return (
-    <button
-      className="border-2 border-gray-300 px-2 py-1 mt-2 hover:border-gray-600"
+    <AppButton
+      className=""
       disabled={!!error || isLoading}
       onClick={() => write()}
     >
-      Submit Proposal to DAO
-    </button>
+      {isLoading ? "Submitting Proposal..." : "Submit Proposal"}
+    </AppButton>
   );
 };

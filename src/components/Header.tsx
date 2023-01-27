@@ -1,6 +1,5 @@
 import React from 'react'
 import { AnimatePresence } from "framer-motion"
-// import { ConnectButton } from "@rainbow-me/rainbowkit";
 import dynamic from "next/dynamic";
 
 
