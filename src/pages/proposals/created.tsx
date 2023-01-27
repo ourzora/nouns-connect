@@ -21,8 +21,6 @@ function Created({ dao }: { dao: any }) {
 
   const {
     data: proposalData,
-    isLoading,
-    error,
   } = useSWR(
     isReady ? ["proposalById", query.id] : undefined,
     ([_, proposalId]) =>

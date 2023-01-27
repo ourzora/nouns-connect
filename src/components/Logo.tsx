@@ -48,7 +48,7 @@ class Circle {
   }
 }
 
-export const Logo = ({ size = WIDTH_TOTAL }: { size: number }) => {
+export const Logo = ({ size = WIDTH_TOTAL }: { size?: number }) => {
   const canvasRef = useRef<HTMLCanvasElement>();
   useLayoutEffect(() => {
     if (canvasRef.current) {
