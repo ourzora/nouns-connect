@@ -2,6 +2,9 @@ import request from "graphql-request";
 import { useEffect, useState, useMemo } from "react";
 import useSWR from "swr";
 import { useAccount, useContractReads } from "wagmi";
+
+import governorABI from "@zoralabs/nouns-protocol/dist/artifacts/Governor.sol/Governor.json";
+
 import {
   LastTokenQuery,
   MyHoldingsQuery,
@@ -9,7 +12,6 @@ import {
 } from "../config/daos-query";
 import { CHAIN_ID, ZORA_API_URL } from "../utils/constants";
 import { DAOItem } from "./DAOItem";
-import governorABI from "@zoralabs/nouns-protocol/dist/artifacts/Governor.sol/Governor.json";
 
 export const YourDAOs = () => {
   const { address, isConnected } = useAccount();
