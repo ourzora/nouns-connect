@@ -32,7 +32,7 @@ export const DescriptionManager = ({
 
           <label
             htmlFor="proposal-summary"
-            className="text-lg text-left block mb-2 mt-4"
+            className="text-lg text-left block mb-2 mt-4 flex items-end"
           >
             Summary
             {hasTitle && (

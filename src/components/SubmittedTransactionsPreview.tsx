@@ -12,6 +12,7 @@ import { SubmitProposalBuilder } from "./SubmitProposalBuilder";
 import { Transaction, useTransactionsStore } from "../stores/interactions";
 import { AppButton } from "./AppButton";
 import { BorderFrame } from "./BorderFrame";
+import { ProposalSimulation } from "./ProposalSimulation";
 
 const SubmittedTransactionsPreview = ({ dao }: { dao: any }) => {
   const { transactions, clear } = useTransactionsStore();
@@ -71,6 +72,8 @@ const SubmittedTransactionsPreview = ({ dao }: { dao: any }) => {
         isConnected ? (
           <>
             <DescriptionManager hasTitle={isError} />
+            <div className="h-4"> </div>
+            <ProposalSimulation daoTreasuryAddress={dao.treasuryAddress} />
             <div className="h-4"> </div>
             <SubmitComponent
               onSubmitted={onProposalSubmitted}
