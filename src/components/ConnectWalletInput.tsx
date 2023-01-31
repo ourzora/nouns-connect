@@ -2,7 +2,8 @@ import { useCallback, useEffect, useState } from "react";
 import jsQR from "jsqr";
 import { blobToImageData } from "../utils/images";
 import { toast } from "react-hot-toast";
-import { format } from 'date-fns'
+import { format } from "date-fns";
+import { useRouter } from "next/router";
 
 type ConnectWalletInputProps = {
   client: any;
@@ -37,9 +38,7 @@ export const ConnectWalletInput = ({
         } else {
           toast("Invalid QR Code");
           // setInvalidQRCode(true)
-          setInputValue(
-            `Screen Shot ${format(new Date(), 'yyyy-MM-dd')}`
-          );
+          setInputValue(`Screen Shot ${format(new Date(), "yyyy-MM-dd")}`);
         }
       };
       reader.readAsDataURL(file);
@@ -96,6 +95,13 @@ export const ConnectWalletInput = ({
     [connectWithQR]
   );
 
+  const { query } = useRouter();
+  useEffect(() => {
+    if (query?.uri) {
+      connectWithUri(query.uri as string);
+    }
+  }, [query]);
+
   const onWCPaste = useCallback(
     (event: any) => {
       if (client) {
@@ -130,7 +136,7 @@ export const ConnectWalletInput = ({
   };
   const dragEnd = () => {
     setDragging(false);
-  }
+  };
   const onDrop = (evt: any) => {
     dragEnd();
     evt.preventDefault();

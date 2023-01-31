@@ -2,7 +2,7 @@ import request from "graphql-request";
 import useSWR from "swr";
 
 import { LastTokenQuery } from "../config/daos-query";
-import { CHAIN_ID, ZORA_API_URL } from "../utils/constants";
+import { ZORA_API_URL, CHAIN_NAME } from "../utils/constants";
 
 export const useDAOImage = ({
   collectionAddress,
@@ -12,7 +12,7 @@ export const useDAOImage = ({
   const { data: imageData } = useSWR(collectionAddress, (collectionAddress) =>
     request(ZORA_API_URL, LastTokenQuery, {
       tokens: [{ address: collectionAddress, tokenId: "0" }],
-      chain: CHAIN_ID === 1 ? "ETHEREUM" : "GOERLI",
+      chain: CHAIN_NAME,
     })
   );
 

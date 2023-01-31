@@ -85,8 +85,21 @@ export const useWalletConnectClient = ({
       });
 
       wcConnector.on("call_request", async (error: any, payload: any) => {
+        console.log({ type: "call_request", error, payload });
         if (error) {
           throw error;
+        }
+
+        if (['personal_sign', 'eth_sign', 'eth_signTypedData'].includes(payload.method)) {
+          new Notification("Cannot sign messages from a WalletConnect client", {
+            body: 'A message was requested to be signed, but a connected wallet cannot sign a message'
+          });
+          toast("Cannot sign messages from a DAO", { duration: 20000 });
+          return rejectWithMessage(
+            wcConnector,
+            payload.id,
+            "Cannot sign messages from a WC client"
+          );
         }
 
         try {
@@ -96,7 +109,8 @@ export const useWalletConnectClient = ({
 
           wcConnector.approveRequest({
             id: payload.id,
-            result: '0x0000000000000000000000000000000000000000000000000000000000000000',
+            result:
+              "0x0000000000000000000000000000000000000000000000000000000000000000",
           });
         } catch (err) {
           rejectWithMessage(wcConnector, payload.id, (err as Error).message);

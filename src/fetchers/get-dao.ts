@@ -1,6 +1,7 @@
 import request from "graphql-request";
+
 import { NounsQueryByCollection } from "../config/daos-query";
-import { CHAIN_ID, ZORA_API_URL } from "../utils/constants";
+import { CHAIN_NAME, ZORA_API_URL } from "../utils/constants";
 
 export const GetDaoServerSide = async ({
   res,
@@ -12,7 +13,7 @@ export const GetDaoServerSide = async ({
   );
 
   const daos = await request(ZORA_API_URL, NounsQueryByCollection, {
-    chain: { "1": "MAINNET", "5": "GOERLI" }[CHAIN_ID.toString()],
+    chain: CHAIN_NAME,
     collectionAddresses: [query.address as string],
   });
 
