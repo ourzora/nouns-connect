@@ -14,6 +14,7 @@ import { ProposalByIdQuery } from "../../config/daos-query";
 import { GetDaoServerSide } from "../../fetchers/get-dao";
 import { useDAOImage } from "../../hooks/useDAOImage";
 import { CHAIN_ID, ZORA_API_URL } from "../../utils/constants";
+import { MadePossibleLogo } from "../../components/MadePossibleLogo";
 
 function Created({ dao }: { dao: any }) {
   const { url } = useDAOImage({ collectionAddress: dao.collectionAddress });
@@ -147,10 +148,7 @@ function Created({ dao }: { dao: any }) {
             </h3>
           )}
         </BorderFrame>
-        <div className="flex mt-8 items-center text-2xl text-gray-700 justify-center font-pt font-bold">
-          <div className="text-xl">Made possible by:</div>
-          <Logo size={120} />
-        </div>
+        <MadePossibleLogo />
       </PageFrameSize>
     </Layout>
   );

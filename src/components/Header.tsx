@@ -1,14 +1,14 @@
-import React from 'react'
-import { AnimatePresence } from "framer-motion"
+import React from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 
-
-const ConnectButton = dynamic(() => import('./ConnectButton'), {
+const ConnectButton = dynamic(() => import("./ConnectButton"), {
   ssr: false,
-})
-const Logo = dynamic(() => import('./Logo'), {
+});
+const Logo = dynamic(() => import("./Logo"), {
   ssr: false,
-})
+});
 
 export default function Header() {
   return (
@@ -17,9 +17,18 @@ export default function Header() {
         <AnimatePresence>
           <Logo />
         </AnimatePresence>
-        {/* | <Link href="/about">About</Link> */}
+        <motion.span
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 2 }}
+          className="hover:underline"
+        >
+          <Link className="text-gray-400 ml-4 text-md" href="/faq">
+            FAQ
+          </Link>
+        </motion.span>
       </nav>
       <ConnectButton />
     </header>
-  )
+  );
 }

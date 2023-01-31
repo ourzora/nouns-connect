@@ -109,7 +109,7 @@ const Logo = ({ size = WIDTH_TOTAL }: { size?: number }) => {
           className="inline-block -mt-2"
           ref={canvasRef}
         />
-        <span className="">NounsConnect</span>
+        <span className="hover:underline">NounsConnect</span>
       </Link>
     </motion.div>
   );

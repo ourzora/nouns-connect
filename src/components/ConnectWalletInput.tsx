@@ -147,7 +147,7 @@ export const ConnectWalletInput = ({
 
   return (
     <div
-      className="rounded-lg relative border mx-4 mb-8 flex flex-col items-center bg-white p-8"
+      className="rounded-lg relative border mb-8 flex flex-col items-center bg-white p-8 md:px-12"
       onDragStart={dragStart}
       onDrop={onDrop}
       onDragEnd={dragEnd}
