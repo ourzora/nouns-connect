@@ -1,7 +1,7 @@
 import { BigNumber } from "ethers";
 import { formatEther } from "ethers/lib/utils";
 import { useCallback, useEffect, useState } from "react";
-import { useContract, useProvider } from "wagmi";
+import { useContract, useFeeData, useProvider } from "wagmi";
 import multicallAbi from "../config/multicall-abi.json";
 import { Transaction, useTransactionsStore } from "../stores/interactions";
 
@@ -22,6 +22,7 @@ export const ProposalSimulation = ({
   });
 
   const [gasEstimate, setGasEstimate] = useState<any>();
+  const [gasPrice, setGasPrice] = useState<any>();
 
   const callAggregate = useCallback(
     async (contract, transactions) => {
@@ -38,14 +39,10 @@ export const ProposalSimulation = ({
           callData: transaction.data.calldata,
         }));
 
-        const result = await contract.callStatic.aggregate3Value(
-          txns,
-
-          {
-            from: daoTreasuryAddress,
-            value: totalValue,
-          }
-        );
+        const result = await contract.callStatic.aggregate3Value(txns, {
+          from: daoTreasuryAddress,
+          value: totalValue,
+        });
 
         console.log({ result });
 
@@ -64,6 +61,7 @@ export const ProposalSimulation = ({
             fee: feeData.maxFeePerGas.toString(),
             price: feeData.gasPrice.toString(),
           });
+          setGasPrice(feeData.maxFeePerGas);
           setGasEstimate(
             BigNumber.from(gasEstimate)
               .mul(feeData.maxFeePerGas)
@@ -72,7 +70,7 @@ export const ProposalSimulation = ({
         }
       }
     },
-    [setGasEstimate]
+    [setGasEstimate, setGasPrice]
   );
 
   useEffect(() => {
@@ -80,7 +78,15 @@ export const ProposalSimulation = ({
   }, [transactions, contract]);
 
   if (gasEstimate) {
-    return <div>Estimated proposal execution gas: {formatEther(gasEstimate)}</div>;
+    return (
+      <div className="flex flex-between text-md">
+        <div>Estimated proposal execution gas:</div>
+        <div>
+          <span>{formatEther(gasEstimate)}</span>
+        </div>{" "}
+        <span className="text-gray-800">ETH at {gasPrice} GWEI</span>
+      </div>
+    );
   }
 
   return <div>Simulating...</div>;

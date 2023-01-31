@@ -21,7 +21,8 @@ export const Splash = () => {
   const onConnect = useCallback(() => {
     push("/daos");
   }, [push]);
-  const { isConnected } = useAccount(onConnect as any);
+
+  const { isConnected } = useAccount({ onConnect });
 
   const [{ buttonText, buttonOnClick }, setButtonState] = useState({
     buttonText: "Loading...",
@@ -37,7 +38,7 @@ export const Splash = () => {
         buttonOnClick: () => {
           if ("Notification" in window) {
             Notification.requestPermission((permission) => {
-              console.log('has push notif', permission)
+              console.log("has push notif", permission);
               setPermissionGranted(permission);
             });
           }
