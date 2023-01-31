@@ -29,7 +29,7 @@ export const YourDAOs = () => {
 
   const hasDAOs = address && data?.nouns?.nounsDaos?.nodes;
   const { data: daoVotes } = useContractReads({
-    allowFailure: false,
+    allowFailure: true,
     enabled: hasDAOs,
     contracts: hasDAOs
       ? [
@@ -47,6 +47,8 @@ export const YourDAOs = () => {
         ]
       : [],
   });
+
+  console.log({ daoVotes });
 
   const { data: images } = useSWR(
     data
@@ -101,12 +103,14 @@ export const YourDAOs = () => {
             : 0
         }
         quorum={
-          daoVotes?.length > 0
+          daoVotes?.length > 0 && daoVotes[indx * 2]
             ? (daoVotes[indx * 2] as any).toNumber()
             : undefined
         }
         yourVotes={
-          daoVotes?.length > 0 ? (daoVotes[indx] as any).toNumber() : undefined
+          daoVotes?.length > 0 && daoVotes[indx]
+            ? (daoVotes[indx] as any).toNumber()
+            : undefined
         }
         key={`${item.name}-${indx}`}
         address={item.collectionAddress}

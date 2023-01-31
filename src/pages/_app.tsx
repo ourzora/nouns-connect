@@ -49,6 +49,26 @@ const client = createClient({
 export default function MyApp({ Component, pageProps }: any) {
   return (
     <main className={`${Londrina.variable} ${ptRootUi.variable} font-sans`}>
+      <script>{`/*
+
+
+@@@@@@@@@@@@@@@@@@@   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*              @@@@@@   
+@@@@@@@@@@@@@@@@@@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*           @@@@@@@@@   
+        @@@@@@@   @@@@@@@        @@@@@@@        @@@@@         @@@@@@@@@@@   
+      @@@@@@@    @@@@@@            @@@@@@     @@@@@@@      @@@@@@@@*@@@@@   
+   @@@@@@*       @@@@@              @@@@@   @@@@@@@      @@@@@@@    @@@@@   
+@@@@@@@*         @@@@@@            @@@@@@  @@@@@@     @@@@@@@@      @@@@@   
+@@@@@@*           @@@@@@@        @@@@@@@    @@@@@@@ @@@@@@@         @@@@@   
+ @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       @@@@@@@@@@@           @@@@@   
+  *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@           @@@@@@**            @@@@@
+
+ 
+   initial draft by @iainnash
+  
+   ZORA LABS work with us:
+   https://zora.co/careers
+
+        */`}</script>
       <WagmiConfig client={client}>
         <RainbowKitProvider chains={chains}>
           <NextNProgress
