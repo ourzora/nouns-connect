@@ -1,7 +1,14 @@
+import dynamic from "next/dynamic";
 import React from "react";
 import Layout from "../components/layout";
-import { MadePossibleLogo } from "../components/MadePossibleLogo";
 import { PageFrameSize } from "../components/PageFrameSize";
+
+const MadePossibleLogo = dynamic(
+  () => import("../components/MadePossibleLogo"),
+  {
+    ssr: false,
+  }
+);
 
 const FAQItem = ({
   title,

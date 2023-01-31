@@ -1,9 +1,9 @@
 import request from "graphql-request";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
+import dynamic from "next/dynamic";
 import useSWR from "swr";
 
-import Logo from "../../components/Logo";
 import { BorderFrame } from "../../components/BorderFrame";
 import { CheckIcon } from "../../components/CheckIcon";
 import Layout from "../../components/layout";
@@ -14,7 +14,13 @@ import { ProposalByIdQuery } from "../../config/daos-query";
 import { GetDaoServerSide } from "../../fetchers/get-dao";
 import { useDAOImage } from "../../hooks/useDAOImage";
 import { CHAIN_ID, ZORA_API_URL } from "../../utils/constants";
-import { MadePossibleLogo } from "../../components/MadePossibleLogo";
+
+const MadePossibleLogo = dynamic(
+  () => import("../../components/MadePossibleLogo"),
+  {
+    ssr: false,
+  }
+);
 
 function Created({ dao }: { dao: any }) {
   const { url } = useDAOImage({ collectionAddress: dao.collectionAddress });
