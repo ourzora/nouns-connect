@@ -10,7 +10,7 @@ import {
   MyHoldingsQuery,
   MyNounsDaosQuery,
 } from "../config/daos-query";
-import { CHAIN_ID, CHAIN_NAME, ZORA_API_URL } from "../utils/constants";
+import { CHAIN_NAME, ZORA_API_URL } from "../utils/constants";
 import { DAOItem } from "./DAOItem";
 
 export const YourDAOs = () => {
@@ -47,8 +47,6 @@ export const YourDAOs = () => {
         ]
       : [],
   });
-
-  console.log({ daoVotes });
 
   const { data: images } = useSWR(
     data

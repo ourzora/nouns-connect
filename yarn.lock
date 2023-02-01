@@ -466,11 +466,6 @@
     "@ethersproject/properties" "^5.7.0"
     "@ethersproject/strings" "^5.7.0"
 
-"@fontsource/londrina-solid@^4.5.11":
-  version "4.5.11"
-  resolved "https://registry.yarnpkg.com/@fontsource/londrina-solid/-/londrina-solid-4.5.11.tgz#7cf5db4ee5779a660b43f254f4892ce4074ebe0a"
-  integrity sha512-SbM/TMxDH8eXlSyGeQ/bVz6MUHHj6FiQXnZujUr4cyK27smZPpLXoJCjB9uChJaqQ23TsgctQsGRnuHuwml1kw==
-
 "@graphql-typed-document-node/core@^3.1.1":
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.1.1.tgz#076d78ce99822258cf813ecc1e7fa460fa74d052"
@@ -886,6 +881,11 @@
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/@vanilla-extract/sprinkles/-/sprinkles-1.5.0.tgz#c921183ae518bb484299c2dc81f2acefd91c3dbe"
   integrity sha512-W58f2Rzz5lLmk0jbhgStVlZl5wEiPB1Ur3fRvUaBM+MrifZ3qskmFq/CiH//fEYeG5Dh9vF1qRviMMH46cX9Nw==
+
+"@vercel/analytics@^0.1.8":
+  version "0.1.8"
+  resolved "https://registry.yarnpkg.com/@vercel/analytics/-/analytics-0.1.8.tgz#71f1f8c7bb98ac0c5c47eb3fb8ccbe8141b9fe47"
+  integrity sha512-PQrOI8BJ9qUiVJuQfnKiJd15eDjDJH9TBKsNeMrtelT4NAk7d9mBVz1CoZkvoFnHQ0OW7Xnqmr1F2nScfAnznQ==
 
 "@wagmi/chains@0.1.5":
   version "0.1.5"
@@ -2822,10 +2822,6 @@ prop-types@^15.8.1:
     loose-envify "^1.4.0"
     object-assign "^4.1.1"
     react-is "^16.13.1"
-
-"pt-root-ui-font@https://github.com/kokkekpek/pt-root-ui-font.git":
-  version "1.0.0"
-  resolved "https://github.com/kokkekpek/pt-root-ui-font.git#6168d52805db89c8e79be61cb7cf0f8d79a05208"
 
 qrcode@1.4.4:
   version "1.4.4"

@@ -9,12 +9,15 @@ import {
 import { Toaster } from "react-hot-toast";
 import { publicProvider } from "wagmi/providers/public";
 import NextNProgress from "nextjs-progressbar";
+import { Analytics } from '@vercel/analytics/react';
+import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
+
+import "@rainbow-me/rainbowkit/styles.css";
+import "../styles/globals.css";
+
 import { Londrina } from "../fonts/Londrina";
 import { ptRootUi } from "../fonts/PtRootUi";
 
-import "../styles/globals.css";
-import "@rainbow-me/rainbowkit/styles.css";
-import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { CHAIN_ID } from "../utils/constants";
 import Header from "../components/Header";
 import dynamic from "next/dynamic";
@@ -35,7 +38,7 @@ const { chains, provider, webSocketProvider } = configureChains(
 );
 
 const { connectors } = getDefaultWallets({
-  appName: "Nouns Connect",
+  appName: "NounsConnect",
   chains,
 });
 
@@ -83,6 +86,7 @@ export default function MyApp({ Component, pageProps }: any) {
           <Toaster />
           <SplashImageScatter />
           <Component {...pageProps} />
+          <Analytics />
         </RainbowKitProvider>
       </WagmiConfig>
     </main>

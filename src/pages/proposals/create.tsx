@@ -23,7 +23,7 @@ function CreateComponent({ dao }: { dao: any }) {
 
 const DAOActionPage = ({ dao }) => {
   return (
-    <Layout title="Nouns Connect | Create Proposal">
+    <Layout title="NounsConnect | Create Proposal">
       <CreateComponent dao={dao} />
     </Layout>
   );

@@ -17,6 +17,7 @@
     "@next/font": "^13.1.2",
     "@nouns/contracts": "^0.3.0",
     "@rainbow-me/rainbowkit": "^0.8.1",
+    "@vercel/analytics": "^0.1.8",
     "@walletconnect/client": "1.8.0",
     "@walletconnect/types": "1.8.0",
     "@zoralabs/nouns-protocol": "^1.0.1",

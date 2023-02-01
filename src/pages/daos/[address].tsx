@@ -30,7 +30,7 @@ function DAOActionComponent({ dao }: { dao: any }) {
       }
 
       if (permissionGranted === "granted") {
-        new Notification(`Nouns Connect: New Transaction`, {
+        new Notification(`NounsConnect: New Transaction`, {
           body: `We have a new transaction from ${connectedTo}`,
         });
       }
@@ -161,7 +161,7 @@ function DAOActionComponent({ dao }: { dao: any }) {
 
 const DAOActionPage = ({ dao }) => {
   return (
-    <Layout title="Nouns Connect | Your DAOs">
+    <Layout title="NounsConnect | Your DAOs">
       <div className="text-center relative max-w-3xl w-full mx-4 sm:mx-0 sm:mt-20 mt-10">
         <DAOHeader showConnection={true} dao={dao} />
 
