@@ -57,17 +57,9 @@ export const useWalletConnectClient = ({
       let topic;
       if (parseUri(uri).version === 1) {
         alert("not support");
-
-        
-
-
-
       } else {
         const wcConnector = new Core({
           projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
-          // storageOptions: {
-          //   database: `session-${daoTreasuryAddress}`,
-          // },
         });
         const web3wallet = await Web3Wallet.init({
           core: wcConnector,
