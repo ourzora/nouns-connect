@@ -59,7 +59,9 @@ export const RenderRequest = ({
           transaction.data.to
         }/name`
       : undefined,
-    textFetcher
+    textFetcher,
+    // if this errors, don't retry.
+    { errorRetryCount: 0 }
   );
 
   const parsedResponse = useMemo(() => {
@@ -85,7 +87,7 @@ export const RenderRequest = ({
           style={{ backgroundImage: `url(${transaction.wallet.icon})` }}
         />
       )}
-      <div style={{ width: !floatingDisplay ? '100%' : "calc(100% - 40px)" }}>
+      <div style={{ width: !floatingDisplay ? "100%" : "calc(100% - 40px)" }}>
         <div className="flex w-full">
           <div className="flex-grow font-sm text-left text-lg">
             <span className="font-bold capitalize">
@@ -126,13 +128,24 @@ export const RenderRequest = ({
         </div>
         {!collapsed && (
           <div className="mt-4">
-            {parsedResponse && (
+            {parsedResponse ? (
               <ContractDataItems
                 args={parsedResponse?.args}
                 functionFragmentInputs={
                   parsedResponse?.functionFragment?.inputs
                 }
               />
+            ) : decodeData ? (
+              <>{JSON.stringify(decodeData, null, 2)}</>
+            ) : (
+              <DefinitionListItem
+                name="Bytecode data"
+                title="Raw data being sent in the transaction"
+              >
+                <div className="border-gray-200 border-2 font-mono p-2 rounded-lg">
+                  {transaction.data.calldata}
+                </div>
+              </DefinitionListItem>
             )}
             <dl>
               <DefinitionListItem name="ETH Value">

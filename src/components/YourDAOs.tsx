@@ -10,7 +10,7 @@ import {
   MyHoldingsQuery,
   MyNounsDaosQuery,
 } from "../config/daos-query";
-import { CHAIN_ID, ZORA_API_URL } from "../utils/constants";
+import { CHAIN_ID, CHAIN_NAME, ZORA_API_URL } from "../utils/constants";
 import { DAOItem } from "./DAOItem";
 
 export const YourDAOs = () => {
@@ -19,7 +19,7 @@ export const YourDAOs = () => {
   const { data } = useSWR(["fetch-daos", address], ([_, memberAddress]) =>
     request(ZORA_API_URL, MyNounsDaosQuery, {
       memberAddress,
-      chain: CHAIN_ID === 1 ? "MAINNET" : "GOERLI",
+      chain: CHAIN_NAME,
     })
   );
 
@@ -63,7 +63,7 @@ export const YourDAOs = () => {
           address,
           tokenId: "0",
         })),
-        chain: CHAIN_ID === 1 ? "MAINNET" : "GOERLI",
+        chain: CHAIN_NAME,
       })
   );
 
@@ -78,7 +78,7 @@ export const YourDAOs = () => {
       request(ZORA_API_URL, MyHoldingsQuery, {
         addresses: holdingsAddresses,
         owner: address,
-        chain: CHAIN_ID === 1 ? "MAINNET" : "GOERLI",
+        chain: CHAIN_NAME,
       })
   );
 

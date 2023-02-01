@@ -14,6 +14,7 @@ import { AppButton } from "../../components/AppButton";
 import { DAOHeader } from "../../components/DAOHeader";
 import { GetDaoServerSide } from "../../fetchers/get-dao";
 import { usePushStore } from "../../stores/push-store";
+import { useDAOStore } from "../../stores/dao";
 
 function DAOActionComponent({ dao }: { dao: any }) {
   const [error, setError] = useState<undefined | string>(undefined);
@@ -79,6 +80,11 @@ function DAOActionComponent({ dao }: { dao: any }) {
       disconnect();
     }
   }, [wcClientData?.name]);
+
+  const { setDao } = useDAOStore();
+  useEffect(() => {
+    setDao(dao);
+  }, [setDao]);
 
   const disconnectButton = (
     <AppButton

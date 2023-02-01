@@ -65,6 +65,7 @@ function Created({ dao }: { dao: any }) {
     return nounsProposal.calldatas.map((calldata, indx) => (
       <div key={indx} className="border-2 rounded-lg py-6 px-6 my-4 w-full">
         <RenderRequest
+          showDeleteButtonInline={false}
           indx={indx}
           defaultCollapsed={true}
           transaction={{

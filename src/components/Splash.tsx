@@ -2,6 +2,7 @@ import { useChainModal, useConnectModal } from "@rainbow-me/rainbowkit";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
 import { useAccount } from "wagmi";
+
 import { usePushStore } from "../stores/push-store";
 import { CHAIN_ID } from "../utils/constants";
 import { AppButton } from "./AppButton";

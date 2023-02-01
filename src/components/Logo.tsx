@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
-const WIDTH_TOTAL = 40;
+const WIDTH_TOTAL = 30;
 
 class Point {
   x: number;
@@ -51,6 +51,8 @@ class Circle {
 }
 
 const Logo = ({ size = WIDTH_TOTAL }: { size?: number }) => {
+  const originalSize = size;
+  size = 30;
   const canvasRef = useRef<HTMLCanvasElement>();
   /**
    * TODO: could animated this - circles rotating.
@@ -106,10 +108,11 @@ const Logo = ({ size = WIDTH_TOTAL }: { size?: number }) => {
         <canvas
           width={size}
           height={size}
+          style={{imageRendering: 'pixelated', width: originalSize, height: originalSize}}
           className="inline-block -mt-2"
           ref={canvasRef}
         />
-        <span className="hover:underline">NounsConnect</span>
+        <span className="pl-2 hover:underline">NounsConnect</span>
       </Link>
     </motion.div>
   );
