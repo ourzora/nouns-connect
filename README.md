@@ -1,5 +1,9 @@
 ## nouns connect
 
+deployed at nounsconnect.wtf
+#
+
+
 Connect your builder/nouns DAOs to walletconnect apps
 
 ### -- apps that work
