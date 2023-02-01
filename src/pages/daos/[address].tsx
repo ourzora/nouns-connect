@@ -30,6 +30,8 @@ function DAOActionComponent({ dao }: { dao: any }) {
         setError(error);
       }
 
+      console.log(event);
+
       if (permissionGranted === "granted") {
         new Notification(`Nouns Connect: New Transaction`, {
           body: `We have a new transaction from ${connectedTo}`,
@@ -37,7 +39,7 @@ function DAOActionComponent({ dao }: { dao: any }) {
       }
 
       const { params } = event.params.request;
-      const paramArgs = params.params.map((param: any) => ({
+      const paramArgs = params.map((param: any) => ({
         data: {
           id: event.id,
           gas: param.gas,

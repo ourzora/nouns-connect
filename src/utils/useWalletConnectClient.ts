@@ -8,7 +8,7 @@ import {
   Web3WalletTypes,
 } from "@walletconnect/web3wallet";
 import { CHAIN_ID } from "./constants";
-import { encodeTypeByte, getSdkError } from "@walletconnect/utils";
+import { parseUri, getSdkError } from "@walletconnect/utils";
 
 export const useWalletConnectClient = ({
   provider,
@@ -46,7 +46,6 @@ export const useWalletConnectClient = ({
         topic,
         reason: getSdkError("USER_REJECTED_METHODS"),
       });
-      localStorage.removeItem(localStorageSessionKey.current);
       setWcClientData(null);
     } catch (error) {
       console.log("Error trying to close WC session: ", error);
@@ -55,81 +54,110 @@ export const useWalletConnectClient = ({
 
   const wcConnect = useCallback(
     async ({ uri }: { uri?: string }) => {
-      const wcConnector = new Core({
-        projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
-        storageOptions: {
-          database: `session-${daoTreasuryAddress}`,
-        },
-      });
-      const web3wallet = await Web3Wallet.init({
-        core: wcConnector,
-        metadata: {
-          name: "Nouns Connect",
-          description: "Nouns Connect",
-          url: "https://nounsconnect.wtf/",
-          icons: [],
-        },
-      });
-      setWeb3wallet(web3wallet as any);
+      let topic;
+      if (parseUri(uri).version === 1) {
+        alert("not support");
 
-      await web3wallet.core.pairing.pair({ uri });
+        
 
-      const namespaces = {
-        eip155: {
-          accounts: [`eip155:${CHAIN_ID}:${daoTreasuryAddress}`],
-          methods: ["eth_sendTransaction"],
-          events: [],
-        },
-      };
 
-      wcConnector.on("disconnect", (evt: any) => {
-        console.log({ type: "disconnect", evt });
-      });
 
-      web3wallet.on(
-        "session_proposal",
-        async (proposal: Web3WalletTypes.SessionProposal) => {
-          const session = await web3wallet.approveSession({
-            id: proposal.id,
-            namespaces,
-          });
-          setTopic(session.topic);
-          trackEvent("New session", proposal.params.proposer.metadata);
-          setWcClientData(proposal.params.proposer.metadata);
-          toast("WC Connected");
-        }
-      );
+      } else {
+        const wcConnector = new Core({
+          projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
+          // storageOptions: {
+          //   database: `session-${daoTreasuryAddress}`,
+          // },
+        });
+        const web3wallet = await Web3Wallet.init({
+          core: wcConnector,
+          metadata: {
+            name: "Nouns Connect",
+            description: "Nouns Connect",
+            url: "https://nounsconnect.wtf/",
+            icons: [],
+          },
+        });
+        setWeb3wallet(web3wallet as any);
 
-      web3wallet.on(
-        "session_request",
-        async (event: Web3WalletTypes.SessionRequest) => {
-          console.log({ event });
-          if (
-            ["personal_sign", "eth_sign", "eth_signTypedData"].includes(
-              event.params.request.method
-            )
-          ) {
-            new Notification(
-              "Cannot sign messages from a WalletConnect client",
-              {
-                body: "A message was requested to be signed, but a connected wallet cannot sign a message",
-              }
-            );
-            toast("Cannot sign messages from a DAO", { duration: 20000 });
+        await web3wallet.core.pairing.pair({ uri });
+
+        wcConnector.on("disconnect", (evt: any) => {
+          console.log({ type: "disconnect", evt });
+        });
+
+        web3wallet.on(
+          "session_proposal",
+          async (proposal: Web3WalletTypes.SessionProposal) => {
+            const requiredNamespaces = proposal.params.requiredNamespaces;
+            const namespaces: any = {};
+            Object.keys(requiredNamespaces).forEach((key) => {
+              const accounts: string[] = [];
+              requiredNamespaces[key].chains.map((chain) => {
+                accounts.push(`${chain}:${daoTreasuryAddress}`);
+              });
+              namespaces[key] = {
+                accounts,
+                methods: requiredNamespaces[key].methods,
+                events: requiredNamespaces[key].events,
+              };
+            });
+
+            const session = await web3wallet.approveSession({
+              id: proposal.id,
+              namespaces,
+            });
+            setTopic(session.topic);
+            topic = session.topic;
+            trackEvent("New session", proposal.params.proposer.metadata);
+            setWcClientData(proposal.params.proposer.metadata);
+            toast("WC Connected");
           }
+        );
 
-          onWCReqCurry.current(undefined, event);
-          await web3wallet.respondSessionRequest({
-            topic,
-            response: {
-              id: event.id,
-              result:
-                "0x0000000000000000000000000000000000000000000000000000000000000000",
-              jsonrpc: "2.0",
-            },
-          });
-        }
-      );
+        web3wallet.on(
+          "session_request",
+          async (event: Web3WalletTypes.SessionRequest) => {
+            console.log({ event });
+
+            if (
+              ["personal_sign", "eth_sign", "eth_signTypedData"].includes(
+                event.params.request.method
+              )
+            ) {
+              new Notification(
+                "Cannot sign messages from a WalletConnect client",
+                {
+                  body: "A message was requested to be signed, but a connected wallet cannot sign a message",
+                }
+              );
+              toast("Cannot sign messages from a DAO", { duration: 20000 });
+              return await web3wallet.respondSessionRequest({
+                topic: event.topic,
+                response: {
+                  id: event.id,
+                  jsonrpc: "2.0",
+                  error: {
+                    code: 300,
+                    message: "error cannot sign",
+                  },
+                },
+              });
+            }
+
+            await web3wallet.respondSessionRequest({
+              topic: event.topic,
+              response: {
+                id: event.id,
+                result:
+                  "0x0000000000000000000000000000000000000000000000000000000000000000",
+                jsonrpc: "2.0",
+              },
+            });
+            onWCReqCurry.current(event);
+          }
+        );
+      }
     },
     [
       setWcClientData,
