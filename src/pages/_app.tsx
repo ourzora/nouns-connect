@@ -67,9 +67,9 @@ export default function MyApp({ Component, pageProps }: any) {
   *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@           @@@@@@**            @@@@@
 
  
-   initial draft by @iainnash
+   initial implementation by github.com/iainnash
   
-   ZORA LABS work with us:
+   join us at ZORA ~
    https://zora.co/careers
 
         */`}</script>
