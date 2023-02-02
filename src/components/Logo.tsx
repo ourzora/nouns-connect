@@ -108,7 +108,11 @@ const Logo = ({ size = WIDTH_TOTAL }: { size?: number }) => {
         <canvas
           width={size}
           height={size}
-          style={{imageRendering: 'pixelated', width: originalSize, height: originalSize}}
+          style={{
+            imageRendering: "pixelated",
+            width: originalSize,
+            height: originalSize,
+          }}
           className="inline-block -mt-2"
           ref={canvasRef}
         />

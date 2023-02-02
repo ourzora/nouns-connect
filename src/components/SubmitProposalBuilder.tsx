@@ -50,8 +50,6 @@ export const SubmitProposalBuilder = ({
     chainId: CHAIN_ID,
   });
 
-  const { push } = useRouter();
-
   const { write, isLoading } = useContractWrite({
     ...config,
     onSuccess: () => {
@@ -65,7 +63,6 @@ export const SubmitProposalBuilder = ({
       const txn = await response.wait();
       // find new proposal hash
       const proposeLog = iface.parseLog(txn.logs[0]);
-      console.log({ proposeLog });
       const proposalId = proposeLog.args.proposalId;
       onSubmitted({ proposalId });
     },

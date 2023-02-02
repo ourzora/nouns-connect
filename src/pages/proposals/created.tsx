@@ -13,7 +13,7 @@ import { RenderRequest } from "../../components/RenderRequest";
 import { ProposalByIdQuery } from "../../config/daos-query";
 import { GetDaoServerSide } from "../../fetchers/get-dao";
 import { useDAOImage } from "../../hooks/useDAOImage";
-import { CHAIN_ID, ZORA_API_URL } from "../../utils/constants";
+import { CHAIN_ID, CHAIN_NAME, ZORA_API_URL } from "../../utils/constants";
 
 const MadePossibleLogo = dynamic(
   () => import("../../components/MadePossibleLogo"),
@@ -30,7 +30,7 @@ function Created({ dao }: { dao: any }) {
     isReady ? ["proposalById", query.id] : undefined,
     ([_, proposalId]) =>
       request(ZORA_API_URL, ProposalByIdQuery, {
-        chain: CHAIN_ID === 1 ? "MAINNET" : "GOERLI",
+        chain: CHAIN_NAME,
         proposalId,
       }),
     {

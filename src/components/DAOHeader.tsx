@@ -19,7 +19,7 @@ export const DAOHeader = ({
         {showConnection && !connectedTo && <>Let’s connect </>}
         {url && (
           <img
-            className="mx-2 w-14 h-14 rounded-lg inline-block"
+            className="mx-2 w-16 h-16 rounded-lg inline-block"
             src={url}
             alt={dao.name}
           />
