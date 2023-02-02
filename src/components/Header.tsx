@@ -21,7 +21,7 @@ export default function Header() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 2 }}
-          className="hover:underline"
+          className="hover:underline hidden md:visible"
         >
           <Link className="text-gray-400 ml-4 text-md" href="/faq">
             FAQ

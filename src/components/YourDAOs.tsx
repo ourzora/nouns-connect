@@ -12,6 +12,7 @@ import {
 } from "../config/daos-query";
 import { CHAIN_NAME, ZORA_API_URL } from "../utils/constants";
 import { DAOItem } from "./DAOItem";
+import Link from "next/link";
 
 export const YourDAOs = () => {
   const { address, isConnected } = useAccount();
@@ -82,7 +83,9 @@ export const YourDAOs = () => {
 
   let daos = <span>loading...</span>;
   if (data) {
-    daos = data.nouns.nounsDaos.nodes.map((item, indx) => (
+    const { nodes } = data.nouns.nounsDaos;
+
+    daos = nodes.map((item, indx) => (
       <DAOItem
         cover={
           images
@@ -115,6 +118,18 @@ export const YourDAOs = () => {
         name={item.name}
       />
     ));
+
+    if (nodes.length === 0) {
+      daos = (
+        <div className="cursor-pointer p-5 w-full border rounded-lg shadow-sm hover:shadow-md relative">
+          We could not find any builder DAOs or nouns DAO membership NFTs on
+          this wallet.
+          <br />
+          <br />
+          You can test the application with the <Link className="underline" href="/daos/0xdf9b7d26c8fc806b1ae6273684556761ff02d422">builder DAO</Link>
+        </div>
+      );
+    }
   }
 
   const [isConnectedState, setIsConnectedState] = useState(false);
