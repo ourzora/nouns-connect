@@ -126,7 +126,13 @@ export const YourDAOs = () => {
           this wallet.
           <br />
           <br />
-          You can test the application with the <Link className="underline" href="/daos/0xdf9b7d26c8fc806b1ae6273684556761ff02d422">builder DAO</Link>
+          You can test the application with the{" "}
+          <Link
+            className="underline"
+            href="/daos/0xdf9b7d26c8fc806b1ae6273684556761ff02d422"
+          >
+            builder DAO
+          </Link>
         </div>
       );
     }
