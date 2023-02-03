@@ -29,7 +29,6 @@ const SplashImageScatter = dynamic(
   }
 );
 
-console.log({CHAIN_ID})
 const { chains, provider, webSocketProvider } = configureChains(
   [CHAIN_ID === 1 ? mainnet : goerli],
   [
