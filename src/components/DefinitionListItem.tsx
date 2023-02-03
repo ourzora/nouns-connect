@@ -5,7 +5,7 @@ export const DefinitionListItem = ({
   children,
   title,
 }: {
-  name: string;
+  name: React.ReactNode;
   title?: string;
   children: ReactNode;
 }) => (
