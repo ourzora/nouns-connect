@@ -18,16 +18,19 @@ export const DAOItem = ({
   holdings?: number;
 }) => {
   const [votesType, amount, isSingular] = useMemo(() => {
-    if (!quorum || !yourVotes) {
+    if (quorum === undefined || yourVotes === undefined) {
       return [undefined, 0, 0];
     }
-    if (quorum >= yourVotes) {
+    if (quorum <= yourVotes) {
       return ["You have", yourVotes, yourVotes === 1];
     }
-    return ["You need", yourVotes - quorum, yourVotes - quorum === 1];
+    return ["You need", quorum - yourVotes, quorum - yourVotes === 1];
   }, [yourVotes, quorum]);
   return (
-    <Link className={votesType === 'You need' ? 'opacity-60' : ''} href={`/daos/${address}`}>
+    <Link
+      className={votesType === "You need" ? "opacity-60" : ""}
+      href={`/daos/${address}`}
+    >
       <motion.div
         whileHover={{ scale: 1.03 }}
         whileTap={{ scale: 0.95 }}
