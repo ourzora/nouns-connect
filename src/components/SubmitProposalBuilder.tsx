@@ -1,8 +1,4 @@
-import {
-  useContractWrite,
-  usePrepareContractWrite,
-  useSigner,
-} from "wagmi";
+import { useContractWrite, usePrepareContractWrite, useSigner } from "wagmi";
 import governorABI from "@zoralabs/nouns-protocol/dist/artifacts/Governor.sol/Governor.json";
 import { CHAIN_ID } from "../utils/constants";
 import { Transaction } from "../stores/interactions";
@@ -11,6 +7,7 @@ import { AppButton } from "./AppButton";
 import { useDescription } from "../stores/description";
 import { useRouter } from "next/router";
 import { ethers } from "ethers";
+import { useSubmitDescription } from "../stores/submit-description";
 // import addressesMainnet from '@zoralabs/nouns-protocol/dist/addresses/1.json';
 // import addressesTestnet from '@zoralabs/nouns-protocol/dist/addresses/5.json';
 
@@ -30,7 +27,7 @@ export const SubmitProposalBuilder = ({
 }) => {
   const { isError, data: signer } = useSigner();
 
-  const { transactionState: {title, description} } = useDescription();
+  const { title, description } = useSubmitDescription();
 
   const { config, error } = usePrepareContractWrite({
     address: daoAddress,

@@ -7,7 +7,10 @@ import { formatEther } from "ethers/lib/utils.js";
 
 import { Transaction, useTransactionsStore } from "../stores/interactions";
 import { CHAIN_ID } from "../utils/constants";
-import { fetcher, textFetcher } from "../utils/fetcher";
+import {
+  fetcher,
+  textFetcher,
+} from "../utils/fetcher";
 import { PrettyAddress } from "./PrettyAddress";
 import { DefinitionListItem } from "./DefinitionListItem";
 import { ContractDataItems } from "./ContractDataItems";
@@ -53,15 +56,13 @@ export const RenderRequest = ({
     fetcher
   );
 
-  const { data: contractName } = useSWR(
+  const { data: contractName} = useSWR(
     !contractError
       ? `https://${CHAIN_ID === 5 ? "goerli." : ""}ether.actor/${
           transaction.data.to
         }/name`
       : undefined,
-    textFetcher,
-    // if this errors, don't retry.
-    { errorRetryCount: 0 }
+    textFetcher
   );
 
   const parsedResponse = useMemo(() => {

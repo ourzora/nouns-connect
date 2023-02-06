@@ -7,7 +7,6 @@ export const useDescription = create(
       description: "",
       title: "",
       editing: true,
-      transactionState: { title: "", description: "" },
     },
     (set) => ({
       updateDescription: (description: string) =>
@@ -15,14 +14,6 @@ export const useDescription = create(
       updateTitle: (title: string) => set((state) => ({ ...state, title })),
       edit: () => set((state) => ({ ...state, editing: true })),
       save: () => set((state) => ({ ...state, editing: false })),
-      updatePreview: () =>
-        set((state) => ({
-          ...state,
-          transactionState: {
-            title: state.title,
-            description: state.description,
-          },
-        })),
     })
   )
 );

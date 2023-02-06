@@ -3,11 +3,10 @@ import governorAbi from "@nouns/contracts/dist/abi/contracts/governance/NounsDAO
 import { CHAIN_ID } from "../utils/constants";
 import { Transaction } from "../stores/interactions";
 import toast from "react-hot-toast";
-import useSWR from "swr";
 import { AppButton } from "./AppButton";
 import { useDescription } from "../stores/description";
 import { ethers } from "ethers";
-import { useRouter } from "next/router";
+import { useSubmitDescription } from "../stores/submit-description";
 // import addressesMainnet from '@zoralabs/nouns-protocol/dist/addresses/1.json';
 // import addressesTestnet from '@zoralabs/nouns-protocol/dist/addresses/5.json';
 
@@ -27,8 +26,8 @@ export const SubmitProposalNouns = ({
 }) => {
   const { data: signer } = useSigner();
   const {
-    transactionState: { description },
-  } = useDescription();
+    description, title,
+  } = useSubmitDescription();
 
   const args = [
     // targets
@@ -40,7 +39,7 @@ export const SubmitProposalNouns = ({
     // calldatas
     transactions.map((txn: Transaction) => txn.data.calldata),
     // description
-    description,
+    title && !description ? `# ${title}` : `# ${title}\n\n${description}`,
   ];
 
   console.log({ args });
@@ -50,9 +49,10 @@ export const SubmitProposalNouns = ({
     abi: governorAbi,
     functionName: "propose",
     signer,
-    enabled: description.length > 0,
+    enabled: title.length > 0,
     onError: (err: any) => {
       toast(`Error setting up proposal`);
+      console.error({ err });
     },
     args,
     chainId: CHAIN_ID,
