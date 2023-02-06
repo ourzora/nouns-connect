@@ -11,8 +11,9 @@ contract DeployRegistry is ImmutableDeployerBase {
     function run() public {
         setUp();
         bytes memory creationCode = type(NounsConnectEchoer).creationCode;
+        console2.log("Creation code hash: ");
         console2.logBytes32(keccak256(creationCode));
-        bytes32 salt = bytes32(0x0000000000000000000000000000000000000000dcfbbaa66376ca0378b91b7c);
+        bytes32 salt = bytes32(0x0000000000000000000000000000000000000000170caad02cd6c2020bbe91b6);
 
         vm.broadcast(deployer);
         IMMUTABLE_CREATE2_FACTORY.safeCreate2(salt, creationCode);
