@@ -29,7 +29,7 @@ export const YourDAOs = () => {
 
   const foundDaos = address && data?.nouns?.nounsDaos?.nodes;
   const daoVotes = useDAOVotes(foundDaos, address);
-  console.log({daoVotes})
+  console.log({ daoVotes });
 
   const { data: images } = useSWR(
     data
@@ -69,12 +69,12 @@ export const YourDAOs = () => {
 
     daos = nodes
       .map((item, indx) => ({ item, indx }))
-      // .filter(
-      //   ({ item, indx }) =>
-      //     holdings?.tokens.nodes.filter(
-      //       (node) => node.token.collectionAddress === item.collectionAddress
-      //     ).length > 0 || daoVotes[item.collectionAddress]?.votes > 0
-      // )
+      .filter(
+        ({ item }) =>
+          holdings?.tokens.nodes.filter(
+            (node) => node.token.collectionAddress === item.collectionAddress
+          ).length > 0 || daoVotes[item.collectionAddress]?.votes > 0
+      )
       .map(({ item, indx }) => (
         <DAOItem
           cover={
@@ -113,7 +113,7 @@ export const YourDAOs = () => {
             className="underline"
             href="/daos/0xdf9b7d26c8fc806b1ae6273684556761ff02d422"
           >
-            builder DAO
+            Builder DAO
           </Link>
         </div>
       );
