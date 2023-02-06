@@ -19,7 +19,7 @@ export const useDAOVotes = (foundDaos: any, address: string) => {
         ? [
             ...foundDaos.map((nounsDao) => {
               const isNounsTypeDao = NON_BUILDER_DAOS.find(
-                (dao) => dao.token === nounsDao.collectionAddress
+                (dao) => dao.collectionAddress === nounsDao.collectionAddress
               );
               if (isNounsTypeDao) {
                 return {
@@ -38,7 +38,7 @@ export const useDAOVotes = (foundDaos: any, address: string) => {
             }),
             ...foundDaos.map((nounsDao) => {
               const isNounsDao = NON_BUILDER_DAOS.find(
-                (dao) => dao.token === nounsDao.collectionAddress
+                (dao) => dao.collectionAddress === nounsDao.collectionAddress
               );
               if (isNounsDao) {
                 return {
@@ -64,7 +64,7 @@ export const useDAOVotes = (foundDaos: any, address: string) => {
 
     return foundDaos.reduce((last, dao, indx) => {
       const isNounsTypeDao = NON_BUILDER_DAOS.find(
-        (nounsDao) => nounsDao.token === dao.collectionAddress
+        (nounsDao) => nounsDao.collectionAddress === dao.collectionAddress
       );
       last[dao.collectionAddress] = {
         quorum:

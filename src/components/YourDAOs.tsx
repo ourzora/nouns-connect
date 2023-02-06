@@ -21,7 +21,7 @@ export const YourDAOs = () => {
     request(ZORA_API_URL, MyNounsDaosQuery, {
       query: {
         memberAddresses: [memberAddress],
-        collectionAddresses: NON_BUILDER_DAOS.map((dao) => dao.token),
+        collectionAddresses: NON_BUILDER_DAOS.map((dao) => dao.collectionAddress),
       },
       chain: CHAIN_NAME,
     })
