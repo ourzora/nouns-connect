@@ -18,10 +18,10 @@ export const useDAOVotes = (foundDaos: any, address: string) => {
       address && foundDaos
         ? [
             ...foundDaos.map((nounsDao) => {
-              const isNounsDao = NON_BUILDER_DAOS.find(
+              const isNounsTypeDao = NON_BUILDER_DAOS.find(
                 (dao) => dao.token === nounsDao.collectionAddress
               );
-              if (isNounsDao) {
+              if (isNounsTypeDao) {
                 return {
                   address: nounsDao.collectionAddress,
                   functionName: "getCurrentVotes",
@@ -62,11 +62,14 @@ export const useDAOVotes = (foundDaos: any, address: string) => {
       return {};
     }
 
-    const result = foundDaos.reduce((last, dao, indx) => {
+    return foundDaos.reduce((last, dao, indx) => {
+      const isNounsTypeDao = NON_BUILDER_DAOS.find(
+        (nounsDao) => nounsDao.token === dao.collectionAddress
+      );
       last[dao.collectionAddress] = {
         quorum:
           daoVotes?.length > 0 && daoVotes[indx * 2]
-            ? (daoVotes[indx * 2] as any).toNumber()
+            ? (daoVotes[indx * 2] as any).toNumber() + (isNounsTypeDao ? 1 : 0)
             : undefined,
         votes:
           daoVotes?.length > 0 && daoVotes[indx]
@@ -75,7 +78,5 @@ export const useDAOVotes = (foundDaos: any, address: string) => {
       };
       return last;
     }, {});
-    console.log({result, daoVotes})
-    return result;
   }, [foundDaos, daoVotes]);
 };

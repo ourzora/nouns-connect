@@ -29,7 +29,6 @@ export const YourDAOs = () => {
 
   const foundDaos = address && data?.nouns?.nounsDaos?.nodes;
   const daoVotes = useDAOVotes(foundDaos, address);
-  console.log({ daoVotes });
 
   const { data: images } = useSWR(
     data
