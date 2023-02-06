@@ -26,7 +26,7 @@ export const SubmitProposalNouns = ({
   onSubmitted: ({ proposalId }: { proposalId: string }) => void;
 }) => {
   const { data: signer } = useSigner();
-  const { description } = useDescription();
+  const { title, description } = useDescription();
 
   const { config, error } = usePrepareContractWrite({
     address: daoAddress,
@@ -47,7 +47,7 @@ export const SubmitProposalNouns = ({
       // calldatas
       transactions.map((txn: Transaction) => txn.data.calldata),
       // description
-      description,
+      title && !description ? `# ${title}` : `# ${title}\n\n${description}`,
     ],
     chainId: CHAIN_ID,
   });
