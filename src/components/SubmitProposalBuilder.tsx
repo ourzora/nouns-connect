@@ -4,12 +4,8 @@ import { CHAIN_ID } from "../utils/constants";
 import { Transaction } from "../stores/interactions";
 import toast from "react-hot-toast";
 import { AppButton } from "./AppButton";
-import { useDescription } from "../stores/description";
-import { useRouter } from "next/router";
 import { ethers } from "ethers";
 import { useSubmitDescription } from "../stores/submit-description";
-// import addressesMainnet from '@zoralabs/nouns-protocol/dist/addresses/1.json';
-// import addressesTestnet from '@zoralabs/nouns-protocol/dist/addresses/5.json';
 
 const MESSAGE_LOOKUP = {
   "0xe33f2b3e": "User does not meet quorum to submit a proposal",
