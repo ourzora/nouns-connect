@@ -71,7 +71,7 @@ const SubmittedTransactionsPreview = ({ dao }: { dao: any }) => {
       {transactions.length > 0 ? (
         isConnected ? (
           <>
-            <DescriptionManager hasTitle={isError} />
+            <DescriptionManager />
             <div className="h-4"> </div>
             <ProposalSimulation daoTreasuryAddress={dao.treasuryAddress} />
             <div className="h-4"> </div>
