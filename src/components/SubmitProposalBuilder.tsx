@@ -30,7 +30,7 @@ export const SubmitProposalBuilder = ({
 }) => {
   const { isError, data: signer } = useSigner();
 
-  const { title, description } = useDescription();
+  const { transactionState: {title, description} } = useDescription();
 
   const { config, error } = usePrepareContractWrite({
     address: daoAddress,

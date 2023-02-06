@@ -6,7 +6,7 @@ export const DescriptionManager = ({
 }: {
   hasTitle?: boolean;
 }) => {
-  const { description, editing, edit, save, updateDescription, updateTitle } =
+  const { description, editing, edit, save, updateDescription, updateTitle, updatePreview } =
     useDescription();
 
   if (editing) {
@@ -24,6 +24,7 @@ export const DescriptionManager = ({
               <input
                 type="text"
                 id="proposal-title"
+                onBlur={() => updatePreview()}
                 className="p-4 rounded font-lg mv-4 w-full border-2 border-gray-200 font-pt"
                 onChange={(evt: any) => updateTitle(evt.target.value)}
               />
@@ -50,6 +51,7 @@ export const DescriptionManager = ({
             }}
             rows={6}
             cols={40}
+            onBlur={() => updatePreview()}
             className="border-2 p-4 border-gray-200 rounded w-full font-pt font-normal"
           />
         </div>

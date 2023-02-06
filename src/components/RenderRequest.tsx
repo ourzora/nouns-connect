@@ -1,5 +1,5 @@
 import { BigNumber, ethers } from "ethers";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import useSWR from "swr";
@@ -27,7 +27,7 @@ export const RenderRequest = ({
   floatingDisplay?: boolean;
   showDeleteButtonInline?: boolean;
 }) => {
-  const { removeTransactionAtIndex } = useTransactionsStore();
+  const { removeTransactionAtIndex, setSignature } = useTransactionsStore();
   const removeTxnClick = useCallback(() => {
     if (confirm("Are you sure you wish to remove this transaction?")) {
       removeTransactionAtIndex(indx);
@@ -70,14 +70,25 @@ export const RenderRequest = ({
     }
     try {
       const iface = new ethers.utils.Interface(contractData.abi);
-      return iface.parseTransaction({
+
+      const txn = iface.parseTransaction({
         data: transaction.data.calldata,
         value: transaction.data.value,
       });
+
+      setSignature(indx, txn.signature);
+
+      return txn;
     } catch {
       return undefined;
     }
-  }, [contractData?.abi]);
+  }, [contractData?.abi, setSignature]);
+
+  useEffect(() => {
+    if (decodeData?.name) {
+      setSignature(indx, decodeData.name);
+    }
+  }, [decodeData, setSignature]);
 
   return (
     <div className="flex w-full">
@@ -91,9 +102,12 @@ export const RenderRequest = ({
         <div className="flex w-full">
           <div className="flex-grow font-sm text-left text-lg">
             <span className="font-bold capitalize">
-              {parsedResponse?.name || "Custom Data"}
+              {parsedResponse?.name ||
+                (transaction.data.calldata === "0x"
+                  ? "transfer"
+                  : "Custom Data")}
             </span>{" "}
-            {BigNumber.from("0").eq(transaction.data.value) ? 'to' : 'on'}{" "}
+            {BigNumber.from("0").eq(transaction.data.value) ? "on" : "to"}{" "}
             <span className="font-bold">
               <PrettyAddress
                 address={transaction.data.to as any}

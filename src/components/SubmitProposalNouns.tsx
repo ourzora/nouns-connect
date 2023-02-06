@@ -26,7 +26,24 @@ export const SubmitProposalNouns = ({
   onSubmitted: ({ proposalId }: { proposalId: string }) => void;
 }) => {
   const { data: signer } = useSigner();
-  const { description } = useDescription();
+  const {
+    transactionState: { description },
+  } = useDescription();
+
+  const args = [
+    // targets
+    transactions.map((txn: Transaction) => txn.data.to),
+    // values
+    transactions.map((txn: Transaction) => txn.data.value),
+    // signatures (not sure what to do here – maybe use ether.actor again)
+    transactions.map((txn: Transaction) => txn.signature),
+    // calldatas
+    transactions.map((txn: Transaction) => txn.data.calldata),
+    // description
+    description,
+  ];
+
+  console.log({ args });
 
   const { config, error } = usePrepareContractWrite({
     address: daoAddress,
@@ -37,18 +54,7 @@ export const SubmitProposalNouns = ({
     onError: (err: any) => {
       toast(`Error setting up proposal`);
     },
-    args: [
-      // targets
-      transactions.map((txn: Transaction) => txn.data.to),
-      // values
-      transactions.map((txn: Transaction) => txn.data.value),
-      // signatures (not sure what to do here – maybe use ether.actor again)
-      transactions.map((txn: Transaction) => ""),
-      // calldatas
-      transactions.map((txn: Transaction) => txn.data.calldata),
-      // description
-      description,
-    ],
+    args,
     chainId: CHAIN_ID,
   });
 
