@@ -7,10 +7,10 @@ import {NounsConnectEchoer} from "../src/NounsConnectEchoer.sol";
 
 import {ImmutableDeployerBase} from "./ImmutableDeployerBase.sol";
 
-contract DeployRegistry is ScriptBase {
+contract DeployRegistry is ImmutableDeployerBase {
     function run() public {
         setUp();
-        bytes memory creationCode = type(JSONExtensionRegistry).creationCode;
+        bytes memory creationCode = type(NounsConnectEchoer).creationCode;
         console2.logBytes32(keccak256(creationCode));
         bytes32 salt = bytes32(0x0000000000000000000000000000000000000000dcfbbaa66376ca0378b91b7c);
 
