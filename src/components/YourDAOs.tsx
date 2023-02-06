@@ -1,9 +1,7 @@
 import request from "graphql-request";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
-import { useAccount, useContractReads } from "wagmi";
-
-import governorABI from "@zoralabs/nouns-protocol/dist/artifacts/Governor.sol/Governor.json";
+import { useAccount } from "wagmi";
 
 import {
   LastTokenQuery,
@@ -13,41 +11,25 @@ import {
 import { CHAIN_NAME, ZORA_API_URL } from "../utils/constants";
 import { DAOItem } from "./DAOItem";
 import Link from "next/link";
+import { NON_BUILDER_DAOS } from "../config/fixed-daos";
+import { useDAOVotes } from "../hooks/useDAOVotes";
 
 export const YourDAOs = () => {
   const { address, isConnected } = useAccount();
 
   const { data } = useSWR(["fetch-daos", address], ([_, memberAddress]) =>
     request(ZORA_API_URL, MyNounsDaosQuery, {
-      memberAddress,
+      query: {
+        memberAddresses: [memberAddress],
+        collectionAddresses: NON_BUILDER_DAOS.map((dao) => dao.token),
+      },
       chain: CHAIN_NAME,
     })
   );
 
-  const now = useMemo(() => {
-    return Math.floor(new Date().getTime() / 1000);
-  }, []);
-
-  const hasDAOs = address && data?.nouns?.nounsDaos?.nodes;
-  const { data: daoVotes } = useContractReads({
-    allowFailure: true,
-    enabled: hasDAOs,
-    contracts: hasDAOs
-      ? [
-          ...data.nouns.nounsDaos.nodes.map((nounsDao) => ({
-            address: nounsDao.governorAddress,
-            functionName: "getVotes",
-            abi: governorABI.abi,
-            args: [address, now - 120],
-          })),
-          ...data.nouns.nounsDaos.nodes.map((nounsDao) => ({
-            address: nounsDao.governorAddress,
-            functionName: "quorum",
-            abi: governorABI.abi,
-          })),
-        ]
-      : [],
-  });
+  const foundDaos = address && data?.nouns?.nounsDaos?.nodes;
+  const daoVotes = useDAOVotes(foundDaos, address);
+  console.log({ daoVotes });
 
   const { data: images } = useSWR(
     data
@@ -85,41 +67,41 @@ export const YourDAOs = () => {
   if (data) {
     const { nodes } = data.nouns.nounsDaos;
 
-    daos = nodes.map((item, indx) => (
-      <DAOItem
-        cover={
-          images
-            ? images.tokens.nodes.find(
-                (node) =>
-                  node.token.collectionAddress === item.collectionAddress
-              )?.token.image?.mediaEncoding?.poster
-            : undefined
-        }
-        holdings={
-          holdings
-            ? holdings.tokens.nodes.filter(
-                (node) =>
-                  node.token.collectionAddress === item.collectionAddress
-              ).length
-            : 0
-        }
-        quorum={
-          daoVotes?.length > 0 && daoVotes[indx * 2]
-            ? (daoVotes[indx * 2] as any).toNumber()
-            : undefined
-        }
-        yourVotes={
-          daoVotes?.length > 0 && daoVotes[indx]
-            ? (daoVotes[indx] as any).toNumber()
-            : undefined
-        }
-        key={`${item.name}-${indx}`}
-        address={item.collectionAddress}
-        name={item.name}
-      />
-    ));
+    daos = nodes
+      .map((item, indx) => ({ item, indx }))
+      .filter(
+        ({ item }) =>
+          holdings?.tokens.nodes.filter(
+            (node) => node.token.collectionAddress === item.collectionAddress
+          ).length > 0 || daoVotes[item.collectionAddress]?.votes > 0
+      )
+      .map(({ item, indx }) => (
+        <DAOItem
+          cover={
+            images
+              ? images.tokens.nodes.find(
+                  (node) =>
+                    node.token.collectionAddress === item.collectionAddress
+                )?.token.image?.mediaEncoding?.poster
+              : undefined
+          }
+          holdings={
+            holdings
+              ? holdings.tokens.nodes.filter(
+                  (node) =>
+                    node.token.collectionAddress === item.collectionAddress
+                ).length
+              : 0
+          }
+          quorum={daoVotes[item.collectionAddress].quorum}
+          yourVotes={daoVotes[item.collectionAddress].votes}
+          key={`${item.name}-${indx}`}
+          address={item.collectionAddress}
+          name={item.name}
+        />
+      ));
 
-    if (nodes.length === 0) {
+    if ((daos as any).length === 0) {
       daos = (
         <div className="cursor-pointer p-5 w-full border rounded-lg shadow-sm hover:shadow-md relative">
           We could not find any builder DAOs or nouns DAO membership NFTs on
@@ -131,7 +113,7 @@ export const YourDAOs = () => {
             className="underline"
             href="/daos/0xdf9b7d26c8fc806b1ae6273684556761ff02d422"
           >
-            builder DAO
+            Builder DAO
           </Link>
         </div>
       );

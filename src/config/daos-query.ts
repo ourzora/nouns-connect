@@ -1,10 +1,10 @@
 import { gql } from "graphql-request";
 
 export const MyNounsDaosQuery = gql`
-  query MyNounsDao($memberAddress: String!, $chain: Chain!) {
+  query MyNounsDao($chain: Chain!, $query: NounsQueryInput!) {
     nouns {
       nounsDaos(
-        where: { memberAddresses: [$memberAddress] }
+        where: $query
         networks: [{ chain: $chain, network: ETHEREUM }]
       ) {
         nodes {
@@ -29,11 +29,10 @@ export const MyNounsDaosQuery = gql`
 export const ProposalByIdQuery = gql`
   query nounsProposal($proposalId: String!, $chain: Chain!) {
     nouns {
-      nounsProposal(where:{
-        proposalId: $proposalId
-      }, network:{
-        chain: $chain, network: ETHEREUM
-      }) {
+      nounsProposal(
+        where: { proposalId: $proposalId }
+        network: { chain: $chain, network: ETHEREUM }
+      ) {
         proposalId
         proposalNumber
         description
