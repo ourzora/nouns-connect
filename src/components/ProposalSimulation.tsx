@@ -2,7 +2,7 @@ import { BigNumber } from "ethers";
 import { formatEther } from "ethers/lib/utils";
 import { useCallback, useEffect, useState } from "react";
 import { useContract, useProvider } from "wagmi";
-import multicallAbi from "../config/multicall-abi.json";
+import multicallAbi from "../abis/multicall-abi.json";
 import { Transaction, useTransactionsStore } from "../stores/interactions";
 
 const MULTICALL_CONTRACT = "0xcA11bde05977b3631167028862bE2a173976CA11";

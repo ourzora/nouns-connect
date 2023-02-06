@@ -93,7 +93,7 @@ export const RenderRequest = ({
             <span className="font-bold capitalize">
               {parsedResponse?.name || "Custom Data"}
             </span>{" "}
-            on{" "}
+            {BigNumber.from("0").eq(transaction.data.value) ? 'to' : 'on'}{" "}
             <span className="font-bold">
               <PrettyAddress
                 address={transaction.data.to as any}

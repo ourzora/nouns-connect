@@ -15,11 +15,13 @@ const MadePossibleLogo = dynamic(
 const FAQItem = ({
   title,
   children,
+  id,
 }: {
   title: string;
   children: React.ReactNode;
+  id?: string;
 }) => (
-  <div className="my-2">
+  <div id={id} className="my-2">
     <h3 className="text-2xl mb-2 mt-4">{title}</h3>
     <p className="font-pt text-lg">{children}</p>
   </div>
@@ -56,7 +58,7 @@ const FAQ = () => {
           using that QR code or copying the connection link there.
         </FAQItem>
 
-        <FAQItem title="What apps are supported?">
+        <FAQItem id="supported-apps" title="What apps are supported?">
           <div className="mb-4">
             Most DApps are supported that do not require a signature-based
             login. Some common actions to use are:
@@ -117,7 +119,7 @@ const FAQ = () => {
                     key="warning"
                     className="mb-4"
                     initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: '100%' }}
+                    animate={{ opacity: 1, height: "100%" }}
                     exit={{ opacity: 0, height: 0 }}
                   >
                     Note: If an application requires an approval, that will not
