@@ -30,9 +30,9 @@ export const SubmitProposalNouns = ({
     // values
     transactions.map((txn: Transaction) => txn.data.value),
     // signatures (not sure what to do here – maybe use ether.actor again)
-    transactions.map((txn: Transaction) => txn.signature),
+    transactions.map((txn: Transaction) => txn.signature || ''),
     // calldatas
-    transactions.map((txn: Transaction) => txn.data.calldata),
+    transactions.map((txn: Transaction) => txn.signature ? txn.data.calldata.slice(8) : txn.data.calldata),
     // description
     title && !description ? `# ${title}` : `# ${title}\n\n${description}`,
   ];
