@@ -22,9 +22,7 @@ export const SubmitProposalNouns = ({
   onSubmitted: ({ proposalId }: { proposalId: string }) => void;
 }) => {
   const { data: signer } = useSigner();
-  const {
-    description, title,
-  } = useSubmitDescription();
+  const { description, title } = useSubmitDescription();
 
   const args = [
     // targets
@@ -38,8 +36,6 @@ export const SubmitProposalNouns = ({
     // description
     title && !description ? `# ${title}` : `# ${title}\n\n${description}`,
   ];
-
-  console.log({ args });
 
   const { config, error } = usePrepareContractWrite({
     address: daoAddress,
@@ -55,7 +51,7 @@ export const SubmitProposalNouns = ({
     chainId: CHAIN_ID,
   });
 
-  const { write, isLoading } = useContractWrite({
+  const { write, isLoading, error: writeError } = useContractWrite({
     ...config,
     onSuccess: () => {
       toast(`Sending proposal request`);
@@ -79,6 +75,8 @@ export const SubmitProposalNouns = ({
       </>
     );
   }
+
+  console.log({ writeError, config, args, error, isLoading, write });
 
   return (
     <AppButton

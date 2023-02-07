@@ -14,15 +14,14 @@ import { AppButton } from "./AppButton";
 import { BorderFrame } from "./BorderFrame";
 import { ProposalSimulation } from "./ProposalSimulation";
 import { ATTRIBUTION_CONTRACT_ADDRESS } from "../utils/constants";
+import { NON_BUILDER_DAOS } from "../config/fixed-daos";
 
 const SubmittedTransactionsPreview = ({ dao }: { dao: any }) => {
   const { transactions, clear, addTransactions } = useTransactionsStore();
-  const { isError } = useContractRead({
-    abi: governorAbi,
-    address: dao.governorAddress,
-    functionName: "admin",
-    watch: false,
-  });
+
+  const nounsDao = NON_BUILDER_DAOS.find(
+    (thisDao) => thisDao.collectionAddress === dao.collectionAddress
+  );
 
   useEffect(() => {
     if (transactions.length === 0) {
@@ -50,7 +49,9 @@ const SubmittedTransactionsPreview = ({ dao }: { dao: any }) => {
     }
   }, [transactions, addTransactions]);
 
-  const SubmitComponent = isError ? SubmitProposalBuilder : SubmitProposalNouns;
+  const SubmitComponent = nounsDao
+    ? SubmitProposalNouns
+    : SubmitProposalBuilder;
 
   const { isConnected } = useAccount();
   const { push } = useRouter();
@@ -104,7 +105,7 @@ const SubmittedTransactionsPreview = ({ dao }: { dao: any }) => {
             <div className="h-4"> </div>
             <SubmitComponent
               onSubmitted={onProposalSubmitted}
-              isNounsDaoStructure={!isError}
+              isNounsDaoStructure={!!nounsDao}
               daoAddress={dao.governorAddress}
               transactions={transactions}
             />
