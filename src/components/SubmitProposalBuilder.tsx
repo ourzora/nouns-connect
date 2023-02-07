@@ -21,7 +21,7 @@ export const SubmitProposalBuilder = ({
   transactions: Transaction[];
   onSubmitted: ({ proposalId }: { proposalId: string }) => void;
 }) => {
-  const { isError, data: signer } = useSigner();
+  const { data: signer } = useSigner();
 
   const { title, description } = useSubmitDescription();
 
@@ -61,6 +61,8 @@ export const SubmitProposalBuilder = ({
     },
   });
 
+  console.log({write});
+
   if (error) {
     console.log({ error });
     return (
@@ -77,8 +79,8 @@ export const SubmitProposalBuilder = ({
   return (
     <AppButton
       className=""
-      disabled={!!error || isLoading || title.length === 0}
-      onClick={() => write()}
+      disabled={!!error || isLoading || !write}
+      onClick={() => setTimeout(write, 100)}
     >
       {isLoading ? "Submitting Proposal..." : "Submit Proposal"}
     </AppButton>
