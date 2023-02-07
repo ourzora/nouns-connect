@@ -1,18 +1,11 @@
-import {
-  useContractWrite,
-  usePrepareContractWrite,
-  useSigner,
-} from "wagmi";
+import { useContractWrite, usePrepareContractWrite, useSigner } from "wagmi";
 import governorABI from "@zoralabs/nouns-protocol/dist/artifacts/Governor.sol/Governor.json";
 import { CHAIN_ID } from "../utils/constants";
 import { Transaction } from "../stores/interactions";
 import toast from "react-hot-toast";
 import { AppButton } from "./AppButton";
-import { useDescription } from "../stores/description";
-import { useRouter } from "next/router";
 import { ethers } from "ethers";
-// import addressesMainnet from '@zoralabs/nouns-protocol/dist/addresses/1.json';
-// import addressesTestnet from '@zoralabs/nouns-protocol/dist/addresses/5.json';
+import { useSubmitDescription } from "../stores/submit-description";
 
 const MESSAGE_LOOKUP = {
   "0xe33f2b3e": "User does not meet quorum to submit a proposal",
@@ -28,9 +21,9 @@ export const SubmitProposalBuilder = ({
   transactions: Transaction[];
   onSubmitted: ({ proposalId }: { proposalId: string }) => void;
 }) => {
-  const { isError, data: signer } = useSigner();
+  const { data: signer } = useSigner();
 
-  const { title, description } = useDescription();
+  const { title, description } = useSubmitDescription();
 
   const { config, error } = usePrepareContractWrite({
     address: daoAddress,
@@ -68,6 +61,8 @@ export const SubmitProposalBuilder = ({
     },
   });
 
+  console.log({write});
+
   if (error) {
     console.log({ error });
     return (
@@ -84,8 +79,8 @@ export const SubmitProposalBuilder = ({
   return (
     <AppButton
       className=""
-      disabled={!!error || isLoading || title.length === 0}
-      onClick={() => write()}
+      disabled={!!error || isLoading || !write}
+      onClick={() => setTimeout(write, 100)}
     >
       {isLoading ? "Submitting Proposal..." : "Submit Proposal"}
     </AppButton>

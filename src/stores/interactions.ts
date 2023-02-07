@@ -13,11 +13,13 @@ export type Transaction = {
     icon: string;
     name: string;
   };
+  signature?: string;
 };
 
 interface TransactionsState {
   transactions: Transaction[];
   addTransactions: (transactions: Transaction[]) => void;
+  setSignature: (index: number, signature: string) => void;
   removeTransactionAtIndex: (index: number) => void;
   clear: () => void;
 }
@@ -27,6 +29,12 @@ export const useTransactionsStore = create<TransactionsState>()(
     persist(
       (set) => ({
         transactions: [],
+        setSignature: (index: number, signature: string) =>
+          set((state) => ({
+            transactions: state.transactions.map((txn, indx) =>
+              indx === index ? { ...txn, signature } : txn
+            ),
+          })),
         addTransactions: (transactions: Transaction[]) =>
           set((state) => ({
             transactions: [...state.transactions, ...transactions],

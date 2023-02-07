@@ -1,45 +1,42 @@
 import { useDescription } from "../stores/description";
-import { AppButton } from "./AppButton";
+import { useSubmitDescription } from "../stores/submit-description";
 
-export const DescriptionManager = ({
-  hasTitle = true,
-}: {
-  hasTitle?: boolean;
-}) => {
-  const { description, editing, edit, save, updateDescription, updateTitle } =
-    useDescription();
+export const DescriptionManager = () => {
+  const {
+    description,
+    editing,
+    edit,
+    updateDescription,
+    updateTitle,
+  } = useDescription();
+  const {updateSubmit} = useSubmitDescription();
 
   if (editing) {
     return (
       <>
         <div>
-          {hasTitle && (
-            <>
-              <label
-                className="text-lg text-left block mb-2 mt-4"
-                htmlFor="proposal-title"
-              >
-                Proposal Title
-              </label>
-              <input
-                type="text"
-                id="proposal-title"
-                className="p-4 rounded font-lg mv-4 w-full border-2 border-gray-200 font-pt"
-                onChange={(evt: any) => updateTitle(evt.target.value)}
-              />
-            </>
-          )}
+          <label
+            className="text-lg text-left block mb-2 mt-4"
+            htmlFor="proposal-title"
+          >
+            Proposal Title
+          </label>
+          <input
+            type="text"
+            id="proposal-title"
+            onBlur={() => updateSubmit()}
+            className="p-4 rounded font-lg mv-4 w-full border-2 border-gray-200 font-pt"
+            onChange={(evt: any) => updateTitle(evt.target.value)}
+          />
 
           <label
             htmlFor="proposal-summary"
             className="text-lg text-left block mb-2 mt-4 flex items-end"
           >
             Summary
-            {hasTitle && (
-              <span className="text-right inline-block right-0 absolute text-gray-500 font-regular text-sm">
-                (optional)
-              </span>
-            )}
+            <span className="text-right inline-block right-0 absolute text-gray-500 font-regular text-sm">
+              (optional)
+            </span>
           </label>
 
           <textarea
@@ -50,6 +47,7 @@ export const DescriptionManager = ({
             }}
             rows={6}
             cols={40}
+            onBlur={() => updateSubmit()}
             className="border-2 p-4 border-gray-200 rounded w-full font-pt font-normal"
           />
         </div>
