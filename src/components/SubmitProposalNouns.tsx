@@ -30,9 +30,13 @@ export const SubmitProposalNouns = ({
     // values
     transactions.map((txn: Transaction) => txn.data.value),
     // signatures (not sure what to do here – maybe use ether.actor again)
-    transactions.map((txn: Transaction) => txn.signature || ''),
+    transactions.map((txn: Transaction) => txn.signature || ""),
     // calldatas
-    transactions.map((txn: Transaction) => txn.signature ? txn.data.calldata.slice(8) : txn.data.calldata),
+    transactions.map((txn: Transaction) =>
+      txn.signature
+        ? ethers.utils.hexDataSlice(txn.data.calldata, 4)
+        : txn.data.calldata
+    ),
     // description
     title && !description ? `# ${title}` : `# ${title}\n\n${description}`,
   ];
@@ -51,7 +55,11 @@ export const SubmitProposalNouns = ({
     chainId: CHAIN_ID,
   });
 
-  const { write, isLoading, error: writeError } = useContractWrite({
+  const {
+    write,
+    isLoading,
+    error: writeError,
+  } = useContractWrite({
     ...config,
     onSuccess: () => {
       toast(`Sending proposal request`);
