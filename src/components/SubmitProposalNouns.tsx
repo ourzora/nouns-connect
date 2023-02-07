@@ -34,7 +34,7 @@ export const SubmitProposalNouns = ({
     // calldatas
     transactions.map((txn: Transaction) =>
       txn.signature
-        ? ethers.utils.hexDataSlice(txn.data.calldata, 8)
+        ? ethers.utils.hexDataSlice(txn.data.calldata, 4)
         : txn.data.calldata
     ),
     // description
