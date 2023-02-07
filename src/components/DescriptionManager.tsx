@@ -1,8 +1,15 @@
 import { useDescription } from "../stores/description";
+import { useSubmitDescription } from "../stores/submit-description";
 
 export const DescriptionManager = () => {
-  const { description, editing, edit, updateDescription, updateTitle } =
-    useDescription();
+  const {
+    description,
+    editing,
+    edit,
+    updateDescription,
+    updateTitle,
+  } = useDescription();
+  const {updateSubmit} = useSubmitDescription();
 
   if (editing) {
     return (
@@ -17,6 +24,7 @@ export const DescriptionManager = () => {
           <input
             type="text"
             id="proposal-title"
+            onBlur={() => updateSubmit()}
             className="p-4 rounded font-lg mv-4 w-full border-2 border-gray-200 font-pt"
             onChange={(evt: any) => updateTitle(evt.target.value)}
           />
@@ -39,6 +47,7 @@ export const DescriptionManager = () => {
             }}
             rows={6}
             cols={40}
+            onBlur={() => updateSubmit()}
             className="border-2 p-4 border-gray-200 rounded w-full font-pt font-normal"
           />
         </div>

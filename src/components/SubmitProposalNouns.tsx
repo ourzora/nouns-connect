@@ -3,13 +3,9 @@ import governorAbi from "@nouns/contracts/dist/abi/contracts/governance/NounsDAO
 import { CHAIN_ID } from "../utils/constants";
 import { Transaction } from "../stores/interactions";
 import toast from "react-hot-toast";
-import useSWR from "swr";
 import { AppButton } from "./AppButton";
-import { useDescription } from "../stores/description";
 import { ethers } from "ethers";
-import { useRouter } from "next/router";
-// import addressesMainnet from '@zoralabs/nouns-protocol/dist/addresses/1.json';
-// import addressesTestnet from '@zoralabs/nouns-protocol/dist/addresses/5.json';
+import { useSubmitDescription } from "../stores/submit-description";
 
 const MESSAGE_LOOKUP = {
   "0xe33f2b3e": "User does not meet quorum to submit a proposal",
@@ -26,33 +22,36 @@ export const SubmitProposalNouns = ({
   onSubmitted: ({ proposalId }: { proposalId: string }) => void;
 }) => {
   const { data: signer } = useSigner();
-  const { title, description } = useDescription();
+  const { description, title } = useSubmitDescription();
+
+  const args = [
+    // targets
+    transactions.map((txn: Transaction) => txn.data.to),
+    // values
+    transactions.map((txn: Transaction) => txn.data.value),
+    // signatures (not sure what to do here – maybe use ether.actor again)
+    transactions.map((txn: Transaction) => txn.signature),
+    // calldatas
+    transactions.map((txn: Transaction) => txn.data.calldata),
+    // description
+    title && !description ? `# ${title}` : `# ${title}\n\n${description}`,
+  ];
 
   const { config, error } = usePrepareContractWrite({
     address: daoAddress,
     abi: governorAbi,
     functionName: "propose",
     signer,
-    enabled: description.length > 0,
+    enabled: title.length > 0,
     onError: (err: any) => {
       toast(`Error setting up proposal`);
+      console.error({ err });
     },
-    args: [
-      // targets
-      transactions.map((txn: Transaction) => txn.data.to),
-      // values
-      transactions.map((txn: Transaction) => txn.data.value),
-      // signatures (not sure what to do here – maybe use ether.actor again)
-      transactions.map((txn: Transaction) => ""),
-      // calldatas
-      transactions.map((txn: Transaction) => txn.data.calldata),
-      // description
-      title && !description ? `# ${title}` : `# ${title}\n\n${description}`,
-    ],
+    args,
     chainId: CHAIN_ID,
   });
 
-  const { write, isLoading } = useContractWrite({
+  const { write, isLoading, error: writeError } = useContractWrite({
     ...config,
     onSuccess: () => {
       toast(`Sending proposal request`);
@@ -76,6 +75,8 @@ export const SubmitProposalNouns = ({
       </>
     );
   }
+
+  console.log({ writeError, config, args, error, isLoading, write });
 
   return (
     <AppButton

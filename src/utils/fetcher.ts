@@ -15,3 +15,4 @@ export const textFetcher = (url: URL) =>
   fetch(url)
     .then(onlySuccess)
     .then((res) => res.text());
+

@@ -1,6 +1,7 @@
 import { useWCConnectionStore } from "../stores/connection";
 import { useDAOImage } from "../hooks/useDAOImage";
 import { CHAIN_ID } from "../utils/constants";
+import { NounsBuildLink } from "./NounsBuildLink";
 
 export const DAOHeader = ({
   dao,
@@ -25,16 +26,7 @@ export const DAOHeader = ({
           />
         )}{" "}
         {dao.name}
-        <a
-          title="View on nouns.build"
-          target="_blank"
-          className="pl-2 text-gray-600 text-xl hover:color-black transition-color"
-          href={`https://${CHAIN_ID === 5 ? "testnet." : ""}nouns.build/dao/${
-            dao.collectionAddress
-          }`}
-        >
-          ↗
-        </a>
+        <NounsBuildLink dao={dao} />
       </h1>
       {showConnection && (
         <p
