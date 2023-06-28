@@ -15,6 +15,7 @@ import { DAOHeader } from "../../components/DAOHeader";
 import { GetDaoServerSide } from "../../fetchers/get-dao";
 import { usePushStore } from "../../stores/push-store";
 import { useDAOStore } from "../../stores/dao";
+import { Web3WalletTypes } from "@walletconnect/web3wallet";
 
 function DAOActionComponent({ dao }: { dao: any }) {
   const [error, setError] = useState<undefined | string>(undefined);
@@ -23,11 +24,13 @@ function DAOActionComponent({ dao }: { dao: any }) {
   const { permissionGranted } = usePushStore();
 
   const onWCRequest = useCallback(
-    (error: any, payload: any) => {
+    (event: Web3WalletTypes.SessionRequest) => {
       if (error) {
         toast(error.toString());
         setError(error);
       }
+
+      console.log(event);
 
       if (permissionGranted === "granted") {
         new Notification(`NounsConnect: New Transaction`, {
@@ -35,9 +38,10 @@ function DAOActionComponent({ dao }: { dao: any }) {
         });
       }
 
-      const paramArgs = payload.params.map((param: any) => ({
+      const { params } = event.params.request;
+      const paramArgs = params.map((param: any) => ({
         data: {
-          id: payload.id,
+          id: event.id,
           gas: param.gas,
           to: param.to,
           calldata: param.data,
