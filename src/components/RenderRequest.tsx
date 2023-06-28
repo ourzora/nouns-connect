@@ -1,5 +1,5 @@
 import { BigNumber, ethers } from "ethers";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import useSWR from "swr";
@@ -7,7 +7,10 @@ import { formatEther } from "ethers/lib/utils.js";
 
 import { Transaction, useTransactionsStore } from "../stores/interactions";
 import { CHAIN_ID } from "../utils/constants";
-import { fetcher, textFetcher } from "../utils/fetcher";
+import {
+  fetcher,
+  textFetcher,
+} from "../utils/fetcher";
 import { PrettyAddress } from "./PrettyAddress";
 import { DefinitionListItem } from "./DefinitionListItem";
 import { ContractDataItems } from "./ContractDataItems";
@@ -27,7 +30,7 @@ export const RenderRequest = ({
   floatingDisplay?: boolean;
   showDeleteButtonInline?: boolean;
 }) => {
-  const { removeTransactionAtIndex } = useTransactionsStore();
+  const { removeTransactionAtIndex, setSignature } = useTransactionsStore();
   const removeTxnClick = useCallback(() => {
     if (confirm("Are you sure you wish to remove this transaction?")) {
       removeTransactionAtIndex(indx);
@@ -53,15 +56,13 @@ export const RenderRequest = ({
     fetcher
   );
 
-  const { data: contractName } = useSWR(
+  const { data: contractName} = useSWR(
     !contractError
       ? `https://${CHAIN_ID === 5 ? "goerli." : ""}ether.actor/${
           transaction.data.to
         }/name`
       : undefined,
-    textFetcher,
-    // if this errors, don't retry.
-    { errorRetryCount: 0 }
+    textFetcher
   );
 
   const parsedResponse = useMemo(() => {
@@ -70,14 +71,25 @@ export const RenderRequest = ({
     }
     try {
       const iface = new ethers.utils.Interface(contractData.abi);
-      return iface.parseTransaction({
+
+      const txn = iface.parseTransaction({
         data: transaction.data.calldata,
         value: transaction.data.value,
       });
+
+      setSignature(indx, txn.signature);
+
+      return txn;
     } catch {
       return undefined;
     }
-  }, [contractData?.abi]);
+  }, [contractData?.abi, setSignature]);
+
+  useEffect(() => {
+    if (decodeData?.name) {
+      setSignature(indx, decodeData.name);
+    }
+  }, [decodeData, setSignature]);
 
   return (
     <div className="flex w-full">
@@ -91,9 +103,12 @@ export const RenderRequest = ({
         <div className="flex w-full">
           <div className="flex-grow font-sm text-left text-lg">
             <span className="font-bold capitalize">
-              {parsedResponse?.name || "Custom Data"}
+              {parsedResponse?.name ||
+                (transaction.data.calldata === "0x"
+                  ? "transfer"
+                  : "Custom Data")}
             </span>{" "}
-            on{" "}
+            {BigNumber.from("0").eq(transaction.data.value) ? "on" : "to"}{" "}
             <span className="font-bold">
               <PrettyAddress
                 address={transaction.data.to as any}

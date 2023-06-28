@@ -13,7 +13,9 @@ import { RenderRequest } from "../../components/RenderRequest";
 import { ProposalByIdQuery } from "../../config/daos-query";
 import { GetDaoServerSide } from "../../fetchers/get-dao";
 import { useDAOImage } from "../../hooks/useDAOImage";
-import { CHAIN_ID, ZORA_API_URL } from "../../utils/constants";
+import { CHAIN_ID, CHAIN_NAME, ZORA_API_URL } from "../../utils/constants";
+import { NounsBuildLink } from "../../components/NounsBuildLink";
+import { ViewProposalLink } from "../../components/ViewProposalLink";
 
 const MadePossibleLogo = dynamic(
   () => import("../../components/MadePossibleLogo"),
@@ -30,7 +32,7 @@ function Created({ dao }: { dao: any }) {
     isReady ? ["proposalById", query.id] : undefined,
     ([_, proposalId]) =>
       request(ZORA_API_URL, ProposalByIdQuery, {
-        chain: CHAIN_ID === 1 ? "MAINNET" : "GOERLI",
+        chain: CHAIN_NAME,
         proposalId,
       }),
     {
@@ -100,17 +102,7 @@ function Created({ dao }: { dao: any }) {
               style={{ backgroundImage: `url(${url})` }}
             />
             <h3 className="font-londrina text-4xl ml-4">
-              {dao.name}{" "}
-              <a
-                title="View on nouns.build"
-                target="_blank"
-                className="text-gray-600 text-xl hover:color-black transition-color"
-                href={`https://${
-                  CHAIN_ID === 5 ? "testnet." : ""
-                }nouns.build/dao/${dao.collectionAddress}`}
-              >
-                ↗
-              </a>
+              {dao.name} <NounsBuildLink dao={dao} />
             </h3>
           </div>
           <div className="w-full border-bottom-gray-500 " />
@@ -122,18 +114,10 @@ function Created({ dao }: { dao: any }) {
                 </span>
                 <h3 className="text-2xl">
                   {proposalTitle}{" "}
-                  <a
-                    title="View on nouns.build"
-                    target="_blank"
-                    className="text-gray-600 hover:color-black transition-color"
-                    href={`https://${
-                      CHAIN_ID === 5 ? "testnet." : ""
-                    }nouns.build/dao/${dao.collectionAddress}/vote/${
-                      nounsProposal.proposalId
-                    }`}
-                  >
-                    ↗
-                  </a>
+                  <ViewProposalLink
+                    dao={dao}
+                    proposalId={nounsProposal.proposalId}
+                  />
                 </h3>
                 <div className="text-right flex-grow flex justify-end">
                   <div className="capitalize rounded text-lg p-2 text-center bg-gray-100 px-4 text-slate-600">

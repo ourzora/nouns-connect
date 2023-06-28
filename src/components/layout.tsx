@@ -10,24 +10,19 @@ type Props = {
   title?: string;
 };
 
-const Layout = ({ children, title = "Nouns Connect" }: Props) => (
+const Layout = ({ children, title = "NounsConnect" }: Props) => (
   <>
     <Head>
       <title>{title}</title>
       <link href="/styles/globals.css" type="text/stylesheet" />
+
+      <link rel="shortcut icon" type="image/png" href="/favicon-192x192.png" />
+      <link rel="shortcut icon" sizes="192x192" href="/favicon-192x192.png" />
+      <link rel="apple-touch-icon" href="/favicon-192x192.png" />
+
       <meta charSet="utf-8" />
       <meta name="viewport" content="initial-scale=1.0, width=device-width" />
     </Head>
-    {/* <header className="font-pt leading-6">
-      <nav className="m-8 text-xl font-bold flex align-center">
-        <Link className="" href="/">
-          <Logo /> <span className="">NounsConnect</span>
-        </Link>{" "}
-      </nav>
-      <aside className="float-right mx-8 -mt-16">
-        <ConnectButton />
-      </aside>
-    </header> */}
     <div
       className="md:m-10 font-londrina flex items-center justify-center"
       style={{ minHeight: "80vh" }}

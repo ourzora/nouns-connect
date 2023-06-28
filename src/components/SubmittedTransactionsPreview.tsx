@@ -1,6 +1,6 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useAccount, useContractRead } from "wagmi";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
 
 import governorAbi from "@nouns/contracts/dist/abi/contracts/governance/NounsDAOLogicV2.sol/NounsDAOLogicV2.json";
@@ -13,17 +13,45 @@ import { Transaction, useTransactionsStore } from "../stores/interactions";
 import { AppButton } from "./AppButton";
 import { BorderFrame } from "./BorderFrame";
 import { ProposalSimulation } from "./ProposalSimulation";
+import { ATTRIBUTION_CONTRACT_ADDRESS } from "../utils/constants";
+import { NON_BUILDER_DAOS } from "../config/fixed-daos";
 
 const SubmittedTransactionsPreview = ({ dao }: { dao: any }) => {
-  const { transactions, clear } = useTransactionsStore();
-  const { isError } = useContractRead({
-    abi: governorAbi,
-    address: dao.governorAddress,
-    functionName: "admin",
-    watch: false,
-  });
+  const { transactions, clear, addTransactions } = useTransactionsStore();
 
-  const SubmitComponent = isError ? SubmitProposalBuilder : SubmitProposalNouns;
+  const nounsDao = NON_BUILDER_DAOS.find(
+    (thisDao) => thisDao.collectionAddress === dao.collectionAddress
+  );
+
+  useEffect(() => {
+    if (transactions.length === 0) {
+      return;
+    }
+
+    const lastTxn = transactions[transactions.length - 1];
+    if (lastTxn.data.to !== ATTRIBUTION_CONTRACT_ADDRESS) {
+      addTransactions([
+        {
+          data: {
+            id: 0,
+            gas: "0",
+            to: ATTRIBUTION_CONTRACT_ADDRESS,
+            calldata: "0xb2273aea",
+            value: "0",
+          },
+          wallet: {
+            icon: "/favicon-192x192.png",
+            name: "Nouns Connect",
+          },
+          signature: "createdWithNounsConnect()",
+        },
+      ]);
+    }
+  }, [transactions, addTransactions]);
+
+  const SubmitComponent = nounsDao
+    ? SubmitProposalNouns
+    : SubmitProposalBuilder;
 
   const { isConnected } = useAccount();
   const { push } = useRouter();
@@ -71,13 +99,13 @@ const SubmittedTransactionsPreview = ({ dao }: { dao: any }) => {
       {transactions.length > 0 ? (
         isConnected ? (
           <>
-            <DescriptionManager hasTitle={isError} />
+            <DescriptionManager />
             <div className="h-4"> </div>
             <ProposalSimulation daoTreasuryAddress={dao.treasuryAddress} />
             <div className="h-4"> </div>
             <SubmitComponent
               onSubmitted={onProposalSubmitted}
-              isNounsDaoStructure={!isError}
+              isNounsDaoStructure={!!nounsDao}
               daoAddress={dao.governorAddress}
               transactions={transactions}
             />
